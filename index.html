@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema VLT Carioca - Login</title>
+    <title>VLT Carioca - Login</title>
     <style>
         * {
             margin: 0;
@@ -12,61 +12,47 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
 
-        .login-container {
+        .container {
             background: white;
+            padding: 40px;
             border-radius: 10px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 400px;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 48px;
-            margin-bottom: 20px;
         }
 
         h1 {
+            text-align: center;
             color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        .subtitle {
-            color: #666;
             margin-bottom: 30px;
-            font-size: 14px;
+            font-size: 28px;
         }
 
         .form-group {
             margin-bottom: 20px;
-            text-align: left;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
             color: #555;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: bold;
         }
 
         input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ddd;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 16px;
             transition: border-color 0.3s;
         }
 
@@ -75,7 +61,7 @@
             border-color: #667eea;
         }
 
-        .btn {
+        button {
             width: 100%;
             padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -83,333 +69,137 @@
             border: none;
             border-radius: 5px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s;
-            margin-top: 10px;
+            transition: opacity 0.3s;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-            text-align: left;
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
             font-size: 14px;
         }
 
         .success {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-            text-align: left;
-            font-size: 14px;
-        }
-
-        .dashboard-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 1000px;
-            padding: 20px;
-            display: none;
-        }
-
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 20px;
-        }
-
-        .dashboard-header h2 {
-            font-size: 24px;
-            color: #333;
-        }
-
-        .user-info {
-            text-align: right;
-            font-size: 14px;
-        }
-
-        .user-info p {
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .btn-logout {
-            padding: 8px 16px;
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .btn-logout:hover {
-            background-color: #c82333;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .tab-button {
-            padding: 12px 20px;
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            color: #666;
-            transition: all 0.3s;
-        }
-
-        .tab-button.ativo {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .tab-button:hover {
-            color: #667eea;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s;
-        }
-
-        .tab-content.ativo {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .painel-button {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            margin: 20px 0;
-            transition: transform 0.2s;
-        }
-
-        .painel-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .usuarios-list {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-        .usuario-item {
-            background: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-
-        .usuario-info p {
-            margin: 5px 0;
-            color: #666;
+            color: #27ae60;
+            text-align: center;
+            margin-top: 15px;
             font-size: 14px;
         }
 
         .loading {
+            display: none;
             text-align: center;
-            color: #666;
-            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-
-<!-- LOGIN SCREEN -->
-<div class="login-container" id="loginContainer">
-    <div class="logo">🚊</div>
-    <h1>Sistema VLT Carioca</h1>
-    <p class="subtitle">Gerenciamento de Falhas e Manutenção</p>
-
-    <div class="error" id="errorMessage"></div>
-    <div class="success" id="successMessage"></div>
-
-    <form onsubmit="fazerLogin(event)">
-        <div class="form-group">
-            <label for="usuario">Usuário</label>
-            <input type="text" id="usuario" placeholder="Digite seu usuário" required>
-        </div>
-
-        <div class="form-group">
-            <label for="senha">Senha</label>
-            <input type="password" id="senha" placeholder="Digite sua senha" required>
-        </div>
-
-        <button type="submit" class="btn">🔓 Entrar</button>
-    </form>
-</div>
-
-<!-- DASHBOARD SCREEN -->
-<div class="dashboard-container" id="dashboardContainer">
-    <div class="dashboard-header">
-        <div>
-            <h2>🚊 Sistema VLT Carioca</h2>
-        </div>
-        <div class="user-info">
-            <p>Bem-vindo, <strong id="nomeUsuario"></strong></p>
-            <p id="tipoUsuario"></p>
-            <button class="btn-logout" onclick="fazerLogout()">🚪 Sair</button>
-        </div>
+    <div class="container">
+        <h1>VLT Carioca</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="usuario">Usuário:</label>
+                <input type="text" id="usuario" name="usuario" required>
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" required>
+            </div>
+            <button type="submit" id="btnLogin">Entrar</button>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+            </div>
+            <div class="error" id="erro"></div>
+            <div class="success" id="sucesso"></div>
+        </form>
     </div>
 
-    <div class="tabs">
-        <button class="tab-button ativo" onclick="mudarAba('painel')">📊 Painel</button>
-        <button class="tab-button" onclick="mudarAba('registrar')">📝 Registrar Falha</button>
-        <button class="tab-button" id="btnGerenciar" onclick="mudarAba('gerenciar')" style="display: none;">👥 Gerenciar</button>
-    </div>
+    <script>
+        // ⚠️ COLE ESSA URL AQUI - Essa é sua URL do Apps Script:
+        const API_URL = 'https://script.google.com/macros/s/AKfycbz3x9_f_s7kLwKHrgTPUSaqjVmZfzrEo-plnm0oy1UdaQSzrNou2bjpIZTItJRJCrgkgQ/exec';
 
-    <!-- ABA: PAINEL -->
-    <div class="tab-content ativo" id="abaParinel">
-        <p style="color: #666; margin-bottom: 20px;">📊 Painel de Dados VLT Carioca</p>
-        <div style="text-align: center; padding: 40px;">
-            <a href="https://lookerstudio.google.com/reporting/95cf4b2a-b4ef-4aa1-910c-423461799e6c" 
-               target="_blank" 
-               class="painel-button">
-                📈 Abrir Painel Completo
-            </a>
-            <p style="margin-top: 20px; color: #999; font-size: 14px;">O painel será aberto em uma nova aba</p>
-        </div>
-    </div>
+        const form = document.getElementById('loginForm');
+        const btnLogin = document.getElementById('btnLogin');
+        const loading = document.getElementById('loading');
+        const erro = document.getElementById('erro');
+        const sucesso = document.getElementById('sucesso');
 
-    <!-- ABA: REGISTRAR FALHA -->
-    <div class="tab-content" id="abaRegistrar">
-        <p style="color: #666; margin-bottom: 20px;">📝 Registrar uma Nova Falha</p>
-        <div style="text-align: center; padding: 40px;">
-            <a href="https://forms.gle/X6dXM9zyFxmo6PPn6" 
-               target="_blank" 
-               class="painel-button">
-                ✏️ Abrir Formulário
-            </a>
-            <p style="margin-top: 20px; color: #999; font-size: 14px;">O formulário será aberto em uma nova aba</p>
-        </div>
-    </div>
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-    <!-- ABA: GERENCIAR USUÁRIOS -->
-    <div class="tab-content" id="abaGerenciar">
-        <p style="color: #666; margin-bottom: 20px;">👥 Gerenciar Usuários</p>
-        <div class="usuarios-list" id="usuariosList">
-            <p class="loading">⏳ Carregando usuários...</p>
-        </div>
-    </div>
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
 
-</div>
+            // Limpar mensagens anteriores
+            erro.textContent = '';
+            sucesso.textContent = '';
 
-<script>
-    // ========== CONFIGURAÇÕES ==========
-    const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbz3x9_f_s7kLwKHrgTPUSaqjVmZfzrEo-plnm0oy1UdaQSzrNou2bjpIZTItJRJCrgkgQ/exec";
-    const URL_LOOKER_STUDIO = "https://lookerstudio.google.com/reporting/95cf4b2a-b4ef-4aa1-910c-423461799e6c";
-    const URL_FORMULARIO = "https://forms.gle/X6dXM9zyFxmo6PPn6";
+            // Mostrar carregamento
+            loading.style.display = 'block';
+            btnLogin.disabled = true;
 
-    // ========== VARIÁVEIS GLOBAIS ==========
-    let usuarioLogado = null;
-    let tipoUsuario = null;
+            try {
+                console.log('🔍 Enviando requisição para:', API_URL);
+                console.log('📝 Dados:', { usuario, senha });
 
-    // ========== FUNÇÕES DE LOGIN ==========
-    function fazerLogin(event) {
-        event.preventDefault();
-        
-        const usuario = document.getElementById('usuario').value;
-        const senha = document.getElementById('senha').value;
+                const response = await fetch(API_URL + '?acao=verificar_login&usuario=' + encodeURIComponent(usuario) + '&senha=' + encodeURIComponent(senha));
 
-        const url = `${URL_APPS_SCRIPT}?acao=verificar_login&usuario=${encodeURIComponent(usuario)}&senha=${encodeURIComponent(senha)}`;
+                console.log('📥 Status da resposta:', response.status);
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
+                const data = await response.json();
+
+                console.log('📦 Resposta recebida:', data);
+
                 if (data.status === 'sucesso') {
-                    usuarioLogado = data.usuario;
-                    tipoUsuario = data.tipo;
-                    mostrarDashboard();
+                    sucesso.textContent = '✅ ' + data.mensagem;
+                    console.log('✅ Login bem-sucedido!', data);
+                    
+                    // Guardar dados do usuário
+                    localStorage.setItem('usuario', data.usuario);
+                    localStorage.setItem('tipo', data.tipo);
+
+                    // Redirecionar após 1.5 segundos
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
                 } else {
-                    mostrarErro(data.mensagem || 'Usuário ou senha inválidos!');
+                    erro.textContent = '❌ ' + data.mensagem;
+                    console.error('❌ Erro:', data.mensagem);
                 }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                mostrarErro('Erro ao conectar com o servidor!');
-            });
-    }
-
-    function mostrarDashboard() {
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('dashboardContainer').style.display = 'block';
-        document.getElementById('nomeUsuario').textContent = usuarioLogado;
-        document.getElementById('tipoUsuario').textContent = `Tipo: ${tipoUsuario}`;
-
-        if (tipoUsuario === 'ADMIN') {
-            document.getElementById('btnGerenciar').style.display = 'block';
-        }
-
-        carregarUsuarios();
-    }
-
-    function fazerLogout() {
-        usuarioLogado = null;
-        tipoUsuario = null;
-        document.getElementById('loginContainer').style.display = 'flex';
-        document.getElementById('dashboardContainer').style.display = 'none';
-        document.getElementById('usuario').value = '';
-        document.getElementById('senha').value = '';
-    }
-
-    // ========== FUNÇÕES DE ABA ==========
-    function mudarAba(nomeAba) {
-        const abas = document.querySelectorAll('.tab-content');
-        abas.forEach(aba => aba.classList.remove('ativo'));
-
-        const botoes = document.querySelectorAll('.tab-button');
-        botoes.forEach(botao => botao.classList.remove('ativo'));
-
-        if (nomeAba === 'painel') {
-            document.getElementById('abaParinel').classList.add('ativo');
-        } else if (nomeAba === 'registrar') {
-            document.getElementById('abaRegistrar').classList.add('ativo');
-        } else if (nomeAba === 'gerenciar') {
-            document.getElementById('abaGerenciar').classList.add('ativo');
-        }
-
-        event.target.classList.add('ativo');
-    }
-
-    // ========== FUNÇÕES DE USUÁRIOS ==========
-    function carregarUsuarios() {
-        const url = `${URL_APPS_SCRIPT}?acao=listar_usuarios`;
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
+            } catch (error) {
+                erro.textContent = '❌ Erro na conexão: ' + error.message;
+                console.error('💥 Erro da requisição:', error);
+            } finally {
+                loading.style.display = 'none';
+                btnLogin.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
