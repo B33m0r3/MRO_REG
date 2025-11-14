@@ -182,9 +182,6 @@
         }
         .card-info h3 { font-size: 24px; color: var(--dark); margin-bottom: 5px; }
         .card-info p { color: #7f8c8d; font-size: 14px; }
-        .card-manutencao .card-icon { background: linear-gradient(135deg, var(--danger), #ff6b6b); }
-        .card-liberado .card-icon { background: linear-gradient(135deg, var(--success), #26c6da); }
-        .card-agendado .card-icon { background: linear-gradient(135deg, var(--warning), #ffb74d); }
         .card-total .card-icon { background: linear-gradient(135deg, var(--info), #4fc3f7); }
         /* Loading */
         .loading-overlay {
@@ -591,9 +588,6 @@
                             </div>
                         </div>
                         <div class="sobre-container">
-                            <div class="sobre-map">
-                                <img src="https://raw.githubusercontent.com/B33m0r3/vlt-carioca-sistema/main/mapa-vlt-carioca.png" alt="Mapa das Linhas do VLT Carioca">
-                            </div>
                             <div class="sobre-info">
                                 <div class="info-card">
                                     <h3>Buscar Estação</h3>
@@ -843,18 +837,9 @@
             }
         }
         function renderCards() {
-            const counts = { manutencao: 0, liberado: 0, agendado: 0, total: allRegistros.length };
-            allRegistros.forEach(r => {
-                const status = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
-                if (status.includes('manuten')) counts.manutencao++;
-                else if (status.includes('liberad')) counts.liberado++;
-                else if (status.includes('agendad')) counts.agendado++;
-            });
+            const counts = { total: allRegistros.length };
             const cardsHtml = `
                 <div class="card card-total"><div class="card-icon"><i class="fas fa-list"></i></div><div class="card-info"><h3>${counts.total}</h3><p>Total de Registros</p></div></div>
-                <div class="card card-manutencao"><div class="card-icon"><i class="fas fa-tools"></i></div><div class="card-info"><h3>${counts.manutencao}</h3><p>Em Manutenção</p></div></div>
-                <div class="card card-liberado"><div class="card-icon"><i class="fas fa-check-circle"></i></div><div class="card-info"><h3>${counts.liberado}</h3><p>Liberados</p></div></div>
-                <div class="card card-agendado"><div class="card-icon"><i class="fas fa-calendar-check"></i></div><div class="card-info"><h3>${counts.agendado}</h3><p>Agendados</p></div></div>
             `;
             document.getElementById('dashboard-cards').innerHTML = cardsHtml;
         }
@@ -878,7 +863,8 @@
                     const rows = parseCSV(csv);
                     const filteredRows = rows.filter(r => {
                         try {
-                            const dataRegistro = new Date(r['Coluna1']);
+                            // ✅ Corrigido: usa a coluna 'DATA' e 'GRUPO' conforme sua planilha
+                            const dataRegistro = new Date(r['DATA']);
                             const grupoRegistro = r['GRUPO'];
                             return dataRegistro >= dataInicio && 
                                    dataRegistro <= dataFim && 
@@ -935,7 +921,7 @@
                     else if (status.includes('preventiva')) statusClass = 'status-preventiva';
                     return `
                         <tr>
-                            <td>${r['Coluna 1']}</td>
+                            <td>${r['DATA']}</td>
                             <td>${r['NOME']}</td>
                             <td>${r['NMERO DO TREM:']}</td>
                             <td>${r['SISTEMA']}</td>
@@ -993,13 +979,13 @@
             const status = document.getElementById('filterStatus').value;
             filteredReportData = allRegistros.filter(r => {
                 try {
-                    const dataRegistro = new Date(r['Coluna 1']);
+                    const dataRegistro = new Date(r['DATA']); // ✅ Coluna correta
                     if (dataInicio && dataRegistro < new Date(dataInicio + 'T00:00:00')) return false;
                     if (dataFim && dataRegistro > new Date(dataFim + 'T23:59:59')) return false;
                     if (trem && !r['NMERO DO TREM:'].toLowerCase().includes(trem)) return false;
                     if (sistema && !r['SISTEMA'].toLowerCase().includes(sistema)) return false;
                     // CORREÇÃO: Verificar a equipe corretamente
-                    if (equipe && r['GRUPO'] !== equipe) return false;
+                    if (equipe && r['GRUPO'] !== equipe) return false; // ✅ Coluna correta
                     if (tecnico && !r['NOME'].toLowerCase().includes(tecnico)) return false;
                     if (ios && !r['CÓDIGO IOS DA FALHA'].toLowerCase().includes(ios)) return false;
                     if (status) {
@@ -1029,7 +1015,7 @@
                     else if (status.includes('prevent')) statusClass = 'status-preventiva';
                     return `
                         <tr>
-                            <td>${r['Coluna 1']}</td>
+                            <td>${r['DATA']}</td>
                             <td>${r['NOME']}</td>
                             <td>${r['NMERO DO TREM:']}</td>
                             <td>${r['SISTEMA']}</td>
