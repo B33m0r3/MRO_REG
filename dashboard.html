@@ -97,6 +97,7 @@
             border-left-color: var(--primary);
         }
         .nav-item i { width: 20px; min-width: 20px; }
+        .nav-label { display: inline; }
         .nav-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 20px 0; }
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .top-bar {
@@ -261,7 +262,7 @@
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
-            font-size:16px;
+            font-size: 16px;
         }
         .btn-primary:hover { transform: translateY(-2px); }
         .btn-primary i { margin-right: 8px; }
@@ -282,6 +283,7 @@
             backdrop-filter: blur(5px);
         }
         .modal.show { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .modal-content {
             background: white;
             border-radius: 15px;
@@ -444,6 +446,10 @@
             <div class="content">
                 <div class="pages-wrapper">
                     <!-- Dashboard -->
+                    <div class="page active" id="page-dashboard">
+                        <div class="cards-container" id="dashboard-cards">
+                            <!-- Cards serão inseridos aqui pelo JS -->
+                        </div>
                         <div style="width: 100%; height: 600px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; position: relative;">
                             <div class="loading-overlay" id="loading-looker">
                                 <div class="spinner"></div>
@@ -496,8 +502,8 @@
                             <a href="https://docs.google.com/forms/d/e/1FAIpQLSdz056J8dsQMPXV6__U2B-VOxQEaNF34bwyaRgFVlcCKOLZ_Q/viewform?usp=dialog" target="_blank" class="btn-primary">
                                 <i class="fas fa-external-link-alt"></i> Abrir Formulário de Novo Registro
                             </a>
-                            <p style="margin-top: 30px; color: #7f8c8d; font-size: 14px;">
-                                Ao preencher e enviar o formulário, os dados serão adicionados automaticamente à planilha central e refletidos no sistema.
+                            <p class="novo-registro-texto">
+                                ✅ Ao preencher e enviar o formulário, os dados serão adicionados automaticamente à planilha central e refletidos no sistema.
                             </p>
                         </div>
                     </div>
@@ -545,15 +551,15 @@
                                     </tr>
                                 </thead>
                                 <tbody id="relatorio-table">
-                                    <tr><td colspan="7" style="text-align: center; padding: 40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></tr>
+                                    <tr><td colspan="9" style="text-align: center; padding: 40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="download-buttons" id="download-buttons" style="display: none; gap: 10px; margin-top: 20px;">
-                            <button class="btn-primary" onclick="downloadCSV()">
+                            <button class="download-btn" onclick="downloadCSV()">
                                 <i class="fas fa-file-excel"></i> Download Excel (CSV)
                             </button>
-                            <button class="btn-primary" onclick="downloadPDF()">
+                            <button class="download-btn" onclick="downloadPDF()">
                                 <i class="fas fa-file-pdf"></i> Download PDF
                             </button>
                         </div>
@@ -694,7 +700,7 @@
                 <div class="modal-label">Email</div>
                 <div class="modal-value">
                     <a href="mailto:guilherme.fernandes@motiva.com.br" class="modal-link">
-                        📧 guilherme.fernandes@motiva.com.br
+                        📧 guilherme.557676@motiva.com.br
                     </a>
                 </div>
             </div>
@@ -744,7 +750,7 @@
         const USUARIOS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pub?gid=1605075317&single=true&output=csv';
 
         const linhasData = {
-            1: { cor: 'Azul', trajeto: 'Santos Dumont ✈️ → ... → Terminal Gentileza', estacoes: { 'SDU': 'Santos Dumont', 'ACM': 'Antônio Carlos (MAM)', 'CIN': 'Cinelândia', 'CAR': 'Carioca', 'STS': 'Sete de Setembro', 'CAN': 'Candelária', 'SAB': 'São Bento', 'PAM': 'Parada dos Museus', 'PNV': 'Parada dos Navios (Valongo)', 'UAR': 'Utopia (AquaRio)', 'CDS': 'Cidade do Samba (Tia Ciata)', 'SCR': 'Santo Cristo', 'CDG': 'Cordeiro da Graça', 'HAR': 'Harmonia', 'PRO': 'Providência', 'GAM': 'Gamboa', 'PER': 'Pereira Reis', 'EQU': 'Equador', 'ROD': 'Rodoviária', 'TIG': 'Terminal Gentileza' } },
+            1: { cor: 'Azul', trajeto: 'Santos Dumont ✈️ → ... → Terminal Gentileza', estacoes: { 'SDU': 'Santos Dumont', 'ACM': 'Antônio Carlos (MAM)', 'CIN': 'Cinelândia', 'CAR': 'Carioca', 'STS': 'Sete de Setembro', 'CAN': 'Candelária', 'SAB': 'São Bento', 'PAM': 'Parada dos Museus', 'PNV': 'Parada dos Navios (Valongo)', 'UAR': 'Utopia (AquaRio)', 'CDS': 'Cidade do Samba (Tia Ciata)', 'SCR': 'Santo Cristo', 'PNV': 'Parada dos Navios (Valongo)', 'UAR': 'Utopia (AquaRio)', 'UAR': 'Utopia (AquaRio)', 'GAM': 'Gamboa', 'PER': 'Providência', 'PRO': 'Providência', 'GAM': 'Gamboa', 'PER': 'Pereira Reis', 'EQU': 'Equador', 'ROD': 'Rodoviária', 'TIG': 'Terminal Gentileza' } },
             2: { cor: 'Verde', trajeto: 'Praça XV → ... → Praia Formosa', estacoes: { 'PXV': 'Praça XV', 'COL': 'Colombo', 'TIR': 'Tiradentes', 'SAA': 'Saara', 'COA': 'Cristiano Ottoni (Pequena África)', 'CEN': 'Central', 'GAM': 'Gamboa', 'SCR': 'Santo Cristo', 'CDG': 'Cordeiro da Graça', 'VLO': 'Vila Olímpica', 'PER': 'Pereira Reis', 'EQU': 'Equador', 'ROD': 'Rodoviária', 'PFM': 'Praia Formosa' } },
             3: { cor: 'Amarela', trajeto: 'Santos Dumont ✈️ → ... → Central', estacoes: { 'SDU': 'Santos Dumont', 'ACM': 'Antônio Carlos (MAM)', 'CIN': 'Cinelândia', 'CAR': 'Carioca', 'STS': 'Sete de Setembro', 'CAN': 'Candelária', 'SRN': 'Santa Rita (Pretos Novos)', 'CRN': 'Camerino (Rosas Negras)', 'COA': 'Cristiano Ottoni (Pequena África)', 'CEN': 'Central' } },
             4: { cor: 'Laranja', trajeto: 'Praça XV → ... → Terminal Gentileza', estacoes: { 'PXV': 'Praça XV', 'COL': 'Colombo', 'TIR': 'Tiradentes', 'SAA': 'Saara', 'COA': 'Cristiano Ottoni (Pequena África)', 'CEN': 'Central', 'VLO': 'Vila Olímpica', 'PER': 'Pereira Reis', 'GAM': 'Gamboa', 'SCR': 'Santo Cristo', 'CDG': 'Cordeiro da Graça', 'EQU': 'Equador', 'ROD': 'Rodoviária', 'TIG': 'Terminal Gentileza' } }
@@ -755,13 +761,18 @@
         let filteredReportData = [];
 
         function parseCSV(csvText) {
-            const lines = csvText.trim().split('\n'); if (lines.length === 0) return [];
+            const lines = csvText.trim().split('\n');
+            if (lines.length === 0) return [];
+            
             const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
             const rows = [];
+            
             for (let i = 1; i < lines.length; i++) {
                 const obj = {};
                 const values = lines[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-                headers.forEach((h, idx) => { obj[h] = values[idx] ? values[idx].trim().replace(/"/g, '') : ''; });
+                headers.forEach((h, idx) => {
+                    obj[h] = values[idx] ? values[idx].trim().replace(/"/g, '') : '';
+                });
                 rows.push(obj);
             }
             return rows;
@@ -781,8 +792,9 @@
             document.getElementById('userRole').textContent = currentUser.tipo;
             const initials = usuario.split('.').map(n => n[0].toUpperCase()).join('');
             document.getElementById('userInitials').textContent = initials;
+            
+            // Apenas admin não vê usuários, mas relatórios é para todos
             if (currentUser.tipo !== 'ADMIN') {
-                document.getElementById('relatorios-menu').style.display = 'none';
                 document.getElementById('usuarios-menu').style.display = 'none';
             }
             loadUserProfile(usuario);
@@ -791,7 +803,7 @@
         function loadUserProfile(usuario) {
             fetch(USUARIOS_CSV).then(r => r.text()).then(csv => {
                 const rows = parseCSV(csv);
-                const userRow = rows.find(r => r.Usuario === usuario);
+                const userRow = rows.find(r => r.Usuario === usuario || r.usuario === usuario);
                 if (userRow) {
                     const telefone = userRow.Telefone ? userRow.Telefone.replace(/\D/g, '') : '';
                     const whatsappLink = telefone ? `<a href="https://wa.me/55${telefone}" target="_blank" class="modal-link"><i class="fab fa-whatsapp"></i> Clique para conversar</a>` : 'Não informado';
@@ -820,7 +832,7 @@
             if (pageName === 'dashboard') { loadDashboardCards(); document.getElementById('screenshotBtn').style.display = 'none'; }
             if (pageName === 'passagem') { document.getElementById('screenshotBtn').style.display = 'none'; }
             if (pageName === 'relatorios') { document.getElementById('screenshotBtn').style.display = 'none'; }
-            if (pageName === 'usuarios') { document.getElementById('screenshotBtn').style.display = 'none'; }
+            if (pageName === 'usuarios') { document.getElementById('screenshotBtn').display = 'none'; }
             if (pageName === 'novo_registro') { document.getElementById('screenshotBtn').style.display = 'none'; }
             if (pageName === 'sobre') { document.getElementById('screenshotBtn').style.display = 'inline-block'; }
             
@@ -856,30 +868,46 @@
         function applyPassagemFilter() {
             const grupo = document.getElementById('passagemGrupo').value;
             const dataStr = document.getElementById('passagemData').value;
-            if (!dataStr) { alert('Por favor, selecione uma data.'); return; }
+            
+            if (!dataStr) { 
+                alert('Por favor, selecione uma data.'); 
+                return; 
+            }
 
             const data = new Date(dataStr + 'T00:00:00');
-            const dataInicio = new Date(data); dataInicio.setHours(0,0,0,0);
-            const dataFim = new Date(data); dataFim.setHours(23,59,59,999);
+            const dataInicio = new Date(data); 
+            dataInicio.setHours(0,0,0,0);
+            const dataFim = new Date(data); 
+            dataFim.setHours(23,59,59,999);
 
-            fetch(REGISTRO_CSV).then(r => r.text()).then(csv => {
-                const rows = parseCSV(csv);
-                const filteredRows = rows.filter(r => {
-                    try {
-                        const dataRegistro = new Date(r['DATA DA FALHA']);
-                        const grupoRegistro = r['GRUPO'];
-                        return dataRegistro >= dataInicio && dataRegistro <= dataFim && grupoRegistro === grupo;
-                    } catch { return false; }
-                }).reverse();
+            fetch(REGISTRO_CSV)
+                .then(r => r.text())
+                .then(csv => {
+                    const rows = parseCSV(csv);
+                    const filteredRows = rows.filter(r => {
+                        try {
+                            const dataRegistro = new Date(r['Coluna1']);
+                            const grupoRegistro = r['GRUPO'];
+                            
+                            return dataRegistro >= dataInicio && 
+                                   dataRegistro <= dataFim && 
+                                   grupoRegistro === grupo;
+                        } catch { 
+                            return false; 
+                        }
+                    }).reverse();
 
-                renderPassagemTable(filteredRows);
-                renderPassagemSummary(filteredRows);
-                closePassagemFilterModal();
+                    console.log(`Encontrados ${filteredRows.length} registros para Data: ${dataStr}, Grupo: ${grupo}`);
+                    renderPassagemTable(filteredRows);
+                    renderPassagemSummary(filteredRows);
+                    closePassagemFilterModal();
 
-            }).catch(e => {
-                console.error('Erro:', e);
-                document.getElementById('passagem-table').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;">Erro ao carregar dados.</td></tr>';
-            });
+                })
+                .catch(e => {
+                    console.error('Erro:', e);
+                    document.getElementById('passagem-table').innerHTML = 
+                        '<tr><td colspan="6" style="text-align:center;padding:40px;">Erro ao carregar dados.</td></tr>';
+                });
         }
 
         function renderPassagemSummary(rows) {
@@ -911,16 +939,26 @@
                 table.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;">Nenhum registro encontrado para este plantão.</td></tr>';
                 document.getElementById('resumo-passagem-container').innerHTML = '';
             } else {
-                table.innerHTML = rows.map(r => `
-                    <tr>
-                        <td>${r['DATA DA FALHA']}</td>
-                        <td>${r['NOME']}</td>
-                        <td>${r['NMERO DO TREM:']}</td>
-                        <td>${r['SISTEMA']}</td>
-                        <td>${r['DESCRIÇÃO DETALHADA']}</td>
-                        <td><span class="status-badge status-${(r['STATUS ATUAL DO TREM'] || 'liberado').normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()}">${r['STATUS ATUAL DO TREM']}</span></td>
-                    </tr>
-                `).join('');
+                table.innerHTML = rows.map(r => {
+                    const status = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
+                    let statusClass = 'status-liberado';
+                    
+                    if (status.includes('manuten')) statusClass = 'status-manutencao';
+                    else if (status.includes('agendad')) statusClass = 'status-agendado';
+                    else if (status.includes('colisa')) statusClass = 'status-colisao';
+                    else if (status.includes('prevent')) statusClass = 'status-preventiva';
+                    
+                    return `
+                        <tr>
+                            <td>${r['Coluna 1']}</td>
+                            <td>${r['NOME']}</td>
+                            <td>${r['NMERO DO TREM:']}</td>
+                            <td>${r['SISTEMA']}</td>
+                            <td>${r['DESCRIÇÃO DETALHADA']}</td>
+                            <td><span class="status-badge ${statusClass}">${r['STATUS ATUAL DO TREM']}</span></td>
+                        </tr>
+                    `;
+                }).join('');
             }
         }
 
@@ -936,10 +974,11 @@
                         <td>${r.Nome_Completo}</td>
                         <td>${r.Email}</td>
                         <td>${r.Telefone}</td>
-                        <td><span style="padding:4px 12px;border-radius:12px;background:rgba(102,126,234,0.1);color:#667eea;font-size:12px;font-weight:600;">${r.Tipo}</span></td>
-                        <td><span style="padding:4px 12px;border-radius:12px;background:#e8f8f5;color:#27ae60;font-size:12px;font-weight:600;">${r.Ativo}</span></td>
+                        <td><span style="padding:4px 12px;border-radius:12px;background:rgba(102,126,234,0.1);color:#667eea;font-size:12px;font-weight:600;">${r.Tipo || '-'}</span></td>
+                        <td><span style="padding:4px 12px;border-radius:12px;background:#e8f8f5;color:#27ae60;font-size:12px;font-weight:600;">${r.Ativo || '-'}</span></td>
                     </tr>
                 `).join('');
+            }).join('');
             }).catch(e => {
                 console.error('Erro:', e);
                 document.getElementById('usuarios-table').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;">Erro ao carregar usuários.</td></tr>';
@@ -964,18 +1003,30 @@
 
             filteredReportData = allRegistros.filter(r => {
                 try {
-                    const dataRegistro = new Date(r['DATA DA FALHA']);
-                    if (dataInicio && dataRegistro < new Date(dataInicio)) return false;
+                    const dataRegistro = new Date(r['Coluna 1']);
+                    if (dataInicio && dataRegistro < new Date(dataInicio + 'T00:00:00')) return false;
                     if (dataFim && dataRegistro > new Date(dataFim + 'T23:59:59')) return false;
                     if (trem && !r['NMERO DO TREM:'].toLowerCase().includes(trem)) return false;
                     if (sistema && !r['SISTEMA'].toLowerCase().includes(sistema)) return false;
+                    
+                    // CORREÇÃO: Verificar a equipe corretamente
                     if (equipe && r['GRUPO'] !== equipe) return false;
+                    
                     if (tecnico && !r['NOME'].toLowerCase().includes(tecnico)) return false;
                     if (ios && !r['CÓDIGO IOS DA FALHA'].toLowerCase().includes(ios)) return false;
-                    if (status && !(r['STATUS ATUAL DO TREM'] || '').toLowerCase().includes(status)) return false;
+                    
+                    if (status) {
+                        const statusRegistro = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
+                        if (!statusRegistro.includes(status)) return false;
+                    }
+                    
                     return true;
-                } catch { return false; }
+                } catch { 
+                    return false; 
+                }
             });
+            
+            console.log(`Filtros aplicados - Encontrados: ${filteredReportData.length} registros`);
             renderReportTable();
         }
 
@@ -985,17 +1036,27 @@
                 table.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Nenhum registro encontrado para os filtros aplicados.</td></tr>';
                 document.getElementById('download-buttons').style.display = 'none';
             } else {
-                table.innerHTML = filteredReportData.map(r => `
-                    <tr>
-                        <td>${r['DATA DA FALHA']}</td>
-                        <td>${r['NOME']}</td>
-                        <td>${r['NMERO DO TREM:']}</td>
-                        <td>${r['SISTEMA']}</td>
-                        <td>${r['CÓDIGO IOS DA FALHA']}</td>
-                        <td>${r['DESCRIÇÃO DETALHADA']}</td>
-                        <td><span class="status-badge status-${(r['STATUS ATUAL DO TREM'] || 'liberado').normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()}">${r['STATUS ATUAL DO TREM']}</span></td>
-                    </tr>
-                `).join('');
+                table.innerHTML = filteredReportData.map(r => {
+                    const status = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
+                    let statusClass = 'status-liberado';
+                    
+                    if (status.includes('manuten')) statusClass = 'status-manutencao';
+                    else if (status.includes('agendad')) statusClass = 'status-agendado';
+                    else if (status.includes('colisa')) statusClass = 'status-colisao';
+                    else if (status.includes('prevent')) statusClass = 'status-preventiva';
+                    
+                    return `
+                        <tr>
+                            <td>${r['Coluna 1']}</td>
+                            <td>${r['NOME']}</td>
+                            <td>${r['NMERO DO TREM:']}</td>
+                            <td>${r['SISTEMA']}</td>
+                            <td>${r['CÓDIGO IOS DA FALHA']}</td>
+                            <td>${r['DESCRIÇÃO DETALHADA']}</td>
+                            <td><span class="status-badge ${statusClass}">${r['STATUS ATUAL DO TREM']}</span></td>
+                        </tr>
+                    `;
+                }).join('');
                 document.getElementById('download-buttons').style.display = 'flex';
             }
         }
@@ -1010,19 +1071,21 @@
             document.getElementById('filterIOS').value = '';
             document.getElementById('filterStatus').value = '';
             filteredReportData = [];
-            document.getElementById('relatorio-table').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></tr>';
+            document.getElementById('relatorio-table').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></td></tr>';
             document.getElementById('download-buttons').style.display = 'none';
         }
 
         function downloadCSV() {
             if (filteredReportData.length === 0) { alert('Nenhum dado para exportar.'); return; }
+            
+            // CORREÇÃO: Criar um array de arrays para o XLSX
             const csvContent = filteredReportData.map(r => [
-                r['DATA DA FALHA'], r['NOME'], r['NMERO DO TREM:'], r['SISTEMA'], r['CÓDIGO IOS DA FALHA'], r['DESCRIÇÃO DETALHADA'], r['STATUS ATUAL DO TREM']
+                r['Coluna 1'], r['NOME'], r['NMERO DO TREM:'], r['SISTEMA'], r['CÓDIGO IOS DA FALHA'], r['DESCRIÇÃO DETALHADA'], r['STATUS ATUAL DO TREM']
             ]);
             const headers = [['Data', 'Técnico', 'Trem', 'Sistema', 'IOS', 'Descrição', 'Status']];
             const ws = XLSX.utils.aoa_to_sheet(headers.concat(csvContent));
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Relatorio');
+            XLSX.utils.book_append_sheet(wb, ws, 'Relatório');
             XLSX.writeFile(wb, 'VLT_Relatorio_' + new Date().toISOString().slice(0, 10) + '.xlsx');
         }
 
@@ -1061,15 +1124,14 @@
                 }
             }
             if (found) {
-                const estacoes = Object.values(found.estacoes);
-                const siglas = Object.keys(found.estacoes);
+                const estacoes = Object.values(found.linha.estacoes);
                 const anterior = estacoes[found.index - 1];
                 const proxima = estacoes[found.index + 1];
                 const terminal = (found.index === 0 || found.index === estacoes.length - 1);
                 resultDiv.innerHTML = `
                     <div class="info-card">
                         <h4>Resultado da Busca</h4>
-                        <p><strong>Estação:</strong> ${found.nome} (${found.sigla})</p>
+                        <p><strong>Estação:</strong> ${estacao.nome} (${found.sigla})</p>
                         <p><strong>Linha:</strong> ${found.cor} (Linha ${found.linha})</p>
                         <p><strong>Anterior:</strong> ${anterior || 'Início da Linha'}</p>
                         <p><strong>Próxima:</strong> ${proxima || 'Fim da Linha'}</p>
@@ -1086,7 +1148,7 @@
             const linha = linhasData[linhaNum];
             const estacoes = Object.entries(linha.estacoes);
             listDiv.innerHTML = `<h4>Estações da Linha ${linhaNum} - ${linha.cor}</h4>` +
-                estacoes.map(([sigla, nome]) => `<div class="estacao-item">${nome} (${sigla})</div>`).join('');
+                Object.entries(estacoes).map(([sigla, nome]) => `<div class="estacao-item">${nome} (${sigla})</div>`).join('');
             listDiv.style.display = 'block';
         }
 
@@ -1111,8 +1173,8 @@
             const minutes = Math.floor(seconds / 60);
             const hours = Math.floor(minutes / 60);
             const days = Math.floor(hours / 24);
-            const months = Math.floor(days / 30.44);
-            const years = Math.floor(days / 365.25);
+            const months = Math.floor(days / 30.44); // Average month length
+            const years = Math.floor(days / 365.25); // Account for leap years
 
             document.getElementById('op-seconds').textContent = (seconds % 60).toString().padStart(2, '0');
             document.getElementById('op-minutes').textContent = (minutes % 60).toString().padStart(2, '0');
