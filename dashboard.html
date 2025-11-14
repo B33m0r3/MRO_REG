@@ -722,21 +722,83 @@
         let filteredReportData = [];
         let filteredPassagemData = [];
 
-        function parseCSV(csvText) {
-            const lines = csvText.trim().split('\n');
-            if (lines.length === 0) return [];
-            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-            const rows = [];
-            for (let i = 1; i < lines.length; i++) {
-                const obj = {};
-                const values = lines[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-                headers.forEach((h, idx) => {
-                    obj[h] = values[idx] ? values[idx].trim().replace(/"/g, '') : '';
-                });
-                rows.push(obj);
-            }
-            return rows;
+function parseCSV(csvText) {
+    const lines = csvText.trim().split('\n');
+    if (lines.length === 0) return [];
+    
+    // Processa o cabeçalho corretamente
+    const headers = parseCSVLine(lines[0]);
+    
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+        if (lines[i].trim() === '') continue;
+        
+        const values = parseCSVLine(lines[i]);
+        const obj = {};
+        
+        headers.forEach((header, idx) => {
+            // Limpa o cabeçalho removendo aspas e espaços extras
+            const cleanHeader = header.trim().replace(/"/g, '');
+            obj[cleanHeader] = values[idx] ? values[idx].trim().replace(/"/g, '') : '';
+        });
+        
+        rows.push(obj);
+    }
+    return rows;
+}
+
+// Nova função auxiliar para parse correto de linhas CSV
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(current);
+            current = '';
+        } else {
+            current += char;
         }
+    }
+    
+    result.push(current);
+    return result;
+}
+        function debugData(rows) {
+    console.log('=== DEBUG DOS DADOS ===');
+    console.log('Total de registros:', rows.length);
+    if (rows.length > 0) {
+        console.log('Colunas disponíveis:', Object.keys(rows[0]));
+        console.log('Primeiro registro:', rows[0]);
+        
+        // Verifica se a coluna de status existe
+        const firstRow = rows[0];
+        const statusKey = Object.keys(firstRow).find(key => 
+            key.toLowerCase().includes('status')
+        );
+        console.log('Chave do status encontrada:', statusKey);
+        
+        // Mostra alguns status para verificação
+        const sampleStatuses = rows.slice(0, 5).map(r => {
+            const statusKey = Object.keys(r).find(key => 
+                key.toLowerCase().includes('status')
+            );
+            return { 
+                data: r['DATA'], 
+                trem: r['NMERO DO TREM:'], 
+                statusKey: statusKey,
+                statusValue: statusKey ? r[statusKey] : 'NÃO ENCONTRADO'
+            };
+        });
+        console.log('Amostra de status:', sampleStatuses);
+    }
+    console.log('=== FIM DEBUG ===');
+}
 
         function checkAuth() {
             const userData = sessionStorage.getItem('vlt_user');
@@ -855,17 +917,17 @@
             closePassagemFilterModal();
         }
 
-        // NOVAS FUNÇÕES PARA FILTROS DA PASSAGEM DE SERVIÇO
-        function applyPassagemFilters() {
-            if (allRegistros.length === 0) {
-                fetch(REGISTRO_CSV).then(r => r.text()).then(csv => { 
-                    allRegistros = parseCSV(csv); 
-                    processPassagemFilters(); 
-                }).catch(console.error);
-            } else { 
-                processPassagemFilters(); 
-            }
-        }
+function applyPassagemFilters() {
+    if (allRegistros.length === 0) {
+        fetch(REGISTRO_CSV).then(r => r.text()).then(csv => { 
+            allRegistros = parseCSV(csv); 
+            debugData(allRegistros); // LINHA NOVA ADICIONADA
+            processPassagemFilters(); 
+        }).catch(console.error);
+    } else { 
+        processPassagemFilters(); 
+    }
+}
 
         function processPassagemFilters() {
             const dataInicio = document.getElementById('passagemDataInicio').value;
