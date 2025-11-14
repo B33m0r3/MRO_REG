@@ -157,32 +157,7 @@
         .page-header h1 { font-size: 28px; color: var(--dark); margin-bottom: 5px; }
         .page-header p { color: var(--dark); font-size: 14px; font-weight: 500; }
         /* Dashboard Cards */
-        .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
-        .card-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-        }
-        .card-info h3 { font-size: 24px; color: var(--dark); margin-bottom: 5px; }
-        .card-info p { color: #7f8c8d; font-size: 14px; }
-        .card-total .card-icon { background: linear-gradient(135deg, var(--info), #4fc3f7); }
+        .cards-container { display: none; } /* REMOVIDO OS CARDS DO DASHBOARD */
         /* Loading */
         .loading-overlay {
             position: absolute;
@@ -237,11 +212,12 @@
         td { padding: 12px 15px; border-bottom: 1px solid var(--border); }
         tr:hover { background: var(--light); }
         .status-badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-        .status-liberado { background: #e8f8f5; color: #27ae60; }
-        .status-manutencao { background: #fdeaea; color: #e74c3c; }
-        .status-agendado { background: #e8f0fe; color: #4a7c9f; }
-        .status-colisao { background: #fff3cd; color: #856404; }
-        .status-preventiva { background: #e1f5fe; color: #0277bd; }
+        /* Novos status de acordo com a planilha */
+        .status-liberado { background: #27ae60; color: white; }
+        .status-manutencao { background: #e74c3c; color: white; }
+        .status-agendado { background: #fbc02d; color: white; }
+        .status-colisao { background: #8B4513; color: white; }
+        .status-preventiva { background: #2196F3; color: white; }
         /* Botões */
         .btn-primary {
             padding: 15px 30px;
@@ -433,7 +409,7 @@
                     <!-- Dashboard -->
                     <div class="page active" id="page-dashboard">
                         <div class="cards-container" id="dashboard-cards">
-                            <!-- Cards serão inseridos aqui pelo JS -->
+                            <!-- Cards foram removidos conforme solicitado -->
                         </div>
                         <div style="width: 100%; height: 600px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; position: relative;">
                             <div class="loading-overlay" id="loading-looker">
@@ -506,11 +482,11 @@
                             <input type="text" id="filterIOS" class="filter-input" placeholder="Código IOS">
                             <select id="filterStatus" class="filter-select">
                                 <option value="">Todos Status</option>
-                                <option value="liberado">Liberado</option>
-                                <option value="manutencao">Manutenção</option>
-                                <option value="agendado">Agendado</option>
-                                <option value="colisao">Colisão</option>
-                                <option value="preventiva">Preventiva</option>
+                                <option value="LIBERADO">LIBERADO</option>
+                                <option value="MANUTENÇÃO">MANUTENÇÃO</option>
+                                <option value="AGENDADO">AGENDADO</option>
+                                <option value="COLISÃO">COLISÃO</option>
+                                <option value="PREVENTIVA">PREVENTIVA</option>
                             </select>
                             <button class="filter-btn" onclick="applyFilters()">
                                 <i class="fas fa-filter"></i> Aplicar Filtros
@@ -533,7 +509,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="relatorio-table">
-                                    <tr><td colspan="9" style="text-align: center; padding: 40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></tr>
+                                    <tr><td colspan="7" style="text-align: center; padding: 40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -700,10 +676,10 @@
             <div class="modal-section">
                 <div class="modal-label">Selecione o Grupo</div>
                 <select id="passagemGrupo" class="filter-select" style="width: 100%;">
-                    <option value="A">Grupo A</option>
-                    <option value="B">Grupo B</option>
-                    <option value="C">Grupo C</option>
-                    <option value="D">Grupo D</option>
+                    <option value="GRUPO A">GRUPO A</option>
+                    <option value="GRUPO B">GRUPO B</option>
+                    <option value="GRUPO C">GRUPO C</option>
+                    <option value="GRUPO D">GRUPO D</option>
                 </select>
             </div>
             <div class="modal-section">
@@ -775,24 +751,21 @@
                     document.getElementById('perfil-endereco').textContent = userRow.Endereco || '-';
                     document.getElementById('perfil-matricula').textContent = userRow.Matrícula || '-';
                     document.getElementById('perfil-tipo').textContent = userRow.Tipo || '-';
-                    // ✅ Corrigido: agora o perfil está carregado — substitui "Carregando..."
+                    // Atualiza o perfil no topo
                     document.getElementById('userName').textContent = userRow.Nome_Completo || usuario;
                     document.getElementById('userRole').textContent = userRow.Tipo || currentUser.tipo;
                 }
             }).catch(e => console.error('Erro ao carregar perfil:', e));
         }
         function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('collapsed'); }
-        // ✅ Corrigido: agora aceita `event`
         function showPage(pageName, event = null) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById('page-' + pageName).classList.add('active');
 
-            // ✅ Correção: usa `event.currentTarget` se disponível, senão usa fallback
             if (event && event.currentTarget) {
                 event.currentTarget.classList.add('active');
             } else {
-                // fallback para carregamento inicial
                 const activeNavItem = document.querySelector(`[onclick*="'${pageName}'"]`);
                 if (activeNavItem) activeNavItem.classList.add('active');
             }
@@ -801,14 +774,13 @@
             document.getElementById('breadcrumb').textContent = titles[pageName] || pageName;
             updateMotivationalQuote();
 
-            // ✅ Corrigido: .display → .style.display
             const screenshotBtn = document.getElementById('screenshotBtn');
             if (pageName === 'dashboard') { 
-                loadDashboardCards(); 
                 screenshotBtn.style.display = 'none'; 
             }
             if (pageName === 'passagem') { 
                 screenshotBtn.style.display = 'none'; 
+                loadPassagemData(); 
             }
             if (pageName === 'relatorios') { 
                 screenshotBtn.style.display = 'none'; 
@@ -823,7 +795,6 @@
             if (pageName === 'sobre') { 
                 screenshotBtn.style.display = 'inline-block'; 
             }
-            if (pageName === 'passagem') loadPassagemData();
         }
 
         function loadDashboardCards() {
@@ -863,7 +834,7 @@
                     const rows = parseCSV(csv);
                     const filteredRows = rows.filter(r => {
                         try {
-                            // ✅ Corrigido: usa a coluna 'DATA' e 'GRUPO' conforme sua planilha
+                            // Utiliza as colunas corretas da planilha
                             const dataRegistro = new Date(r['DATA']);
                             const grupoRegistro = r['GRUPO'];
                             return dataRegistro >= dataInicio && 
@@ -887,21 +858,21 @@
         function renderPassagemSummary(rows) {
             const counts = { manutencao: 0, liberado: 0, agendado: 0, colisao: 0, preventiva: 0, total: rows.length };
             rows.forEach(r => {
-                const status = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
-                if (status.includes('manuten')) counts.manutencao++;
-                else if (status.includes('liberad')) counts.liberado++;
-                else if (status.includes('agendad')) counts.agendado++;
-                else if (status.includes('colisa')) counts.colisao++;
-                else if (status.includes('prevent')) counts.preventiva++;
+                const status = (r['STATUS ATUAL DO TREM'] || '').toUpperCase();
+                if (status.includes('LIBERADO')) counts.liberado++;
+                else if (status.includes('MANUTENÇÃO')) counts.manutencao++;
+                else if (status.includes('AGENDADO')) counts.agendado++;
+                else if (status.includes('COLISÃO')) counts.colisao++;
+                else if (status.includes('PREVENTIVA')) counts.preventiva++;
             });
             const summaryHtml = `
                 <div class="resumo-passagem">
                     <div class="resumo-card"><h4>${counts.total}</h4><p>Total no Plantão</p></div>
-                    <div class="resumo-card" style="border-left: 4px solid #e74c3c;"><h4>${counts.manutencao}</h4><p>Manutenção</p></div>
-                    <div class="resumo-card" style="border-left: 4px solid #27ae60;"><h4>${counts.liberado}</h4><p>Liberados</p></div>
-                    <div class="resumo-card" style="border-left: 4px solid #fbc02d;"><h4>${counts.agendado}</h4><p>Agendados</p></div>
-                    <div class="resumo-card" style="border-left: 4px solid #8B4513;"><h4>${counts.colisao}</h4><p>Colisão</p></div>
-                    <div class="resumo-card" style="border-left: 4px solid #0277bd;"><h4>${counts.preventiva}</h4><p>Preventiva</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #27ae60;"><h4>${counts.liberado}</h4><p>LIBERADO</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #e74c3c;"><h4>${counts.manutencao}</h4><p>MANUTENÇÃO</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #fbc02d;"><h4>${counts.agendado}</h4><p>AGENDADO</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #8B4513;"><h4>${counts.colisao}</h4><p>COLISÃO</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #2196F3;"><h4>${counts.preventiva}</h4><p>PREVENTIVA</p></div>
                 </div>
             `;
             document.getElementById('resumo-passagem-container').innerHTML = summaryHtml;
@@ -913,12 +884,12 @@
                 document.getElementById('resumo-passagem-container').innerHTML = '';
             } else {
                 table.innerHTML = rows.map(r => {
-                    const status = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
+                    const status = (r['STATUS ATUAL DO TREM'] || '').toUpperCase();
                     let statusClass = 'status-liberado';
-                    if (status.includes('manuten')) statusClass = 'status-manutencao';
-                    else if (status.includes('agendad')) statusClass = 'status-agendado';
-                    else if (status.includes('colisao')) statusClass = 'status-colisao';
-                    else if (status.includes('preventiva')) statusClass = 'status-preventiva';
+                    if (status.includes('MANUTENÇÃO')) statusClass = 'status-manutencao';
+                    else if (status.includes('AGENDADO')) statusClass = 'status-agendado';
+                    else if (status.includes('COLISÃO')) statusClass = 'status-colisao';
+                    else if (status.includes('PREVENTIVA')) statusClass = 'status-preventiva';
                     return `
                         <tr>
                             <td>${r['DATA']}</td>
@@ -926,7 +897,7 @@
                             <td>${r['NMERO DO TREM:']}</td>
                             <td>${r['SISTEMA']}</td>
                             <td>${r['DESCRIÇÃO DETALHADA']}</td>
-                            <td><span class="status-badge ${statusClass}">${r['STATUS ATUAL DO TREM']}</span></td>
+                            <td><span class="status-badge ${statusClass}">${status}</span></td>
                         </tr>
                     `;
                 }).join('');
@@ -934,7 +905,6 @@
         }
         function loadPassagemData() { /* Lógica movida para applyPassagemFilter */ }
         
-        // ✅ Corrigido: removido .join('') incorreto após .catch
         function loadUsuarios() {
             fetch(USUARIOS_CSV)
                 .then(r => r.text())
@@ -950,7 +920,7 @@
                             <td><span style="padding:4px 12px;border-radius:12px;background:rgba(102,126,234,0.1);color:#667eea;font-size:12px;font-weight:600;">${r.Tipo || '-'}</span></td>
                             <td><span style="padding:4px 12px;border-radius:12px;background:#e8f8f5;color:#27ae60;font-size:12px;font-weight:600;">${r.Ativo || '-'}</span></td>
                         </tr>
-                    `).join('');  // ✅ .join() dentro do .then(), correto
+                    `).join('');  
                 })
                 .catch(e => {
                     console.error('Erro ao carregar usuários:', e);
@@ -977,20 +947,20 @@
             const tecnico = document.getElementById('filterTecnico').value.toLowerCase();
             const ios = document.getElementById('filterIOS').value.toLowerCase();
             const status = document.getElementById('filterStatus').value;
+            
             filteredReportData = allRegistros.filter(r => {
                 try {
-                    const dataRegistro = new Date(r['DATA']); // ✅ Coluna correta
+                    const dataRegistro = new Date(r['DATA']);
                     if (dataInicio && dataRegistro < new Date(dataInicio + 'T00:00:00')) return false;
                     if (dataFim && dataRegistro > new Date(dataFim + 'T23:59:59')) return false;
                     if (trem && !r['NMERO DO TREM:'].toLowerCase().includes(trem)) return false;
                     if (sistema && !r['SISTEMA'].toLowerCase().includes(sistema)) return false;
-                    // CORREÇÃO: Verificar a equipe corretamente
-                    if (equipe && r['GRUPO'] !== equipe) return false; // ✅ Coluna correta
+                    if (equipe && r['GRUPO'] !== equipe) return false;
                     if (tecnico && !r['NOME'].toLowerCase().includes(tecnico)) return false;
                     if (ios && !r['CÓDIGO IOS DA FALHA'].toLowerCase().includes(ios)) return false;
                     if (status) {
-                        const statusRegistro = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
-                        if (!statusRegistro.includes(status)) return false;
+                        const statusRegistro = (r['STATUS ATUAL DO TREM'] || '').toUpperCase();
+                        if (!statusRegistro.includes(status.toUpperCase())) return false;
                     }
                     return true;
                 } catch { 
@@ -1007,12 +977,12 @@
                 document.getElementById('download-buttons').style.display = 'none';
             } else {
                 table.innerHTML = filteredReportData.map(r => {
-                    const status = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
+                    const status = (r['STATUS ATUAL DO TREM'] || '').toUpperCase();
                     let statusClass = 'status-liberado';
-                    if (status.includes('manuten')) statusClass = 'status-manutencao';
-                    else if (status.includes('agendad')) statusClass = 'status-agendado';
-                    else if (status.includes('colisa')) statusClass = 'status-colisao';
-                    else if (status.includes('prevent')) statusClass = 'status-preventiva';
+                    if (status.includes('MANUTENÇÃO')) statusClass = 'status-manutencao';
+                    else if (status.includes('AGENDADO')) statusClass = 'status-agendado';
+                    else if (status.includes('COLISÃO')) statusClass = 'status-colisao';
+                    else if (status.includes('PREVENTIVA')) statusClass = 'status-preventiva';
                     return `
                         <tr>
                             <td>${r['DATA']}</td>
@@ -1021,7 +991,7 @@
                             <td>${r['SISTEMA']}</td>
                             <td>${r['CÓDIGO IOS DA FALHA']}</td>
                             <td>${r['DESCRIÇÃO DETALHADA']}</td>
-                            <td><span class="status-badge ${statusClass}">${r['STATUS ATUAL DO TREM']}</span></td>
+                            <td><span class="status-badge ${statusClass}">${status}</span></td>
                         </tr>
                     `;
                 }).join('');
@@ -1041,11 +1011,46 @@
             document.getElementById('relatorio-table').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></tr>';
             document.getElementById('download-buttons').style.display = 'none';
         }
+        function downloadCSV() {
+            if (filteredReportData.length === 0) { 
+                alert('Nenhum dado para exportar.'); 
+                return; 
+            }
+            
+            // Cria uma string CSV
+            const headers = ['DATA', 'NOME', 'NMERO DO TREM:', 'SISTEMA', 'CÓDIGO IOS DA FALHA', 'DESCRIÇÃO DETALHADA', 'STATUS ATUAL DO TREM'];
+            let csvContent = headers.join(',') + '\n';
+            
+            filteredReportData.forEach(row => {
+                const rowData = headers.map(header => {
+                    let value = row[header] || '';
+                    // Escapa valores que contêm vírgulas
+                    if (value.includes(',')) {
+                        value = `"${value.replace(/"/g, '""')}"`;
+                    }
+                    return value;
+                });
+                csvContent += rowData.join(',') + '\n';
+            });
+            
+            // Cria um blob com o conteúdo CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            // Cria um link temporário para download
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'VLT_Relatorio_' + new Date().toISOString().slice(0, 10) + '.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
         function downloadPDF() {
             if (filteredReportData.length === 0) { 
                 alert('Nenhum dado para exportar.'); 
                 return; 
             }
+            
             const element = document.getElementById('relatorio-table');
             const opt = { 
                 margin: 10, 
