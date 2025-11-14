@@ -20,9 +20,28 @@
             --danger: #f5576c;
             --warning: #ffa726;
             --info: #29b6f6;
+            --azul-linha: #0055A4;
+            --verde-linha: #00A651;
+            --amarelo-linha: #FFC400;
+            --laranja-linha: #F37335;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            z-index: -1;
+        }
         .container { display: flex; height: 100vh; }
         .sidebar {
             width: 280px;
@@ -81,7 +100,8 @@
         .nav-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 20px 0; }
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .top-bar {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 15px 30px;
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -89,7 +109,7 @@
             align-items: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .breadcrumb { color: #7f8c8d; font-size: 14px; }
+        .breadcrumb { color: var(--dark); font-size: 16px; font-weight: 600; }
         .top-right { display: flex; gap: 20px; align-items: center; }
         .screenshot-btn {
             padding: 8px 16px;
@@ -134,12 +154,13 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .page-header { margin-bottom: 30px; }
         .page-header h1 { font-size: 28px; color: var(--dark); margin-bottom: 5px; }
-        .page-header p { color: #7f8c8d; font-size: 14px; }
+        .page-header p { color: var(--dark); font-size: 14px; font-weight: 500; }
 
         /* Dashboard Cards */
         .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .card {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
@@ -193,8 +214,15 @@
 
         /* Filtros Relatórios */
         .filter-container { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
-        .filter-input { padding: 10px 15px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; transition: border-color 0.3s; }
-        .filter-input:focus { outline: none; border-color: var(--primary); }
+        .filter-input, .filter-select {
+            padding: 10px 15px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            background: white;
+        }
+        .filter-input:focus, .filter-select:focus { outline: none; border-color: var(--primary); }
         .filter-btn {
             padding: 10px 20px;
             background: white;
@@ -207,8 +235,9 @@
         }
         .filter-btn:hover, .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .table-container { background: white; border-radius: 8px; overflow-x: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        /* Tabelas */
+        .table-container { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 8px; overflow-x: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size:13px; }
         thead { background: var(--light); }
         th { padding: 15px; text-align: left; font-weight: 600; color: var(--dark); border-bottom: 2px solid var(--border); }
         td { padding: 12px 15px; border-bottom: 1px solid var(--border); }
@@ -220,6 +249,7 @@
         .status-colisao { background: #fff3cd; color: #856404; }
         .status-preventiva { background: #e1f5fe; color: #0277bd; }
 
+        /* Botões */
         .btn-primary {
             padding: 15px 30px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -231,11 +261,13 @@
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
-            font-size: 16px;
+            font-size:16px;
         }
         .btn-primary:hover { transform: translateY(-2px); }
         .btn-primary i { margin-right: 8px; }
         .center-content { text-align: center; padding: 60px 20px; }
+
+        /* Modais */
         .modal {
             display: none;
             position: fixed;
@@ -247,15 +279,16 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
-        .modal.show { display: flex; }
+        .modal.show { display: flex; animation: fadeIn 0.3s ease; }
         .modal-content {
             background: white;
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 40px;
             max-width: 600px;
             width: 90%;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             position: relative;
             max-height: 80vh;
             overflow-y: auto;
@@ -268,29 +301,74 @@
             border: none;
             font-size: 28px;
             cursor: pointer;
-            color: #999;
+            color: #bdc3c7;
+            transition: color 0.3s;
         }
-        .modal-close:hover { color: #333; }
+        .modal-close:hover { color: var(--dark); }
         .modal-title { font-size: 24px; font-weight: 600; margin-bottom: 30px; color: var(--dark); }
         .modal-section { margin-bottom: 25px; }
         .modal-label { font-size: 12px; color: #7f8c8d; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
         .modal-value { font-size: 16px; color: var(--dark); font-weight: 600; }
         .modal-link { display: inline-block; color: var(--primary); text-decoration: none; cursor: pointer; font-weight: 600; }
         .modal-link:hover { color: var(--secondary); }
+
+        /* Aba Sobre VLT */
+        .sobre-container { display: flex; gap: 30px; }
+        .sobre-map { flex: 1; }
+        .sobre-map img { width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .sobre-info { flex: 1; }
+        .info-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .info-card h3 { color: var(--dark); margin-bottom: 15px; }
+        .info-card p { color: #555; line-height: 1.6; }
+        .search-box { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; margin-bottom: 20px; }
+        .linha-btn { padding: 10px 15px; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; margin: 5px; transition: transform 0.2s; }
+        .linha-btn:hover { transform: scale(1.05); }
+        .linha-azul { background-color: var(--azul-linha); }
+        .linha-verde { background-color: var(--verde-linha); }
+        .linha-amarela { background-color: var(--amarelo-linha); }
+        .linha-laranja { background-color: var(--laranja-linha); }
+        .estacoes-list { max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; padding: 10px; }
+        .estacao-item { padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
+        .estacao-item:hover { background: var(--light); }
+        .estacao-item.highlight { background: #fff3cd; font-weight: bold; }
+
+        /* Relógio de Operação */
+        .operation-clock {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .operation-clock h2 { font-size: 20px; margin-bottom: 10px; font-weight: 700; }
+        .clock-display { font-size: 28px; font-weight: 700; font-family: 'Courier New', Courier, monospace; }
+        .clock-display span { margin: 0 5px; }
+
+        /* Resumo Passagem */
+        .resumo-passagem { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .resumo-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .resumo-card h4 { font-size: 20px; margin-bottom: 5px; }
+        .resumo-card p { font-size: 12px; color: #7f8c8d; }
+
         .motivational-quote {
             margin-top: auto;
             padding-top: 30px;
             border-top: 2px solid var(--border);
             text-align: center;
-            color: #7f8c8d;
+            color: var(--dark);
             font-style: italic;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: 600;
             min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
         }
-        .loading { color: #667eea; }
+        .loading { color: var(--primary); }
         @media (max-width: 768px) {
             .top-bar { padding: 12px 15px; }
             .screenshot-btn { padding: 6px 12px; font-size: 12px; }
@@ -299,6 +377,7 @@
             .page-header h1 { font-size: 20px; }
             .filter-container { flex-direction: column; }
             .filter-btn { width: 100%; }
+            .sobre-container { flex-direction: column; }
         }
     </style>
 </head>
@@ -331,6 +410,10 @@
                     <i class="fas fa-users"></i>
                     <span class="nav-label">Usuários</span>
                 </li>
+                <li class="nav-item" onclick="showPage('sobre')">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="nav-label">Sobre o VLT</span>
+                </li>
             </ul>
             <div class="nav-divider"></div>
             <ul class="nav-menu">
@@ -345,7 +428,7 @@
             <div class="top-bar">
                 <div class="breadcrumb" id="breadcrumb">📊 Dashboard</div>
                 <div class="top-right">
-                    <button class="screenshot-btn" onclick="takeScreenshot()">
+                    <button class="screenshot-btn" id="screenshotBtn" style="display:none;" onclick="takeScreenshot()">
                         <i class="fas fa-camera"></i> Screenshot
                     </button>
                     <div class="user-profile" onclick="openProfileModal()">
@@ -362,10 +445,6 @@
                 <div class="pages-wrapper">
                     <!-- Dashboard -->
                     <div class="page active" id="page-dashboard">
-                        <div class="page-header">
-                            <h1>📈 Dashboard Analítico</h1>
-                            <p>Visão geral dos indicadores em tempo real</p>
-                        </div>
                         <div class="cards-container" id="dashboard-cards">
                             <!-- Cards serão inseridos aqui pelo JS -->
                         </div>
@@ -381,8 +460,17 @@
                     <div class="page" id="page-passagem">
                         <div class="page-header">
                             <h1>📋 Passagem de Serviço</h1>
-                            <p>Resumo do último plantão (últimas 12 horas)</p>
+                            <p>Resumo do plantão. Use o filtro para carregar os dados corretos.</p>
                         </div>
+                        <div style="margin-bottom: 20px;">
+                            <button class="btn-primary" onclick="openPassagemFilterModal()">
+                                <i class="fas fa-filter"></i> Filtrar Passagem de Serviço
+                            </button>
+                            <a href="https://docs.google.com/spreadsheets/d/13G8eUT2m35aoWsqpIu3OTKUdg0L2sdjEl0GTXfPEg50/edit?usp=sharing" target="_blank" class="btn-primary" style="margin-left: 10px;">
+                                <i class="fas fa-table"></i> Acessar Planilha
+                            </a>
+                        </div>
+                        <div id="resumo-passagem-container"></div>
                         <div class="table-container">
                             <table>
                                 <thead>
@@ -396,7 +484,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="passagem-table">
-                                    <tr><td colspan="6" style="text-align: center; padding: 40px;" class="loading">⏳ Carregando dados...</td></tr>
+                                    <tr><td colspan="6" style="text-align: center; padding: 40px;">Clique no botão "Filtrar Passagem de Serviço" para carregar os dados.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -429,6 +517,17 @@
                             <input type="date" id="filterDataFim" class="filter-input">
                             <input type="text" id="filterTrem" class="filter-input" placeholder="Número do Trem (ex: VLT 101)">
                             <input type="text" id="filterSistema" class="filter-input" placeholder="Sistema (ex: Tração)">
+                            <input type="text" id="filterEquipe" class="filter-input" placeholder="Equipe (A, B, C, D)">
+                            <input type="text" id="filterTecnico" class="filter-input" placeholder="Técnico">
+                            <input type="text" id="filterIOS" class="filter-input" placeholder="Código IOS">
+                            <select id="filterStatus" class="filter-select">
+                                <option value="">Todos Status</option>
+                                <option value="liberado">Liberado</option>
+                                <option value="manutencao">Manutenção</option>
+                                <option value="agendado">Agendado</option>
+                                <option value="colisao">Colisão</option>
+                                <option value="preventiva">Preventiva</option>
+                            </select>
                             <button class="filter-btn" onclick="applyFilters()">
                                 <i class="fas fa-filter"></i> Aplicar Filtros
                             </button>
@@ -488,6 +587,54 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- Sobre o VLT -->
+                    <div class="page" id="page-sobre">
+                        <div class="page-header">
+                            <h1>ℹ️ Sobre o VLT Carioca</h1>
+                            <p>Informações técnicas e mapa da rede</p>
+                        </div>
+                        <div class="operation-clock">
+                            <h2>⏱️ Tempo de Operação Contínuo</h2>
+                            <div class="clock-display" id="operation-clock">
+                                <span id="op-years">0</span>anos
+                                <span id="op-months">0</span>meses
+                                <span id="op-days">0</span>dias
+                                <span id="op-hours">0</span>h
+                                <span id="op-minutes">0</span>m
+                                <span id="op-seconds">0</span>s
+                            </div>
+                        </div>
+                        <div class="sobre-container">
+                            <div class="sobre-map">
+                                <img src="https://raw.githubusercontent.com/B33m0r3/vlt-carioca-sistema/main/mapa-vlt-carioca.png" alt="Mapa das Linhas do VLT Carioca">
+                            </div>
+                            <div class="sobre-info">
+                                <div class="info-card">
+                                    <h3>Buscar Estação</h3>
+                                    <input type="text" id="searchEstacao" class="search-box" placeholder="Digite o nome ou sigla da estação..." onkeyup="searchStation()">
+                                    <div id="estacao-result"></div>
+                                </div>
+                                <div class="info-card">
+                                    <h3>Explorar Linhas</h3>
+                                    <button class="linha-btn linha-azul" onclick="showLineStations(1)">🔵 Linha 1 (Azul)</button>
+                                    <button class="linha-btn linha-verde" onclick="showLineStations(2)">🟢 Linha 2 (Verde)</button>
+                                    <button class="linha-btn linha-amarela" onclick="showLineStations(3)">🟡 Linha 3 (Amarela)</button>
+                                    <button class="linha-btn linha-laranja" onclick="showLineStations(4)">🟠 Linha 4 (Laranja)</button>
+                                    <div id="linhas-list" class="estacoes-list" style="display:none;"></div>
+                                </div>
+                                <div class="info-card">
+                                    <h3>Dados Técnicos</h3>
+                                    <p><strong>Fabricante:</strong> Alstom</p>
+                                    <p><strong>Modelo:</strong> Citadis 402</p>
+                                    <p><strong>Alimentação:</strong> 750V CC (APS e SRS)</p>
+                                    <p><strong>Bitola:</strong> 1,435 mm (padrão)</p>
+                                    <p><strong>Inauguração:</strong> 05/06/2016</p>
+                                    <p><strong>Op. Comercial:</strong> 06/06/2016</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="motivational-quote" id="motivational-quote">
@@ -502,7 +649,6 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeProfileModal()">✕</button>
             <div class="modal-title">👤 Meu Perfil</div>
-            
             <div class="modal-section">
                 <div class="modal-label">Nome Completo</div>
                 <div class="modal-value" id="perfil-nome">-</div>
@@ -544,9 +690,8 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeSupportModal()">✕</button>
             <div class="modal-title">📞 Suporte Técnico</div>
-            
             <div class="modal-section">
-                <div class="modal-label">Gerente de Manutenção</div>
+                <div class="modal-label">Contato</div>
                 <div class="modal-value">Guilherme Juraci</div>
             </div>
             <div class="modal-section">
@@ -572,35 +717,55 @@
         </div>
     </div>
 
+    <!-- Modal Filtro Passagem de Serviço -->
+    <div id="passagemFilterModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePassagemFilterModal()">✕</button>
+            <div class="modal-title">🔍 Filtrar Passagem de Serviço</div>
+            <div class="modal-section">
+                <div class="modal-label">Selecione o Grupo</div>
+                <select id="passagemGrupo" class="filter-select" style="width: 100%;">
+                    <option value="A">Grupo A</option>
+                    <option value="B">Grupo B</option>
+                    <option value="C">Grupo C</option>
+                    <option value="D">Grupo D</option>
+                </select>
+            </div>
+            <div class="modal-section">
+                <div class="modal-label">Selecione a Data do Plantão</div>
+                <input type="date" id="passagemData" class="filter-input" style="width: 100%;">
+            </div>
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="applyPassagemFilter()">
+                <i class="fas fa-search"></i> Buscar Dados do Plantão
+            </button>
+        </div>
+    </div>
+
     <script>
-        const motivationalQuotes = [
-            "💪 Excelência é a jornada, não o destino!", "🚆 Segurança em primeiro lugar, sempre!", "🛡️ Proteção é responsabilidade de todos!",
-            "⚡ Somos o coração ferroviário do Rio!", "🎯 Precisão e dedicação em cada operação!", "👥 Juntos fazemos a diferença!",
-            "🌟 VLT Carioca: Mobilidade com segurança!", "✅ Qualidade: nosso compromisso!", "🚀 Inovação todos os dias!",
-            "❤️ Paixão pelo que fazemos!", "🏆 Somos os melhores ferroviários!", "🔧 Manutenção impecável, sempre!",
-            "⭐ Faça sua parte, sempre com cuidado!", "💯 100% de comprometimento!", "🎖️ Orgulho de servir a população!",
-            "🚇 Conectando vidas, cidades e sonhos!", "🛡️ Cada detalhe conta para a segurança!", "👨‍🔧 Profissionalismo em tudo!",
-            "🌉 VLT: Liderança em mobilidade urbana!", "💡 Ideias para melhorar a cada dia!"
-        ];
+        const motivationalQuotes = [ "💪 Excelência é a jornada, não o destino!", "🚆 Segurança em primeiro lugar, sempre!", "🛡️ Proteção é responsabilidade de todos!", "⚡ Somos o coração ferroviário do Rio!", "🎯 Precisão e dedicação em cada operação!", "👥 Juntos fazemos a diferença!", "🌟 VLT Carioca: Mobilidade com segurança!", "✅ Qualidade: nosso compromisso!", "🚀 Inovação todos os dias!", "❤️ Paixão pelo que fazemos!", "🏆 Somos os melhores ferroviários!", "🔧 Manutenção impecável, sempre!", "⭐ Faça sua parte, sempre com cuidado!", "💯 100% de comprometimento!", "🎖️ Orgulho de servir a população!", "🚇 Conectando vidas, cidades e sonhos!", "🛡️ Cada detalhe conta para a segurança!", "👨‍🔧 Profissionalismo em tudo!", "🌉 VLT: Liderança em mobilidade urbana!", "💡 Ideias para melhorar a cada dia!" ];
 
         const REGISTRO_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pub?gid=1131259241&single=true&output=csv';
         const USUARIOS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pub?gid=1605075317&single=true&output=csv';
+
+        const linhasData = {
+            1: { cor: 'Azul', trajeto: 'Santos Dumont ✈️ → ... → Terminal Gentileza', estacoes: { 'SDU': 'Santos Dumont', 'ACM': 'Antônio Carlos (MAM)', 'CIN': 'Cinelândia', 'CAR': 'Carioca', 'STS': 'Sete de Setembro', 'CAN': 'Candelária', 'SAB': 'São Bento', 'PAM': 'Parada dos Museus', 'PNV': 'Parada dos Navios (Valongo)', 'UAR': 'Utopia (AquaRio)', 'CDS': 'Cidade do Samba (Tia Ciata)', 'SCR': 'Santo Cristo', 'CDG': 'Cordeiro da Graça', 'HAR': 'Harmonia', 'PRO': 'Providência', 'GAM': 'Gamboa', 'PER': 'Pereira Reis', 'EQU': 'Equador', 'ROD': 'Rodoviária', 'TIG': 'Terminal Gentileza' } },
+            2: { cor: 'Verde', trajeto: 'Praça XV → ... → Praia Formosa', estacoes: { 'PXV': 'Praça XV', 'COL': 'Colombo', 'TIR': 'Tiradentes', 'SAA': 'Saara', 'COA': 'Cristiano Ottoni (Pequena África)', 'CEN': 'Central', 'GAM': 'Gamboa', 'SCR': 'Santo Cristo', 'CDG': 'Cordeiro da Graça', 'VLO': 'Vila Olímpica', 'PER': 'Pereira Reis', 'EQU': 'Equador', 'ROD': 'Rodoviária', 'PFM': 'Praia Formosa' } },
+            3: { cor: 'Amarela', trajeto: 'Santos Dumont ✈️ → ... → Central', estacoes: { 'SDU': 'Santos Dumont', 'ACM': 'Antônio Carlos (MAM)', 'CIN': 'Cinelândia', 'CAR': 'Carioca', 'STS': 'Sete de Setembro', 'CAN': 'Candelária', 'SRN': 'Santa Rita (Pretos Novos)', 'CRN': 'Camerino (Rosas Negras)', 'COA': 'Cristiano Ottoni (Pequena África)', 'CEN': 'Central' } },
+            4: { cor: 'Laranja', trajeto: 'Praça XV → ... → Terminal Gentileza', estacoes: { 'PXV': 'Praça XV', 'COL': 'Colombo', 'TIR': 'Tiradentes', 'SAA': 'Saara', 'COA': 'Cristiano Ottoni (Pequena África)', 'CEN': 'Central', 'VLO': 'Vila Olímpica', 'PER': 'Pereira Reis', 'GAM': 'Gamboa', 'SCR': 'Santo Cristo', 'CDG': 'Cordeiro da Graça', 'EQU': 'Equador', 'ROD': 'Rodoviária', 'TIG': 'Terminal Gentileza' } }
+        };
 
         let currentUser = null;
         let allRegistros = [];
         let filteredReportData = [];
 
         function parseCSV(csvText) {
-            const lines = csvText.trim().split('\n');
-            if (lines.length === 0) return [];
+            const lines = csvText.trim().split('\n'); if (lines.length === 0) return [];
             const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
             const rows = [];
             for (let i = 1; i < lines.length; i++) {
                 const obj = {};
                 const values = lines[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-                headers.forEach((h, idx) => {
-                    obj[h] = values[idx] ? values[idx].trim().replace(/"/g, '') : '';
-                });
+                headers.forEach((h, idx) => { obj[h] = values[idx] ? values[idx].trim().replace(/"/g, '') : ''; });
                 rows.push(obj);
             }
             return rows;
@@ -608,10 +773,7 @@
 
         function checkAuth() {
             const userData = sessionStorage.getItem('vlt_user');
-            if (!userData) {
-                window.location.href = 'index.html';
-                return null;
-            }
+            if (!userData) { window.location.href = 'index.html'; return null; }
             return JSON.parse(userData);
         }
 
@@ -623,7 +785,6 @@
             document.getElementById('userRole').textContent = currentUser.tipo;
             const initials = usuario.split('.').map(n => n[0].toUpperCase()).join('');
             document.getElementById('userInitials').textContent = initials;
-
             if (currentUser.tipo !== 'ADMIN') {
                 document.getElementById('relatorios-menu').style.display = 'none';
                 document.getElementById('usuarios-menu').style.display = 'none';
@@ -632,25 +793,21 @@
         }
 
         function loadUserProfile(usuario) {
-            fetch(USUARIOS_CSV)
-                .then(r => r.text())
-                .then(csv => {
-                    const rows = parseCSV(csv);
-                    const userRow = rows.find(r => r.Usuario === usuario);
-                    if (userRow) {
-                        const telefone = userRow.Telefone ? userRow.Telefone.replace(/\D/g, '') : '';
-                        const whatsappLink = telefone ? `<a href="https://wa.me/55${telefone}" target="_blank" class="modal-link"><i class="fab fa-whatsapp"></i> Clique para conversar</a>` : 'Não informado';
-                        
-                        document.getElementById('perfil-nome').textContent = userRow.Nome_Completo || '-';
-                        document.getElementById('perfil-usuario').textContent = userRow.Usuario || '-';
-                        document.getElementById('perfil-email').textContent = userRow.Email || '-';
-                        document.getElementById('perfil-telefone').innerHTML = whatsappLink;
-                        document.getElementById('perfil-endereco').textContent = userRow.Endereco || '-';
-                        document.getElementById('perfil-matricula').textContent = userRow.Matrícula || '-';
-                        document.getElementById('perfil-tipo').textContent = userRow.Tipo || '-';
-                    }
-                })
-                .catch(e => console.error('Erro ao carregar perfil:', e));
+            fetch(USUARIOS_CSV).then(r => r.text()).then(csv => {
+                const rows = parseCSV(csv);
+                const userRow = rows.find(r => r.Usuario === usuario);
+                if (userRow) {
+                    const telefone = userRow.Telefone ? userRow.Telefone.replace(/\D/g, '') : '';
+                    const whatsappLink = telefone ? `<a href="https://wa.me/55${telefone}" target="_blank" class="modal-link"><i class="fab fa-whatsapp"></i> Clique para conversar</a>` : 'Não informado';
+                    document.getElementById('perfil-nome').textContent = userRow.Nome_Completo || '-';
+                    document.getElementById('perfil-usuario').textContent = userRow.Usuario || '-';
+                    document.getElementById('perfil-email').textContent = userRow.Email || '-';
+                    document.getElementById('perfil-telefone').innerHTML = whatsappLink;
+                    document.getElementById('perfil-endereco').textContent = userRow.Endereco || '-';
+                    document.getElementById('perfil-matricula').textContent = userRow.Matrícula || '-';
+                    document.getElementById('perfil-tipo').textContent = userRow.Tipo || '-';
+                }
+            }).catch(e => console.error('Erro ao carregar perfil:', e));
         }
 
         function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('collapsed'); }
@@ -658,15 +815,19 @@
         function showPage(pageName) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            
             document.getElementById('page-' + pageName).classList.add('active');
             event.target.closest('.nav-item').classList.add('active');
-
-            const titles = { 'dashboard': '📊 Dashboard', 'passagem': '📋 Passagem de Serviço', 'novo_registro': '➕ Novo Registro', 'relatorios': '📊 Relatórios', 'usuarios': '👥 Usuários' };
+            const titles = { 'dashboard': '📊 Dashboard', 'passagem': '📋 Passagem de Serviço', 'novo_registro': '➕ Novo Registro', 'relatorios': '📊 Relatórios', 'usuarios': '👥 Usuários', 'sobre': 'ℹ️ Sobre o VLT' };
             document.getElementById('breadcrumb').textContent = titles[pageName] || pageName;
             updateMotivationalQuote();
 
-            if (pageName === 'dashboard') loadDashboardCards();
+            if (pageName === 'dashboard') { loadDashboardCards(); document.getElementById('screenshotBtn').style.display = 'none'; }
+            if (pageName === 'passagem') { document.getElementById('screenshotBtn').style.display = 'none'; }
+            if (pageName === 'relatorios') { document.getElementById('screenshotBtn').style.display = 'none'; }
+            if (pageName === 'usuarios') { document.getElementById('screenshotBtn').style.display = 'none'; }
+            if (pageName === 'novo_registro') { document.getElementById('screenshotBtn').style.display = 'none'; }
+            if (pageName === 'sobre') { document.getElementById('screenshotBtn').style.display = 'inline-block'; }
+            
             if (pageName === 'passagem') loadPassagemData();
             if (pageName === 'usuarios') loadUsuarios();
         }
@@ -674,9 +835,7 @@
         function loadDashboardCards() {
             if (allRegistros.length === 0) {
                 fetch(REGISTRO_CSV).then(r => r.text()).then(csv => { allRegistros = parseCSV(csv); renderCards(); }).catch(console.error);
-            } else {
-                renderCards();
-            }
+            } else { renderCards(); }
         }
         function renderCards() {
             const counts = { manutencao: 0, liberado: 0, agendado: 0, total: allRegistros.length };
@@ -695,34 +854,81 @@
             document.getElementById('dashboard-cards').innerHTML = cardsHtml;
         }
 
-        function loadPassagemData() {
+        function openPassagemFilterModal() { document.getElementById('passagemFilterModal').classList.add('show'); }
+        function closePassagemFilterModal() { document.getElementById('passagemFilterModal').classList.remove('show'); }
+
+        function applyPassagemFilter() {
+            const grupo = document.getElementById('passagemGrupo').value;
+            const dataStr = document.getElementById('passagemData').value;
+            if (!dataStr) { alert('Por favor, selecione uma data.'); return; }
+
+            const data = new Date(dataStr + 'T00:00:00');
+            const dataInicio = new Date(data); dataInicio.setHours(0,0,0,0);
+            const dataFim = new Date(data); dataFim.setHours(23,59,59,999);
+
             fetch(REGISTRO_CSV).then(r => r.text()).then(csv => {
                 const rows = parseCSV(csv);
-                const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
-                const recentRows = rows.filter(r => {
-                    try { return new Date(r['Carimbo de data/hora']) >= twelveHoursAgo; } catch { return false; }
+                const filteredRows = rows.filter(r => {
+                    try {
+                        const dataRegistro = new Date(r['DATA DA FALHA']);
+                        const grupoRegistro = r['GRUPO'];
+                        return dataRegistro >= dataInicio && dataRegistro <= dataFim && grupoRegistro === grupo;
+                    } catch { return false; }
                 }).reverse();
-                
-                const table = document.getElementById('passagem-table');
-                if (recentRows.length === 0) {
-                    table.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;">Nenhum registro nas últimas 12 horas.</td></tr>';
-                } else {
-                    table.innerHTML = recentRows.map(r => `
-                        <tr>
-                            <td>${r['Carimbo de data/hora']}</td>
-                            <td>${r['NOME']}</td>
-                            <td>${r['NMERO DO TREM:']}</td>
-                            <td>${r['SISTEMA']}</td>
-                            <td>${r['DESCRIO DETALHADA']}</td>
-                            <td><span class="status-badge status-${(r['STATUS ATUAL DO TREM'] || 'liberado').normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()}">${r['STATUS ATUAL DO TREM']}</span></td>
-                        </tr>
-                    `).join('');
-                }
+
+                renderPassagemTable(filteredRows);
+                renderPassagemSummary(filteredRows);
+                closePassagemFilterModal();
+
             }).catch(e => {
                 console.error('Erro:', e);
                 document.getElementById('passagem-table').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;">Erro ao carregar dados.</td></tr>';
             });
         }
+
+        function renderPassagemSummary(rows) {
+            const counts = { manutencao: 0, liberado: 0, agendado: 0, colisao: 0, preventiva: 0, total: rows.length };
+            rows.forEach(r => {
+                const status = (r['STATUS ATUAL DO TREM'] || '').toLowerCase();
+                if (status.includes('manuten')) counts.manutencao++;
+                else if (status.includes('liberad')) counts.liberado++;
+                else if (status.includes('agendad')) counts.agendado++;
+                else if (status.includes('colisa')) counts.colisao++;
+                else if (status.includes('prevent')) counts.preventiva++;
+            });
+            const summaryHtml = `
+                <div class="resumo-passagem">
+                    <div class="resumo-card"><h4>${counts.total}</h4><p>Total no Plantão</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #e74c3c;"><h4>${counts.manutencao}</h4><p>Manutenção</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #27ae60;"><h4>${counts.liberado}</h4><p>Liberados</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #fbc02d;"><h4>${counts.agendado}</h4><p>Agendados</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #8B4513;"><h4>${counts.colisao}</h4><p>Colisão</p></div>
+                    <div class="resumo-card" style="border-left: 4px solid #0277bd;"><h4>${counts.preventiva}</h4><p>Preventiva</p></div>
+                </div>
+            `;
+            document.getElementById('resumo-passagem-container').innerHTML = summaryHtml;
+        }
+
+        function renderPassagemTable(rows) {
+            const table = document.getElementById('passagem-table');
+            if (rows.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;">Nenhum registro encontrado para este plantão.</td></tr>';
+                document.getElementById('resumo-passagem-container').innerHTML = '';
+            } else {
+                table.innerHTML = rows.map(r => `
+                    <tr>
+                        <td>${r['DATA DA FALHA']}</td>
+                        <td>${r['NOME']}</td>
+                        <td>${r['NMERO DO TREM:']}</td>
+                        <td>${r['SISTEMA']}</td>
+                        <td>${r['DESCRIÇÃO DETALHADA']}</td>
+                        <td><span class="status-badge status-${(r['STATUS ATUAL DO TREM'] || 'liberado').normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()}">${r['STATUS ATUAL DO TREM']}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function loadPassagemData() { /* Lógica movida para applyPassagemFilter */ }
 
         function loadUsuarios() {
             fetch(USUARIOS_CSV).then(r => r.text()).then(csv => {
@@ -747,9 +953,7 @@
         function applyFilters() {
             if (allRegistros.length === 0) {
                 fetch(REGISTRO_CSV).then(r => r.text()).then(csv => { allRegistros = parseCSV(csv); processFilters(); }).catch(console.error);
-            } else {
-                processFilters();
-            }
+            } else { processFilters(); }
         }
 
         function processFilters() {
@@ -757,18 +961,25 @@
             const dataFim = document.getElementById('filterDataFim').value;
             const trem = document.getElementById('filterTrem').value.toLowerCase();
             const sistema = document.getElementById('filterSistema').value.toLowerCase();
+            const equipe = document.getElementById('filterEquipe').value.toUpperCase();
+            const tecnico = document.getElementById('filterTecnico').value.toLowerCase();
+            const ios = document.getElementById('filterIOS').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value;
 
             filteredReportData = allRegistros.filter(r => {
                 try {
-                    const dataRegistro = new Date(r['Carimbo de data/hora']);
+                    const dataRegistro = new Date(r['DATA DA FALHA']);
                     if (dataInicio && dataRegistro < new Date(dataInicio)) return false;
                     if (dataFim && dataRegistro > new Date(dataFim + 'T23:59:59')) return false;
                     if (trem && !r['NMERO DO TREM:'].toLowerCase().includes(trem)) return false;
                     if (sistema && !r['SISTEMA'].toLowerCase().includes(sistema)) return false;
+                    if (equipe && r['GRUPO'] !== equipe) return false;
+                    if (tecnico && !r['NOME'].toLowerCase().includes(tecnico)) return false;
+                    if (ios && !r['CÓDIGO IOS DA FALHA'].toLowerCase().includes(ios)) return false;
+                    if (status && !(r['STATUS ATUAL DO TREM'] || '').toLowerCase().includes(status)) return false;
                     return true;
                 } catch { return false; }
             });
-
             renderReportTable();
         }
 
@@ -780,12 +991,12 @@
             } else {
                 table.innerHTML = filteredReportData.map(r => `
                     <tr>
-                        <td>${r['Carimbo de data/hora']}</td>
+                        <td>${r['DATA DA FALHA']}</td>
                         <td>${r['NOME']}</td>
                         <td>${r['NMERO DO TREM:']}</td>
                         <td>${r['SISTEMA']}</td>
-                        <td>${r['CDIGO IOS DA FALHA']}</td>
-                        <td>${r['DESCRIO DETALHADA']}</td>
+                        <td>${r['CÓDIGO IOS DA FALHA']}</td>
+                        <td>${r['DESCRIÇÃO DETALHADA']}</td>
                         <td><span class="status-badge status-${(r['STATUS ATUAL DO TREM'] || 'liberado').normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()}">${r['STATUS ATUAL DO TREM']}</span></td>
                     </tr>
                 `).join('');
@@ -798,6 +1009,10 @@
             document.getElementById('filterDataFim').value = '';
             document.getElementById('filterTrem').value = '';
             document.getElementById('filterSistema').value = '';
+            document.getElementById('filterEquipe').value = '';
+            document.getElementById('filterTecnico').value = '';
+            document.getElementById('filterIOS').value = '';
+            document.getElementById('filterStatus').value = '';
             filteredReportData = [];
             document.getElementById('relatorio-table').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></tr>';
             document.getElementById('download-buttons').style.display = 'none';
@@ -805,7 +1020,11 @@
 
         function downloadCSV() {
             if (filteredReportData.length === 0) { alert('Nenhum dado para exportar.'); return; }
-            const ws = XLSX.utils.json_to_sheet(filteredReportData);
+            const csvContent = filteredReportData.map(r => [
+                r['DATA DA FALHA'], r['NOME'], r['NMERO DO TREM:'], r['SISTEMA'], r['CÓDIGO IOS DA FALHA'], r['DESCRIÇÃO DETALHADA'], r['STATUS ATUAL DO TREM']
+            ]);
+            const headers = [['Data', 'Técnico', 'Trem', 'Sistema', 'IOS', 'Descrição', 'Status']];
+            const ws = XLSX.utils.aoa_to_sheet(headers.concat(csvContent));
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Relatorio');
             XLSX.writeFile(wb, 'VLT_Relatorio_' + new Date().toISOString().slice(0, 10) + '.xlsx');
@@ -828,6 +1047,53 @@
             });
         }
 
+        // Funções da Aba Sobre
+        function searchStation() {
+            const query = document.getElementById('searchEstacao').value.toLowerCase();
+            const resultDiv = document.getElementById('estacao-result');
+            resultDiv.innerHTML = '';
+            if (!query) return;
+
+            let found = null;
+            for (let i = 1; i <= 4; i++) {
+                const estacoes = Object.values(linhasData[i].estacoes);
+                const siglas = Object.keys(linhasData[i].estacoes);
+                const index = estacoes.findIndex(e => e.toLowerCase().includes(query));
+                if (index !== -1) {
+                    found = { linha: i, ...linhasData[i], index, nome: estacoes[index], sigla: siglas[index] };
+                    break;
+                }
+            }
+            if (found) {
+                const estacoes = Object.values(found.estacoes);
+                const siglas = Object.keys(found.estacoes);
+                const anterior = estacoes[found.index - 1];
+                const proxima = estacoes[found.index + 1];
+                const terminal = (found.index === 0 || found.index === estacoes.length - 1);
+                resultDiv.innerHTML = `
+                    <div class="info-card">
+                        <h4>Resultado da Busca</h4>
+                        <p><strong>Estação:</strong> ${found.nome} (${found.sigla})</p>
+                        <p><strong>Linha:</strong> ${found.cor} (Linha ${found.linha})</p>
+                        <p><strong>Anterior:</strong> ${anterior || 'Início da Linha'}</p>
+                        <p><strong>Próxima:</strong> ${proxima || 'Fim da Linha'}</p>
+                        ${terminal ? '<p><strong>⚠️ Estação Terminal</strong></p>' : ''}
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = '<p style="color:#e74c3c;">Estação não encontrada.</p>';
+            }
+        }
+
+        function showLineStations(linhaNum) {
+            const listDiv = document.getElementById('linhas-list');
+            const linha = linhasData[linhaNum];
+            const estacoes = Object.entries(linha.estacoes);
+            listDiv.innerHTML = `<h4>Estações da Linha ${linhaNum} - ${linha.cor}</h4>` +
+                estacoes.map(([sigla, nome]) => `<div class="estacao-item">${nome} (${sigla})</div>`).join('');
+            listDiv.style.display = 'block';
+        }
+
         function openProfileModal() { document.getElementById('profileModal').classList.add('show'); }
         function closeProfileModal() { document.getElementById('profileModal').classList.remove('show'); }
         function openSupportModal() { document.getElementById('supportModal').classList.add('show'); }
@@ -840,13 +1106,36 @@
             document.getElementById('motivational-quote').textContent = quote;
         }
 
+        function updateOperationClock() {
+            const startDate = new Date('2016-06-06T00:00:00');
+            const now = new Date();
+            const diff = now - startDate;
+
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            const months = Math.floor(days / 30.44);
+            const years = Math.floor(days / 365.25);
+
+            document.getElementById('op-seconds').textContent = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('op-minutes').textContent = (minutes % 60).toString().padStart(2, '0');
+            document.getElementById('op-hours').textContent = (hours % 24).toString().padStart(2, '0');
+            document.getElementById('op-days').textContent = (days % 30).toString().padStart(2, '0');
+            document.getElementById('op-months').textContent = months;
+            document.getElementById('op-years').textContent = years;
+        }
+
         // Event Listeners
         document.getElementById('profileModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeProfileModal(); });
         document.getElementById('supportModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeSupportModal(); });
+        document.getElementById('passagemFilterModal').addEventListener('click', e => { if (e.target === e.currentTarget) closePassagemFilterModal(); });
 
         // Initial load
         updateMotivationalQuote();
         loadDashboardCards();
+        setInterval(updateOperationClock, 1000);
+        updateOperationClock(); // Initial call
     </script>
 </body>
 </html>
