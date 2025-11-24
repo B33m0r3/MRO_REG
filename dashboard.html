@@ -122,6 +122,7 @@
             font-size: 14px;
             font-weight: 600;
             transition: all 0.3s;
+            display: none;
         }
         .screenshot-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
         .user-profile {
@@ -1355,7 +1356,7 @@
         </div>
     </div>
     <script>
-        // Variáveis globais
+        // Variáveis globais - CORRIGIDAS
         let currentPage = 'dashboard';
         let calendarMonth = new Date().getMonth();
         let calendarYear = new Date().getFullYear();
@@ -1370,37 +1371,67 @@
             status: 'Ativo'
         };
 
-        // Inicialização
+        // Garante que currentPage existe no escopo global
+        window.currentPage = currentPage;
+
+        // Inicialização - CORRIGIDA
         document.addEventListener('DOMContentLoaded', function() {
-            // Carrega os dados da equipe
-            loadTeamData();
-            // Define a data atual no campo de data
-            setTodayDate();
-            // Atualiza as informações de plantão
-            updatePlantaoInfo();
-            // Gera o calendário
-            generateCalendar();
-            // Carrega informações do usuário
-            loadUserInfo();
-            // Inicia o relógio de operação
-            startOperationClock();
-            // Carrega documentos
-            loadDocuments();
-            // Carrega usuários
-            loadUsers();
+            console.log('DOM completamente carregado e analisado');
             
-            // Adiciona eventos de clique fora dos modais para fechá-los
-            document.addEventListener('click', function(event) {
-                if (event.target === document.getElementById('profileModal')) {
-                    closeProfileModal();
+            try {
+                // Verifica se os elementos essenciais existem
+                const essentialElements = [
+                    'page-dashboard', 'plantao-date', 'calendar-grid', 
+                    'userName', 'userRole', 'userInitials'
+                ];
+                
+                let allElementsExist = true;
+                essentialElements.forEach(id => {
+                    if (!document.getElementById(id)) {
+                        console.warn(`Elemento não encontrado: ${id}`);
+                        allElementsExist = false;
+                    }
+                });
+                
+                if (allElementsExist) {
+                    // Carrega os dados da equipe
+                    loadTeamData();
+                    // Define a data atual no campo de data
+                    setTodayDate();
+                    // Atualiza as informações de plantão
+                    updatePlantaoInfo();
+                    // Gera o calendário
+                    generateCalendar();
+                    // Carrega informações do usuário
+                    loadUserInfo();
+                    // Inicia o relógio de operação
+                    startOperationClock();
+                    // Carrega documentos
+                    loadDocuments();
+                    // Carrega usuários
+                    loadUsers();
+                    
+                    console.log('Inicialização completada com sucesso');
+                } else {
+                    console.error('Alguns elementos essenciais não foram encontrados. Verifique o HTML.');
                 }
-                if (event.target === document.getElementById('supportModal')) {
-                    closeSupportModal();
-                }
-                if (event.target === document.getElementById('teamModal')) {
-                    closeTeamModal();
-                }
-            });
+                
+                // Adiciona eventos de clique fora dos modais para fechá-los
+                document.addEventListener('click', function(event) {
+                    if (event.target === document.getElementById('profileModal')) {
+                        closeProfileModal();
+                    }
+                    if (event.target === document.getElementById('supportModal')) {
+                        closeSupportModal();
+                    }
+                    if (event.target === document.getElementById('teamModal')) {
+                        closeTeamModal();
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Erro durante a inicialização:', error);
+            }
         });
 
         // Função para carregar dados da equipe
@@ -1473,7 +1504,6 @@
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             // Calcula o resto da divisão por 4
             const remainder = ((diffDays % 4) + 4) % 4; // Garante que o resultado seja positivo
-            
             let diurnoGroup, noturnoGroup;
             if (remainder === 0 || remainder === 1) {
                 diurnoGroup = 'GRUPO B';
@@ -1482,7 +1512,6 @@
                 diurnoGroup = 'GRUPO A';
                 noturnoGroup = 'GRUPO D';
             }
-            
             // Atualiza os elementos na página
             document.getElementById('diurno-group').textContent = diurnoGroup;
             document.getElementById('noturno-group').textContent = noturnoGroup;
@@ -1643,49 +1672,81 @@
             sidebar.classList.toggle('collapsed');
         }
 
-        // Função para exibir uma página
+        // Função para exibir uma página - CORRIGIDA
         function showPage(pageId, event) {
-            // Esconde todas as páginas
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.classList.remove('active');
-            });
-            // Exibe a página selecionada
-            document.getElementById(`page-${pageId}`).classList.add('active');
-            // Remove a classe ativa de todos os itens de navegação
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.classList.remove('active');
-            });
-            // Adiciona a classe ativa ao item de navegação clicado
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
-            // Atualiza o breadcrumb
-            const breadcrumb = document.getElementById('breadcrumb');
-            const pageNames = {
-                'dashboard': '📊 Dashboard',
-                'plantao': '📅 Plantão',
-                'passagem': '📋 Passagem de Serviço',
-                'novo_registro': '➕ Novo Registro',
-                'usuarios': '👥 Usuários',
-                'laboratorio': '🔬 Laboratório',
-                'eva': '🤖 EVA',
-                'refrigeracao': '❄️ Refrigeração',
-                'rastreabilidade': '🛣️ Rastreabilidade',
-                'programacao': '📅 Programação Semanal',
-                'documentacao': '📒 Documentação',
-                'sobre': 'ℹ️ Sobre o VLT'
-            };
-            breadcrumb.textContent = pageNames[pageId] || pageId;
-            currentPage = pageId;
-            
-            // Oculta o botão de screenshot para algumas páginas específicas
-            const screenshotBtn = document.getElementById('screenshotBtn');
-            if (['dashboard', 'usuarios', 'documentacao', 'sobre'].includes(pageId)) {
-                screenshotBtn.style.display = 'none';
-            } else {
-                screenshotBtn.style.display = 'block';
+            try {
+                // Esconde todas as páginas
+                const pages = document.querySelectorAll('.page');
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Verifica se a página existe antes de tentar ativá-la
+                const targetPage = document.getElementById(`page-${pageId}`);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                } else {
+                    console.error(`Página não encontrada: page-${pageId}`);
+                    // Volta para o dashboard como fallback
+                    document.getElementById('page-dashboard').classList.add('active');
+                    pageId = 'dashboard';
+                }
+                
+                // Remove a classe ativa de todos os itens de navegação
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Adiciona a classe ativa ao item de navegação clicado
+                if (event && event.currentTarget) {
+                    event.currentTarget.classList.add('active');
+                }
+                
+                // Atualiza o breadcrumb
+                const breadcrumb = document.getElementById('breadcrumb');
+                if (breadcrumb) {
+                    const pageNames = {
+                        'dashboard': '📊 Dashboard',
+                        'plantao': '📅 Plantão',
+                        'passagem': '📋 Passagem de Serviço',
+                        'novo_registro': '➕ Novo Registro',
+                        'usuarios': '👥 Usuários',
+                        'laboratorio': '🔬 Laboratório',
+                        'eva': '🤖 EVA',
+                        'refrigeracao': '❄️ Refrigeração',
+                        'rastreabilidade': '🛣️ Rastreabilidade',
+                        'programacao': '📅 Programação Semanal',
+                        'documentacao': '📒 Documentação',
+                        'sobre': 'ℹ️ Sobre o VLT'
+                    };
+                    breadcrumb.textContent = pageNames[pageId] || pageId;
+                }
+                
+                // Atualiza a variável global currentPage
+                window.currentPage = pageId;
+                
+                // Oculta o botão de screenshot para algumas páginas específicas
+                const screenshotBtn = document.getElementById('screenshotBtn');
+                if (screenshotBtn) {
+                    if (['dashboard', 'usuarios', 'documentacao', 'sobre'].includes(pageId)) {
+                        screenshotBtn.style.display = 'none';
+                    } else {
+                        screenshotBtn.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao mostrar página:', error);
+                // Tenta recuperar voltando para o dashboard
+                try {
+                    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                    const dashboardPage = document.getElementById('page-dashboard');
+                    if (dashboardPage) {
+                        dashboardPage.classList.add('active');
+                    }
+                } catch (recoveryError) {
+                    console.error('Falha na recuperação:', recoveryError);
+                }
             }
         }
 
@@ -1695,7 +1756,6 @@
                 document.getElementById('userName').textContent = userInfo.nome;
                 document.getElementById('userRole').textContent = userInfo.tipo;
                 document.getElementById('userInitials').textContent = userInfo.nome.split(' ').map(n => n[0]).join('').substring(0, 2);
-                
                 // Preenche o modal de perfil
                 document.getElementById('perfil-nome').textContent = userInfo.nome;
                 document.getElementById('perfil-usuario').textContent = userInfo.usuario;
@@ -1730,18 +1790,15 @@
         // Função para iniciar o relógio de operação
         function startOperationClock() {
             const operationStartDate = new Date('2016-06-06T00:00:00'); // Data de operação comercial
-        
             function updateClock() {
                 const now = new Date();
                 const diff = now - operationStartDate;
-                
                 const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
                 const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24 * 30.44));
                 const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                
                 document.getElementById('op-years').textContent = years;
                 document.getElementById('op-months').textContent = months;
                 document.getElementById('op-days').textContent = days;
@@ -1749,7 +1806,6 @@
                 document.getElementById('op-minutes').textContent = minutes;
                 document.getElementById('op-seconds').textContent = seconds;
             }
-            
             updateClock();
             setInterval(updateClock, 1000);
         }
@@ -1807,10 +1863,8 @@
                         date: '25/11/2025'
                     }
                 ];
-                
                 const documentsList = document.getElementById('documents-list');
                 documentsList.innerHTML = '';
-                
                 documents.forEach(doc => {
                     const card = document.createElement('div');
                     card.className = 'document-card';
@@ -1850,10 +1904,8 @@
                     { usuario: 'darlan', nome: 'Darlan', email: 'darlan@vltcarioca.rj.gov.br', telefone: '(21) 94321-0987', tipo: 'Técnico', status: 'Em Férias' },
                     { usuario: 'admin', nome: 'Administrador', email: 'admin@vltcarioca.rj.gov.br', telefone: '(21) 93210-9876', tipo: 'Administrador', status: 'Ativo' }
                 ];
-                
                 const tableBody = document.getElementById('usuarios-table');
                 tableBody.innerHTML = '';
-                
                 users.forEach(user => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -1920,11 +1972,9 @@
             const sistema = document.getElementById('passagemSistema').value;
             const tecnico = document.getElementById('passagemTecnico').value;
             const status = document.getElementById('passagemStatus').value;
-            
             // Simula o carregamento dos dados filtrados
             const tableBody = document.getElementById('passagem-table');
             tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 40px;" class="loading">⏳ Carregando dados filtrados...</td></tr>`;
-            
             setTimeout(() => {
                 // Dados simulados para demonstração
                 const mockData = [
@@ -1933,9 +1983,7 @@
                     { data: '24/11/2025 14:45', tecnico: 'André Luiz', trem: '003', sistema: 'Portas', descricao: 'Correção de sensor de porta', status: 'AGENDADO' },
                     { data: '24/11/2025 16:20', tecnico: 'Rafael Camilo', trem: '004', sistema: 'Comunicação', descricao: 'Falha no sistema de comunicação', status: 'COLISÃO' }
                 ];
-                
                 tableBody.innerHTML = '';
-                
                 mockData.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -1999,11 +2047,9 @@
         function filterDocuments() {
             const searchTerm = document.getElementById('searchDocumentacao').value.toLowerCase();
             const cards = document.querySelectorAll('.document-card');
-            
             cards.forEach(card => {
                 const title = card.querySelector('.document-title').textContent.toLowerCase();
                 const description = card.querySelector('.document-info').textContent.toLowerCase();
-                
                 if (title.includes(searchTerm) || description.includes(searchTerm)) {
                     card.style.display = 'block';
                 } else {
@@ -2033,31 +2079,34 @@
         }
 
         function handleIframeError(pageId, fallbackUrl) {
-            document.getElementById(loadingId).classList.add('hidden');
+            const loading = document.querySelector('.loading-overlay');
+            if (loading) {
+                loading.classList.add('hidden');
+            }
             const container = document.getElementById(pageId);
-            container.innerHTML = `
-                <div class="fallback-container">
-                    <div class="fallback-message">
-                        <p>O formulário não pôde ser carregado. Isso pode acontecer devido a restrições de segurança do navegador.</p>
-                        <p>Clique no botão abaixo para abrir o formulário em uma nova aba:</p>
+            if (container) {
+                container.innerHTML = `
+                    <div class="fallback-container">
+                        <div class="fallback-message">
+                            <p>O formulário não pôde ser carregado. Isso pode acontecer devido a restrições de segurança do navegador.</p>
+                            <p>Clique no botão abaixo para abrir o formulário em uma nova aba:</p>
+                        </div>
+                        <a href="${fallbackUrl}" target="_blank" class="fallback-btn">
+                            <i class="fas fa-external-link-alt"></i> Abrir Formulário
+                        </a>
                     </div>
-                    <a href="${fallbackUrl}" target="_blank" class="fallback-btn">
-                        <i class="fas fa-external-link-alt"></i> Abrir Formulário
-                    </a>
-                </div>
-            `;
+                `;
+            }
         }
 
         // Funções da aba Sobre o VLT
         function searchStation() {
             const searchTerm = document.getElementById('searchEstacao').value.toLowerCase();
             const resultDiv = document.getElementById('estacao-result');
-            
             if (searchTerm.length < 2) {
                 resultDiv.innerHTML = '';
                 return;
             }
-            
             // Dados simulados de estações
             const stations = [
                 { name: 'Candelária', code: 'CAN', line: '1' },
@@ -2070,12 +2119,10 @@
                 { name: 'Presidente Vargas', code: 'PV', line: '3' },
                 { name: 'Praça XV', code: 'PXV', line: '4' }
             ];
-            
             const results = stations.filter(station => 
                 station.name.toLowerCase().includes(searchTerm) || 
                 station.code.toLowerCase().includes(searchTerm)
             );
-            
             if (results.length > 0) {
                 let html = `<div class="estacoes-list">`;
                 results.forEach(station => {
@@ -2101,10 +2148,8 @@
                 3: ['Carioca', 'Presidente Vargas'],
                 4: ['Praça XV', 'Parada dos Museus']
             };
-            
             const stations = lines[lineNumber] || [];
             const listDiv = document.getElementById('linhas-list');
-            
             if (stations.length > 0) {
                 let html = `<div style="margin-bottom: 10px;"><strong>Linha ${lineNumber}</strong></div>`;
                 html += `<div class="estacoes-list">`;
@@ -2118,6 +2163,36 @@
                 listDiv.style.display = 'none';
             }
         }
+
+        // Fallback para caso os scripts externos falhem
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verifica se as bibliotecas necessárias estão carregadas
+            const requiredLibs = ['html2canvas', 'XLSX', 'jsPDF'];
+            
+            requiredLibs.forEach(lib => {
+                if (typeof window[lib] === 'undefined') {
+                    console.warn(`Biblioteca ${lib} não carregada. Funcionalidades relacionadas podem não funcionar.`);
+                }
+            });
+            
+            // Cria versões fallback para funções críticas
+            if (typeof html2canvas === 'undefined') {
+                window.html2canvas = function() {
+                    console.error('html2canvas não disponível. Captura de tela desabilitada.');
+                    return Promise.reject(new Error('html2canvas não carregado'));
+                };
+            }
+            
+            if (typeof XLSX === 'undefined') {
+                window.XLSX = {
+                    utils: {
+                        json_to_sheet: function() { return {}; },
+                        aoa_to_sheet: function() { return {}; }
+                    },
+                    writeFile: function() { console.error('XLSX não disponível. Exportação desabilitada.'); }
+                };
+            }
+        });
     </script>
 </body>
 </html>
