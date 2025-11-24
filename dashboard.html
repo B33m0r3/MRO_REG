@@ -122,7 +122,6 @@
             font-size: 14px;
             font-weight: 600;
             transition: all 0.3s;
-            display: none;
         }
         .screenshot-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
         .user-profile {
@@ -396,7 +395,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 20px;
             position: relative;
-            min-height: 850px; /* Altura mínima para evitar layout shift */
+            min-height: 850px;
         }
         .form-iframe {
             width: 100%;
@@ -438,52 +437,250 @@
         .tab-content.active {
             display: block;
         }
-        @media (max-width: 768px) {
-            .top-bar { padding: 12px 15px; }
-            .screenshot-btn { padding: 6px 12px; font-size: 12px; }
-            .user-info { display: none; }
-            .content { padding: 15px; }
-            .page-header h1 { font-size: 20px; }
-            .filter-container { flex-direction: column; }
-            .filter-btn { width: 100%; }
-            .sobre-container { flex-direction: column; }
-            .documents-container { grid-template-columns: 1fr; }
-            .form-iframe { height: 600px; }
-        }
-        /* Fallback para quando o iframe é bloqueado */
-        .fallback-container {
+        /* Estilos para a aba Catálogo */
+        .catalogo-container {
             display: flex;
             flex-direction: column;
+            height: 100%;
+        }
+        .catalogo-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            padding: 40px;
-            text-align: center;
+            margin-bottom: 20px;
+        }
+        .catalogo-title {
+            font-size: 24px;
+            font-weight: 600;
             color: var(--dark);
         }
-        .fallback-message {
-            font-size: 16px;
-            margin-bottom: 20px;
-            line-height: 1.5;
+        .catalogo-actions {
+            display: flex;
+            gap: 10px;
         }
-        .fallback-btn {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+        .catalogo-main {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+        }
+        .catalogo-sidebar {
+            width: 30%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-y: auto;
+        }
+        .catalogo-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .catalogo-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 0;
+        }
+        .catalogo-tab {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.8);
             border: none;
-            border-radius: 6px;
-            font-weight: 600;
+            border-bottom: 3px solid transparent;
             cursor: pointer;
+            font-weight: 600;
+            color: var(--dark);
             transition: all 0.3s;
-            display: inline-flex;
+            flex: 1;
+        }
+        .catalogo-tab.active {
+            background: white;
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+        .catalogo-tab-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .catalogo-search {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .catalogo-filter-group {
+            margin-bottom: 15px;
+        }
+        .catalogo-filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .catalogo-filter-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            background: white;
+        }
+        .catalogo-filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .catalogo-tree {
+            margin-top: 15px;
+        }
+        .catalogo-tree-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
             align-items: center;
             gap: 8px;
         }
-        .fallback-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        .catalogo-tree-item:hover {
+            background: var(--light);
         }
-        .fallback-btn i {
+        .catalogo-tree-item.selected {
+            background: rgba(102, 126, 234, 0.2);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .catalogo-tree-toggle {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .catalogo-tree-children {
+            margin-left: 20px;
+            margin-top: 5px;
+            display: none;
+        }
+        .catalogo-tree-children.show {
+            display: block;
+        }
+        .catalogo-details {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .catalogo-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .catalogo-details-title {
             font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .catalogo-details-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .catalogo-details-content {
+            display: flex;
+            gap: 20px;
+        }
+        .catalogo-details-info {
+            flex: 1;
+        }
+        .catalogo-details-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .catalogo-details-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .catalogo-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .catalogo-details-table th {
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--border);
+            background: var(--light);
+        }
+        .catalogo-details-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .catalogo-material-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .catalogo-material-table th {
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--border);
+            background: var(--light);
+        }
+        .catalogo-material-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .catalogo-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .catalogo-pagination-btn {
+            padding: 8px 12px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+        .catalogo-pagination-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .catalogo-pagination-info {
+            font-size: 14px;
+            color: var(--dark);
         }
         /* Estilos para a aba Plantão */
         .plantao-container {
@@ -788,6 +985,22 @@
             height: 100%;
             border: none;
         }
+        @media (max-width: 768px) {
+            .top-bar { padding: 12px 15px; }
+            .screenshot-btn { padding: 6px 12px; font-size: 12px; }
+            .user-info { display: none; }
+            .content { padding: 15px; }
+            .page-header h1 { font-size: 20px; }
+            .filter-container { flex-direction: column; }
+            .filter-btn { width: 100%; }
+            .sobre-container { flex-direction: column; }
+            .documents-container { grid-template-columns: 1fr; }
+            .form-iframe { height: 600px; }
+            .catalogo-main { flex-direction: column; }
+            .catalogo-sidebar { width: 100%; }
+            .catalogo-details-content { flex-direction: column; }
+            .catalogo-details-image { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -843,6 +1056,10 @@
                     <i class="fas fa-book"></i>
                     <span class="nav-label">Documentação</span>
                 </li>
+                <li class="nav-item" onclick="showPage('catalogo', event)">
+                    <i class="fas fa-folder-open"></i>
+                    <span class="nav-label">Catálogo</span>
+                </li>
                 <li class="nav-item" onclick="showPage('sobre', event)">
                     <i class="fas fa-info-circle"></i>
                     <span class="nav-label">Sobre o VLT</span>
@@ -857,14 +1074,14 @@
             <div class="top-bar">
                 <div class="breadcrumb" id="breadcrumb">📊 Dashboard</div>
                 <div class="top-right">
-                    <button class="screenshot-btn" id="screenshotBtn" style="display:none;" onclick="takeScreenshot()">
+                    <button class="screenshot-btn" id="screenshotBtn" style="display:block;" onclick="takeScreenshot()">
                         <i class="fas fa-camera"></i> Screenshot
                     </button>
                     <div class="user-profile" onclick="openProfileModal()">
-                        <div class="user-avatar" id="userInitials">GJ</div>
+                        <div class="user-avatar" id="userInitials">JS</div>
                         <div class="user-info">
-                            <div class="user-name" id="userName">Carregando...</div>
-                            <div class="user-role" id="userRole">...</div>
+                            <div class="user-name" id="userName">João Silva</div>
+                            <div class="user-role" id="userRole">Administrador</div>
                         </div>
                     </div>
                 </div>
@@ -943,7 +1160,7 @@
                             <a href="https://docs.google.com/spreadsheets/d/13G8eUT2m35aoWsqpIu3OTKUdg0L2sdjEl0GTXfPEg50/edit?usp=sharing" target="_blank" class="btn-primary" style="margin-left: 10px;">
                                 <i class="fas fa-table"></i> Acessar Planilha
                             </a>
-                            <button class="btn-primary" onclick="takePassagemScreenshot()" style="margin-left: 10px;">
+                            <button class="btn-primary" onclick="takePageScreenshot('passagem')" style="margin-left: 10px;">
                                 <i class="fas fa-camera"></i> Capturar Tela
                             </button>
                         </div>
@@ -978,16 +1195,25 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Data/Hora</th>
-                                        <th>Técnico</th>
-                                        <th>Trem</th>
-                                        <th>Sistema</th>
-                                        <th>Descrição</th>
-                                        <th>Status</th>
+                                        <th>Carimbo de data/hora</th>
+                                        <th>NOME E SOBRENOME</th>
+                                        <th>MATRICULA</th>
+                                        <th>GRUPO</th>
+                                        <th>TURNO</th>
+                                        <th>DATA DA FAHA</th>
+                                        <th>NÚMERO DO TREM</th>
+                                        <th>SISTEMAS</th>
+                                        <th>CÓDIGO IOS DA FALHA</th>
+                                        <th>DESCRIÇÃO DETALHADA</th>
+                                        <th>EVIDÊNCIAS</th>
+                                        <th>STATUS ATUAL DO TREM</th>
+                                        <th>ORDEM DE SERVIÇO</th>
+                                        <th>NÚMERO DA ORDEM DE SERVIÇO</th>
+                                        <th>Endereço de e-mail</th>
                                     </tr>
                                 </thead>
                                 <tbody id="passagem-table">
-                                    <tr><td colspan="7" style="text-align: center; padding: 40px;">Clique no botão "Filtrar Passagem de Serviço" para carregar os dados.</td></tr>
+                                    <tr><td colspan="15" style="text-align: center; padding: 40px;">Clique no botão "Filtrar Passagem de Serviço" para carregar os dados.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1028,7 +1254,7 @@
                             <p>Lista de usuários cadastrados e seus perfis</p>
                         </div>
                         <div style="margin-bottom: 20px;">
-                            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pub?gid=1605075317&single=true&output=csv" target="_blank" class="btn-primary">
+                            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pubhtml?gid=1605075317&single=true" target="_blank" class="btn-primary">
                                 <i class="fas fa-table"></i> Acessar Planilha
                             </a>
                             <button class="btn-primary" onclick="takePageScreenshot('usuarios')" style="margin-left: 10px;">
@@ -1048,7 +1274,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="usuarios-table">
-                                    <tr><td colspan="7" style="text-align: center; padding: 40px;" class="loading">⏳ Carregando usuários...</td></tr>
+                                    <tr><td colspan="6" style="text-align: center; padding: 40px;" class="loading">⏳ Carregando usuários...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1143,30 +1369,16 @@
                     <!-- Rastreabilidade -->
                     <div class="page" id="page-rastreabilidade">
                         <div class="page-header">
-                            <h1>🛣️ Rastreabilidade</h1>
-                            <p>Registros e atividades de rastreabilidade</p>
+                            <h1>🔍 Rastreabilidade</h1>
+                            <p>Sistema de rastreabilidade de componentes</p>
                         </div>
                         <div style="margin-bottom: 20px;">
-                            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQh0a-BMomvvOomRWYGlmoZSPG6ZuwF1jRXFrm8yhzMzizB9vWBgFiFBRyFBRRHQfVVoRppT3E8FBKS/pub?gid=500914835&single=true&output=csv" target="_blank" class="btn-primary">
-                                <i class="fas fa-table"></i> Acessar Planilha
-                            </a>
-                            <button class="btn-primary" onclick="takePageScreenshot('rastreabilidade')" style="margin-left: 10px;">
+                            <button class="btn-primary" onclick="takePageScreenshot('rastreabilidade')">
                                 <i class="fas fa-camera"></i> Capturar Tela
                             </button>
                         </div>
-                        <div class="form-container">
-                            <div class="loading-overlay" id="loading-rastreabilidade">
-                                <div class="spinner"></div>
-                            </div>
-                            <iframe 
-                                src="https://docs.google.com/forms/d/e/1FAIpQLSciTNSHCOzWsFK0GBQv-GKTqgb5WtijzfaG4azAMyIvcU0Vnw/viewform?embedded=true" 
-                                class="form-iframe"
-                                allow="clipboard-read; clipboard-write"
-                                allowfullscreen
-                                loading="lazy"
-                                onload="handleIframeLoad('loading-rastreabilidade')"
-                                onerror="handleIframeError('page-rastreabilidade', 'https://docs.google.com/forms/d/e/1FAIpQLSciTNSHCOzWsFK0GBQv-GKTqgb5WtijzfaG4azAMyIvcU0Vnw/viewform')"
-                            ></iframe>
+                        <div class="center-content">
+                            <p>Funcionalidade em desenvolvimento</p>
                         </div>
                     </div>
                     <!-- Programação Semanal -->
@@ -1176,7 +1388,10 @@
                             <p>Visualização da programação semanal de atividades</p>
                         </div>
                         <div style="margin-bottom: 20px;">
-                            <button class="btn-primary" onclick="takePageScreenshot('programacao')">
+                            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQh0a-BMomvvOomRWYGlmoZSPG6ZuwF1jRXFrm8yhzMzizB9vWBgFiFBRyFBRRHQfVVoRppT3E8FBKS/pub?gid=1564591852&single=true&output=csv" target="_blank" class="btn-primary">
+                                <i class="fas fa-table"></i> Acessar Planilha Online
+                            </a>
+                            <button class="btn-primary" onclick="takePageScreenshot('programacao')" style="margin-left: 10px;">
                                 <i class="fas fa-camera"></i> Capturar Tela
                             </button>
                         </div>
@@ -1184,14 +1399,14 @@
                             <div class="programacao-header">
                                 <div class="programacao-title">Programação Semanal</div>
                                 <div class="programacao-actions">
-                                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pub?gid=1888450540&single=true&output=csv" target="_blank" class="btn-primary">
-                                        <i class="fas fa-external-link-alt"></i> Abrir em Nova Aba
-                                    </a>
+                                    <button class="btn-primary" onclick="refreshProgramacao()">
+                                        <i class="fas fa-sync-alt"></i> Atualizar
+                                    </button>
                                 </div>
                             </div>
                             <div class="programacao-iframe-container">
                                 <iframe 
-                                    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pubhtml?gid=1888450540&single=true" 
+                                    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQh0a-BMomvvOomRWYGlmoZSPG6ZuwF1jRXFrm8yhzMzizB9vWBgFiFBRyFBRRHQfVVoRppT3E8FBKS/pub?gid=1564591852&single=true&output=csv" 
                                     class="programacao-iframe"
                                     allowfullscreen
                                     loading="lazy"
@@ -1202,997 +1417,397 @@
                     <!-- Documentação -->
                     <div class="page" id="page-documentacao">
                         <div class="page-header">
-                            <h1>📒 Documentação</h1>
-                            <p>Manuais, procedimentos e documentações técnicas</p>
+                            <h1>📚 Documentação</h1>
+                            <p>Documentos técnicos e manuais do sistema VLT</p>
                         </div>
-                        <div class="filter-container">
-                            <input type="text" id="searchDocumentacao" class="filter-input" placeholder="🔍 Buscar documento..." onkeyup="filterDocuments()">
-                            <button class="filter-btn" onclick="clearDocumentSearch()">
-                                <i class="fas fa-times"></i> Limpar
+                        <div style="margin-bottom: 20px;">
+                            <button class="btn-primary" onclick="takePageScreenshot('documentacao')">
+                                <i class="fas fa-camera"></i> Capturar Tela
                             </button>
                         </div>
-                        <div class="documents-container" id="documents-list">
-                            <div style="text-align: center; padding: 40px; color: #666;">
-                                <i class="fas fa-spinner fa-spin"></i> Carregando documentos...
+                        <div class="documents-container" id="documents-container">
+                            <!-- Documents will be loaded here -->
+                        </div>
+                    </div>
+                    <!-- Catálogo -->
+                    <div class="page" id="page-catalogo">
+                        <div class="page-header">
+                            <h1>📂 Catálogo</h1>
+                            <p>Catálogo de peças e componentes do VLT</p>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <button class="btn-primary" onclick="takePageScreenshot('catalogo')">
+                                <i class="fas fa-camera"></i> Capturar Tela
+                            </button>
+                        </div>
+                        <div class="catalogo-container">
+                            <div class="catalogo-main">
+                                <div class="catalogo-sidebar">
+                                    <div class="catalogo-filter-group">
+                                        <label class="catalogo-filter-label">Pesquisar</label>
+                                        <input type="text" id="catalogo-search" class="catalogo-search" placeholder="Buscar componente...">
+                                    </div>
+                                    <div class="catalogo-filter-group">
+                                        <label class="catalogo-filter-label">Filtrar por</label>
+                                        <select id="catalogo-filter-type" class="catalogo-filter-select">
+                                            <option value="">Todos</option>
+                                            <option value="sistema">Sistema</option>
+                                            <option value="material">Material</option>
+                                        </select>
+                                    </div>
+                                    <div class="catalogo-tree" id="catalogo-tree">
+                                        <!-- Tree will be generated here -->
+                                    </div>
+                                </div>
+                                <div class="catalogo-content">
+                                    <div class="catalogo-tabs">
+                                        <button class="catalogo-tab active" onclick="showCatalogoTab('sistema')">Sistema/Equipamento</button>
+                                        <button class="catalogo-tab" onclick="showCatalogoTab('material')">Base Cadastro</button>
+                                    </div>
+                                    <div class="catalogo-tab-content active" id="catalogo-sistema">
+                                        <div class="catalogo-details" id="catalogo-sistema-details">
+                                            <div class="catalogo-details-header">
+                                                <div class="catalogo-details-title">Selecione um componente</div>
+                                                <div class="catalogo-details-actions">
+                                                    <button class="btn-primary" onclick="exportCatalogoSistema()">
+                                                        <i class="fas fa-download"></i> Exportar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="catalogo-details-content">
+                                                <div class="catalogo-details-info">
+                                                    <p>Selecione um componente na árvore à esquerda para visualizar seus detalhes.</p>
+                                                </div>
+                                                <div class="catalogo-details-image">
+                                                    <img src="https://via.placeholder.com/300" alt="Componente">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="catalogo-tab-content" id="catalogo-material">
+                                        <div class="catalogo-details" id="catalogo-material-details">
+                                            <div class="catalogo-details-header">
+                                                <div class="catalogo-details-title">Base de Cadastro</div>
+                                                <div class="catalogo-details-actions">
+                                                    <button class="btn-primary" onclick="exportCatalogoMaterial()">
+                                                        <i class="fas fa-download"></i> Exportar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="table-container">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Centro</th>
+                                                            <th>Material</th>
+                                                            <th>Texto breve de material</th>
+                                                            <th>Texto Longo</th>
+                                                            <th>Depósito</th>
+                                                            <th>Utilização livre</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="catalogo-material-table">
+                                                        <tr><td colspan="6" style="text-align: center; padding: 40px;">Carregando dados...</td></tr>
+                                                    </tbody>
+                                                </table>
+                                                <div class="catalogo-pagination">
+                                                    <button class="catalogo-pagination-btn" onclick="previousMaterialPage()">
+                                                        <i class="fas fa-chevron-left"></i>
+                                                    </button>
+                                                    <div class="catalogo-pagination-info">
+                                                        Página <span id="material-current-page">1</span> de <span id="material-total-pages">1</span>
+                                                    </div>
+                                                    <button class="catalogo-pagination-btn" onclick="nextMaterialPage()">
+                                                        <i class="fas fa-chevron-right"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Sobre o VLT -->
+                    <!-- Sobre -->
                     <div class="page" id="page-sobre">
                         <div class="page-header">
-                            <h1>ℹ️ Sobre o VLT Carioca</h1>
-                            <p>Informações técnicas e mapa da rede</p>
+                            <h1>ℹ️ Sobre o VLT</h1>
+                            <p>Informações sobre o sistema VLT Carioca</p>
                         </div>
-                        <div class="operation-clock">
-                            <h2>⏱️ Tempo de Operação Contínuo</h2>
-                            <div class="clock-display" id="operation-clock">
-                                <span id="op-years">0</span>anos
-                                <span id="op-months">0</span>meses
-                                <span id="op-days">0</span>dias
-                                <span id="op-hours">0</span>h
-                                <span id="op-minutes">0</span>m
-                                <span id="op-seconds">0</span>s
-                            </div>
+                        <div style="margin-bottom: 20px;">
+                            <button class="btn-primary" onclick="takePageScreenshot('sobre')">
+                                <i class="fas fa-camera"></i> Capturar Tela
+                            </button>
                         </div>
                         <div class="sobre-container">
+                            <div class="sobre-map">
+                                <img src="https://via.placeholder.com/600x400" alt="Mapa VLT">
+                            </div>
                             <div class="sobre-info">
                                 <div class="info-card">
-                                    <h3>Buscar Estação</h3>
-                                    <input type="text" id="searchEstacao" class="search-box" placeholder="Digite o nome ou sigla da estação..." onkeyup="searchStation()">
-                                    <div id="estacao-result"></div>
+                                    <h3>Sobre o VLT Carioca</h3>
+                                    <p>O Veículo Leve sobre Trilhos (VLT) Carioca é um sistema de transporte público moderno que conecta diversas regiões do Rio de Janeiro, oferecendo uma alternativa eficiente e sustentável para o deslocamento de passageiros.</p>
                                 </div>
                                 <div class="info-card">
-                                    <h3>Explorar Linhas</h3>
-                                    <button class="linha-btn linha-azul" onclick="showLineStations(1)">🔵 Linha 1 (Azul)</button>
-                                    <button class="linha-btn linha-verde" onclick="showLineStations(2)">🟢 Linha 2 (Verde)</button>
-                                    <button class="linha-btn linha-amarela" onclick="showLineStations(3)">🟡 Linha 3 (Amarela)</button>
-                                    <button class="linha-btn linha-laranja" onclick="showLineStations(4)">🟠 Linha 4 (Laranja)</button>
-                                    <div id="linhas-list" class="estacoes-list" style="display:none;"></div>
+                                    <h3>Especificações Técnicas</h3>
+                                    <ul>
+                                        <li>Modelo: Citadis 402</li>
+                                        <li>Fabricante: Alstom</li>
+                                        <li>Comprimento: 43 metros</li>
+                                        <li>Capacidade: 420 passageiros</li>
+                                        <li>Velocidade máxima: 70 km/h</li>
+                                    </ul>
                                 </div>
                                 <div class="info-card">
-                                    <h3>Dados Técnicos</h3>
-                                    <p><strong>Fabricante:</strong> Alstom</p>
-                                    <p><strong>Modelo:</strong> Citadis 402</p>
-                                    <p><strong>Alimentação:</strong> 750V CC (APS e SRS)</p>
-                                    <p><strong>Peso Vazio:</strong> 60.000 Kg (60 Toneladas)</p>
-                                    <p><strong>Peso em Operação:</strong> 82.000 Kg</p>
-                                    <p><strong>Velocidade Máxima:</strong> Atinge cerca de 70 km/h</p>
-                                    <p><strong>Inauguração:</strong> 05/06/2016</p>
-                                    <p><strong>Op. Comercial:</strong> 06/06/2016</p>
+                                    <h3>Linhas</h3>
+                                    <div style="margin-bottom: 10px;">
+                                        <button class="linha-btn linha-azul">Linha 1</button>
+                                        <button class="linha-btn linha-verde">Linha 2</button>
+                                        <button class="linha-btn linha-amarela">Linha 3</button>
+                                        <button class="linha-btn linha-laranja">Linha 4</button>
+                                    </div>
+                                    <div class="estacoes-list" id="estacoes-list">
+                                        <!-- Lista de estações -->
+                                        <div class="estacao-item">Carioca</div>
+                                        <div class="estacao-item">Uruguai</div>
+                                        <div class="estacao-item">Saara</div>
+                                        <div class="estacao-item">Presidente Vargas</div>
+                                        <div class="estacao-item">Cinelandia</div>
+                                        <div class="estacao-item">Santos Dumont</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="motivational-quote" id="motivational-quote">
-                    💪 Excelência é a jornada, não o destino!
                 </div>
             </div>
         </main>
     </div>
-    <!-- Modal Perfil -->
-    <div id="profileModal" class="modal">
+
+    <!-- Modais -->
+    <div class="modal" id="supportModal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeProfileModal()">✕</button>
-            <div class="modal-title">👤 Meu Perfil</div>
+            <button class="modal-close" onclick="document.getElementById('supportModal').classList.remove('show')">&times;</button>
+            <h2 class="modal-title">Central de Suporte</h2>
+            <p>Em caso de dúvidas ou problemas, entre em contato com o suporte técnico.</p>
+            <div style="margin-top: 20px;">
+                <p><strong>Email:</strong> suporte@vltcarioca.com.br</p>
+                <p><strong>Telefone:</strong> (21) 99999-9999</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('profileModal').classList.remove('show')">&times;</button>
+            <h2 class="modal-title">Meu Perfil</h2>
             <div class="modal-section">
-                <div class="modal-label">Nome Completo</div>
-                <div class="modal-value" id="perfil-nome">-</div>
+                <div class="modal-label">Nome</div>
+                <div class="modal-value" id="profileName">João Silva</div>
             </div>
             <div class="modal-section">
-                <div class="modal-label">Usuário</div>
-                <div class="modal-value" id="perfil-usuario">-</div>
+                <div class="modal-label">Cargo</div>
+                <div class="modal-value" id="profileRole">Administrador</div>
             </div>
             <div class="modal-section">
                 <div class="modal-label">Email</div>
-                <div class="modal-value" id="perfil-email">-</div>
+                <div class="modal-value">joao.silva@vltcarioca.com.br</div>
             </div>
             <div class="modal-section">
-                <div class="modal-label">Telefone / WhatsApp</div>
-                <div class="modal-value" id="perfil-telefone">-</div>
+                <div class="modal-label">Telefone</div>
+                <div class="modal-value">(21) 98765-4321</div>
             </div>
-            <div class="modal-section">
-                <div class="modal-label">Tipo</div>
-                <div class="modal-value" id="perfil-tipo">-</div>
-            </div>
-            <div class="modal-section">
-                <div class="modal-label">Status</div>
-                <div class="modal-value" id="perfil-status">-</div>
-            </div>
-            <div class="modal-section">
-                <div class="modal-label">Ações</div>
-                <div class="modal-value">
-                    <a href="#" class="modal-link" onclick="editProfile()">Editar Perfil</a> | 
-                    <a href="#" class="modal-link" onclick="changePassword()">Alterar Senha</a> | 
-                    <a href="#" class="modal-link" onclick="logout()">Sair</a>
-                </div>
+            <div style="margin-top: 30px; text-align: center;">
+                <button class="btn-primary" onclick="document.getElementById('profileModal').classList.remove('show')">
+                    Fechar
+                </button>
             </div>
         </div>
     </div>
-    <!-- Modal Suporte -->
-    <div id="supportModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeSupportModal()">✕</button>
-            <div class="modal-title">🎧 Suporte Técnico</div>
-            <div class="modal-section">
-                <div class="modal-label">Contato Direto</div>
-                <div class="modal-value">
-                    <p><i class="fas fa-phone"></i> (21) 1234-5678</p>
-                    <p><i class="fab fa-whatsapp"></i> (21) 98765-4321</p>
-                </div>
-            </div>
-            <div class="modal-section">
-                <div class="modal-label">Email</div>
-                <div class="modal-value">suporte@vltcarioca.rj.gov.br</div>
-            </div>
-            <div class="modal-section">
-                <div class="modal-label">Horário de Atendimento</div>
-                <div class="modal-value">Segunda a Sexta, das 08:00 às 18:00</div>
-            </div>
-            <div class="modal-section">
-                <div class="modal-label">Abrir Chamado</div>
-                <div class="modal-value">
-                    <a href="#" class="modal-link" onclick="openTicketForm()">Clique aqui para abrir um chamado</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal Detalhes da Equipe -->
-    <div id="teamModal" class="team-modal">
-        <div class="team-modal-content">
-            <button class="modal-close" onclick="closeTeamModal()">✕</button>
-            <div class="team-modal-header">
-                <div class="team-modal-icon" id="team-modal-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div>
-                    <div class="team-modal-title" id="team-modal-title">GRUPO B</div>
-                    <div class="team-modal-subtitle" id="team-modal-subtitle">Turno Diurno</div>
-                </div>
-            </div>
-            <div class="team-members" id="team-members">
-                <!-- Team members will be loaded here -->
-            </div>
-        </div>
-    </div>
+
+    <!-- Scripts JavaScript -->
     <script>
-        // Variáveis globais - CORRIGIDAS
-        let currentPage = 'dashboard';
-        let calendarMonth = new Date().getMonth();
-        let calendarYear = new Date().getFullYear();
-        let selectedDate = new Date();
-        let teamData = {};
-        let userInfo = {
-            nome: 'Gelson Júnior',
-            usuario: 'gjunior',
-            email: 'gjunior@vltcarioca.rj.gov.br',
-            telefone: '(21) 98765-4321',
-            tipo: 'Técnico de Manutenção',
-            status: 'Ativo'
-        };
-
-        // Garante que currentPage existe no escopo global
-        window.currentPage = currentPage;
-
-        // Inicialização - CORRIGIDA
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM completamente carregado e analisado');
-            
-            try {
-                // Verifica se os elementos essenciais existem
-                const essentialElements = [
-                    'page-dashboard', 'plantao-date', 'calendar-grid', 
-                    'userName', 'userRole', 'userInitials'
-                ];
-                
-                let allElementsExist = true;
-                essentialElements.forEach(id => {
-                    if (!document.getElementById(id)) {
-                        console.warn(`Elemento não encontrado: ${id}`);
-                        allElementsExist = false;
-                    }
-                });
-                
-                if (allElementsExist) {
-                    // Carrega os dados da equipe
-                    loadTeamData();
-                    // Define a data atual no campo de data
-                    setTodayDate();
-                    // Atualiza as informações de plantão
-                    updatePlantaoInfo();
-                    // Gera o calendário
-                    generateCalendar();
-                    // Carrega informações do usuário
-                    loadUserInfo();
-                    // Inicia o relógio de operação
-                    startOperationClock();
-                    // Carrega documentos
-                    loadDocuments();
-                    // Carrega usuários
-                    loadUsers();
-                    
-                    console.log('Inicialização completada com sucesso');
-                } else {
-                    console.error('Alguns elementos essenciais não foram encontrados. Verifique o HTML.');
-                }
-                
-                // Adiciona eventos de clique fora dos modais para fechá-los
-                document.addEventListener('click', function(event) {
-                    if (event.target === document.getElementById('profileModal')) {
-                        closeProfileModal();
-                    }
-                    if (event.target === document.getElementById('supportModal')) {
-                        closeSupportModal();
-                    }
-                    if (event.target === document.getElementById('teamModal')) {
-                        closeTeamModal();
-                    }
-                });
-                
-            } catch (error) {
-                console.error('Erro durante a inicialização:', error);
-            }
-        });
-
-        // Função para carregar dados da equipe
-        async function loadTeamData() {
-            try {
-                // Simulando carregamento de dados da equipe
-                teamData = {
-                    'GRUPO A': [
-                        { name: 'DARLAN', role: 'Técnico' },
-                        { name: 'JEFERSON NARCISO', role: 'Técnico' }
-                    ],
-                    'GRUPO B': [
-                        { name: 'DANILO QUINTINO', role: 'Técnico' },
-                        { name: 'LUCAS', role: 'Técnico' }
-                    ],
-                    'GRUPO C': [
-                        { name: 'ANDRÉ LUIZ', role: 'Técnico' },
-                        { name: 'GELSON DOMINGUES', role: 'Técnico' }
-                    ],
-                    'GRUPO D': [
-                        { name: 'RAFAEL CAMILO', role: 'Técnico' },
-                        { name: 'ROGÉRIO RAMOS', role: 'Técnico' },
-                        { name: 'ROGÉRIO REIS', role: 'Técnico' }
-                    ]
-                };
-                console.log('Dados da equipe carregados com sucesso');
-            } catch (error) {
-                console.error('Erro ao carregar dados da equipe:', error);
-                // Dados simulados em caso de erro
-                teamData = {
-                    'GRUPO A': [
-                        { name: 'DARLAN', role: 'Técnico' },
-                        { name: 'JEFERSON NARCISO', role: 'Técnico' }
-                    ],
-                    'GRUPO B': [
-                        { name: 'DANILO QUINTINO', role: 'Técnico' },
-                        { name: 'LUCAS', role: 'Técnico' }
-                    ],
-                    'GRUPO C': [
-                        { name: 'ANDRÉ LUIZ', role: 'Técnico' },
-                        { name: 'GELSON DOMINGUES', role: 'Técnico' }
-                    ],
-                    'GRUPO D': [
-                        { name: 'RAFAEL CAMILO', role: 'Técnico' },
-                        { name: 'ROGÉRIO RAMOS', role: 'Técnico' },
-                        { name: 'ROGÉRIO REIS', role: 'Técnico' }
-                    ]
-                };
-            }
-        }
-
-        // Função para definir a data atual
-        function setTodayDate() {
-            const today = new Date();
-            const dateStr = today.toISOString().split('T')[0];
-            document.getElementById('plantao-date').value = dateStr;
-            selectedDate = today;
-            updatePlantaoInfo();
-        }
-
-        // Função para atualizar informações de plantão
-        function updatePlantaoInfo() {
-            const dateInput = document.getElementById('plantao-date').value;
-            if (!dateInput) return;
-            selectedDate = new Date(dateInput);
-            // Data base: 24/11/2025
-            const baseDate = new Date('2025-11-24');
-            // Calcula a diferença em dias
-            const diffTime = selectedDate - baseDate;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            // Calcula o resto da divisão por 4
-            const remainder = ((diffDays % 4) + 4) % 4; // Garante que o resultado seja positivo
-            let diurnoGroup, noturnoGroup;
-            if (remainder === 0 || remainder === 1) {
-                diurnoGroup = 'GRUPO B';
-                noturnoGroup = 'GRUPO C';
-            } else {
-                diurnoGroup = 'GRUPO A';
-                noturnoGroup = 'GRUPO D';
-            }
-            // Atualiza os elementos na página
-            document.getElementById('diurno-group').textContent = diurnoGroup;
-            document.getElementById('noturno-group').textContent = noturnoGroup;
-            // Atualiza o calendário
-            generateCalendar();
-        }
-
-        // Função para gerar o calendário
-        function generateCalendar() {
-            const calendarGrid = document.getElementById('calendar-grid');
-            const calendarTitle = document.getElementById('calendar-title');
-            // Limpa o calendário
-            calendarGrid.innerHTML = '';
-            // Define o título do calendário
-            const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-            calendarTitle.textContent = `${monthNames[calendarMonth]} ${calendarYear}`;
-            // Adiciona os cabeçalhos dos dias da semana
-            const dayHeaders = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-            dayHeaders.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'calendar-day-header';
-                dayHeader.textContent = day;
-                calendarGrid.appendChild(dayHeader);
-            });
-            // Obtém o primeiro dia do mês e o número de dias no mês
-            const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
-            const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
-            const daysInPrevMonth = new Date(calendarYear, calendarMonth, 0).getDate();
-            // Adiciona os dias do mês anterior
-            for (let i = firstDay - 1; i >= 0; i--) {
-                const day = document.createElement('div');
-                day.className = 'calendar-day other-month';
-                day.innerHTML = `
-                    <div class="calendar-day-number">${daysInPrevMonth - i}</div>
-                    <div class="calendar-day-shifts">
-                        <div class="calendar-day-diurno"></div>
-                        <div class="calendar-day-noturno"></div>
-                    </div>
-                `;
-                calendarGrid.appendChild(day);
-            }
-            // Adiciona os dias do mês atual
-            for (let day = 1; day <= daysInMonth; day++) {
-                const date = new Date(calendarYear, calendarMonth, day);
-                const dateStr = date.toISOString().split('T')[0];
-                // Verifica se é o dia selecionado ou hoje
-                const today = new Date();
-                const isToday = date.toDateString() === today.toDateString();
-                const isSelected = date.toDateString() === selectedDate.toDateString();
-                // Determina os grupos para este dia
-                const baseDate = new Date('2025-11-24');
-                const diffTime = date - baseDate;
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                const remainder = ((diffDays % 4) + 4) % 4;
-                let diurnoGroup, noturnoGroup;
-                if (remainder === 0 || remainder === 1) {
-                    diurnoGroup = 'GRUPO B';
-                    noturnoGroup = 'GRUPO C';
-                } else {
-                    diurnoGroup = 'GRUPO A';
-                    noturnoGroup = 'GRUPO D';
-                }
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                if (isToday) dayElement.classList.add('today');
-                if (isSelected) dayElement.classList.add('selected');
-                dayElement.innerHTML = `
-                    <div class="calendar-day-number">${day}</div>
-                    <div class="calendar-day-shifts">
-                        <div class="calendar-day-diurno" title="${diurnoGroup}"></div>
-                        <div class="calendar-day-noturno" title="${noturnoGroup}"></div>
-                    </div>
-                `;
-                // Adiciona evento de clique
-                dayElement.addEventListener('click', function() {
-                    document.getElementById('plantao-date').value = dateStr;
-                    selectedDate = date;
-                    updatePlantaoInfo();
-                });
-                calendarGrid.appendChild(dayElement);
-            }
-            // Adiciona os dias do próximo mês para completar a grade
-            const totalCells = calendarGrid.children.length - 7; // Subtrai os cabeçalhos
-            const remainingCells = 35 - totalCells; // 5 semanas * 7 dias - totalCells
-            for (let day = 1; day <= remainingCells; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day other-month';
-                dayElement.innerHTML = `
-                    <div class="calendar-day-number">${day}</div>
-                    <div class="calendar-day-shifts">
-                        <div class="calendar-day-diurno"></div>
-                        <div class="calendar-day-noturno"></div>
-                    </div>
-                `;
-                calendarGrid.appendChild(dayElement);
-            }
-        }
-
-        // Função para mudar o mês do calendário
-        function changeMonth(direction) {
-            calendarMonth += direction;
-            if (calendarMonth < 0) {
-                calendarMonth = 11;
-                calendarYear--;
-            } else if (calendarMonth > 11) {
-                calendarMonth = 0;
-                calendarYear++;
-            }
-            generateCalendar();
-        }
-
-        // Função para mostrar detalhes da equipe
-        function showTeamDetails(shift) {
-            const diurnoGroup = document.getElementById('diurno-group').textContent;
-            const noturnoGroup = document.getElementById('noturno-group').textContent;
-            const group = shift === 'diurno' ? diurnoGroup : noturnoGroup;
-            const shiftName = shift === 'diurno' ? 'Turno Diurno' : 'Turno Noturno';
-            const iconClass = shift === 'diurno' ? 'fa-sun' : 'fa-moon';
-            const iconColorClass = shift === 'diurno' ? 'diurno' : 'noturno';
-            // Atualiza o modal
-            document.getElementById('team-modal-title').textContent = group;
-            document.getElementById('team-modal-subtitle').textContent = shiftName;
-            document.getElementById('team-modal-icon').className = `team-modal-icon ${iconColorClass}`;
-            document.getElementById('team-modal-icon').innerHTML = `<i class="fas ${iconClass}"></i>`;
-            // Limpa e preenche a lista de membros
-            const membersContainer = document.getElementById('team-members');
-            membersContainer.innerHTML = '';
-            if (teamData[group]) {
-                teamData[group].forEach(member => {
-                    const memberElement = document.createElement('div');
-                    memberElement.className = 'team-member';
-                    // Obtém as iniciais do nome
-                    const initials = member.name.split(' ').map(n => n[0]).join('').substring(0, 2);
-                    memberElement.innerHTML = `
-                        <div class="member-avatar">${initials}</div>
-                        <div class="member-info">
-                            <div class="member-name">${member.name}</div>
-                            <div class="member-role">${member.role}</div>
-                        </div>
-                    `;
-                    membersContainer.appendChild(memberElement);
-                });
-            } else {
-                membersContainer.innerHTML = '<p style="text-align: center; color: #666;">Nenhum membro encontrado para este grupo.</p>';
-            }
-            // Exibe o modal
-            document.getElementById('teamModal').classList.add('show');
-        }
-
-        // Função para fechar o modal de equipe
-        function closeTeamModal() {
-            document.getElementById('teamModal').classList.remove('show');
-        }
-
-        // Função para alternar a barra lateral
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('collapsed');
-        }
-
-        // Função para exibir uma página - CORRIGIDA
+        // Função para alternar entre as abas do menu
         function showPage(pageId, event) {
-            try {
-                // Esconde todas as páginas
-                const pages = document.querySelectorAll('.page');
-                pages.forEach(page => {
-                    page.classList.remove('active');
-                });
-                
-                // Verifica se a página existe antes de tentar ativá-la
-                const targetPage = document.getElementById(`page-${pageId}`);
-                if (targetPage) {
-                    targetPage.classList.add('active');
-                } else {
-                    console.error(`Página não encontrada: page-${pageId}`);
-                    // Volta para o dashboard como fallback
-                    document.getElementById('page-dashboard').classList.add('active');
-                    pageId = 'dashboard';
-                }
-                
-                // Remove a classe ativa de todos os itens de navegação
-                const navItems = document.querySelectorAll('.nav-item');
-                navItems.forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // Adiciona a classe ativa ao item de navegação clicado
-                if (event && event.currentTarget) {
-                    event.currentTarget.classList.add('active');
-                }
-                
-                // Atualiza o breadcrumb
-                const breadcrumb = document.getElementById('breadcrumb');
-                if (breadcrumb) {
-                    const pageNames = {
-                        'dashboard': '📊 Dashboard',
-                        'plantao': '📅 Plantão',
-                        'passagem': '📋 Passagem de Serviço',
-                        'novo_registro': '➕ Novo Registro',
-                        'usuarios': '👥 Usuários',
-                        'laboratorio': '🔬 Laboratório',
-                        'eva': '🤖 EVA',
-                        'refrigeracao': '❄️ Refrigeração',
-                        'rastreabilidade': '🛣️ Rastreabilidade',
-                        'programacao': '📅 Programação Semanal',
-                        'documentacao': '📒 Documentação',
-                        'sobre': 'ℹ️ Sobre o VLT'
-                    };
-                    breadcrumb.textContent = pageNames[pageId] || pageId;
-                }
-                
-                // Atualiza a variável global currentPage
-                window.currentPage = pageId;
-                
-                // Oculta o botão de screenshot para algumas páginas específicas
-                const screenshotBtn = document.getElementById('screenshotBtn');
-                if (screenshotBtn) {
-                    if (['dashboard', 'usuarios', 'documentacao', 'sobre'].includes(pageId)) {
-                        screenshotBtn.style.display = 'none';
-                    } else {
-                        screenshotBtn.style.display = 'block';
-                    }
-                }
-            } catch (error) {
-                console.error('Erro ao mostrar página:', error);
-                // Tenta recuperar voltando para o dashboard
-                try {
-                    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-                    const dashboardPage = document.getElementById('page-dashboard');
-                    if (dashboardPage) {
-                        dashboardPage.classList.add('active');
-                    }
-                } catch (recoveryError) {
-                    console.error('Falha na recuperação:', recoveryError);
-                }
+            // Remove classe "active" de todos os itens do menu
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Adiciona classe "active" ao item clicado
+            if (event) {
+                event.currentTarget.classList.add('active');
             }
+            
+            // Esconde todas as páginas
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Mostra a página selecionada
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            // Atualiza o título no topo da página (breadcrumb)
+            const pageTitles = {
+                'dashboard': '📊 Dashboard',
+                'plantao': '📅 Plantão',
+                'passagem': '📋 Passagem de Serviço',
+                'novo_registro': '➕ Novo Registro',
+                'usuarios': '👥 Usuários',
+                'laboratorio': '🔬 Laboratório',
+                'eva': '🤖 EVA',
+                'refrigeracao': '❄️ Refrigeração',
+                'rastreabilidade': '🔍 Rastreabilidade',
+                'programacao': '📅 Programação Semanal',
+                'documentacao': '📚 Documentação',
+                'catalogo': '📂 Catálogo',
+                'sobre': 'ℹ️ Sobre o VLT'
+            };
+            
+            document.getElementById('breadcrumb').textContent = pageTitles[pageId] || pageId;
         }
 
-        // Função para carregar informações do usuário
-        function loadUserInfo() {
-            setTimeout(() => {
-                document.getElementById('userName').textContent = userInfo.nome;
-                document.getElementById('userRole').textContent = userInfo.tipo;
-                document.getElementById('userInitials').textContent = userInfo.nome.split(' ').map(n => n[0]).join('').substring(0, 2);
-                // Preenche o modal de perfil
-                document.getElementById('perfil-nome').textContent = userInfo.nome;
-                document.getElementById('perfil-usuario').textContent = userInfo.usuario;
-                document.getElementById('perfil-email').textContent = userInfo.email;
-                document.getElementById('perfil-telefone').textContent = userInfo.telefone;
-                document.getElementById('perfil-tipo').textContent = userInfo.tipo;
-                document.getElementById('perfil-status').textContent = userInfo.status;
-            }, 1000);
+        // Função para carregar informações do usuário no perfil
+        function loadUserProfile() {
+            // Aqui você pode substituir por dados reais do seu sistema
+            const user = {
+                name: 'João Silva',
+                role: 'Administrador',
+                initials: 'JS'
+            };
+            
+            // Atualiza os elementos com as informações do usuário
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userRole').textContent = user.role;
+            document.getElementById('userInitials').textContent = user.initials;
+            
+            // Também atualiza o modal do perfil
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileRole').textContent = user.role;
         }
 
-        // Função para abrir modal de perfil
+        // Função para alternar menu lateral (abrir/fechar)
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        }
+
+        // Funções para os botões de ação
+        function takeScreenshot() {
+            alert('Captura de tela iniciada! Esta função pode ser aprimorada.');
+        }
+        
+        function openSupportModal() {
+            document.getElementById('supportModal').classList.add('show');
+        }
+        
         function openProfileModal() {
             document.getElementById('profileModal').classList.add('show');
         }
 
-        // Função para fechar modal de perfil
-        function closeProfileModal() {
-            document.getElementById('profileModal').classList.remove('show');
-        }
-
-        // Função para abrir modal de suporte
-        function openSupportModal() {
-            document.getElementById('supportModal').classList.add('show');
-            showPage('dashboard'); // Volta para o dashboard
-        }
-
-        // Função para fechar modal de suporte
-        function closeSupportModal() {
-            document.getElementById('supportModal').classList.remove('show');
-        }
-
-        // Função para iniciar o relógio de operação
-        function startOperationClock() {
-            const operationStartDate = new Date('2016-06-06T00:00:00'); // Data de operação comercial
-            function updateClock() {
-                const now = new Date();
-                const diff = now - operationStartDate;
-                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
-                const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24 * 30.44));
-                const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById('op-years').textContent = years;
-                document.getElementById('op-months').textContent = months;
-                document.getElementById('op-days').textContent = days;
-                document.getElementById('op-hours').textContent = hours;
-                document.getElementById('op-minutes').textContent = minutes;
-                document.getElementById('op-seconds').textContent = seconds;
-            }
-            updateClock();
-            setInterval(updateClock, 1000);
-        }
-
-        // Função para carregar documentos
-        function loadDocuments() {
-            setTimeout(() => {
-                const documents = [
-                    {
-                        title: 'Manual de Operação VLT',
-                        description: 'Procedimentos operacionais padrão',
-                        type: 'PDF',
-                        size: '2.4 MB',
-                        url: '#',
-                        date: '15/10/2025'
-                    },
-                    {
-                        title: 'Procedimentos de Segurança',
-                        description: 'Normas e procedimentos de segurança',
-                        type: 'PDF',
-                        size: '1.8 MB',
-                        url: '#',
-                        date: '23/11/2025'
-                    },
-                    {
-                        title: 'Manual de Manutenção Preventiva',
-                        description: 'Guia completo de manutenção',
-                        type: 'PDF',
-                        size: '3.1 MB',
-                        url: '#',
-                        date: '05/11/2025'
-                    },
-                    {
-                        title: 'Especificações Técnicas',
-                        description: 'Documentação técnica detalhada',
-                        type: 'PDF',
-                        size: '4.2 MB',
-                        url: '#',
-                        date: '12/11/2025'
-                    },
-                    {
-                        title: 'Procedimentos de Emergência',
-                        description: 'Protocolos para situações de emergência',
-                        type: 'PDF',
-                        size: '1.5 MB',
-                        url: '#',
-                        date: '30/10/2025'
-                    },
-                    {
-                        title: 'Relatório Diário de Operação',
-                        description: 'Template para relatórios diários',
-                        type: 'XLSX',
-                        size: '0.3 MB',
-                        url: '#',
-                        date: '25/11/2025'
-                    }
-                ];
-                const documentsList = document.getElementById('documents-list');
-                documentsList.innerHTML = '';
-                documents.forEach(doc => {
-                    const card = document.createElement('div');
-                    card.className = 'document-card';
-                    card.innerHTML = `
-                        <div class="document-icon">
-                            <i class="fas ${doc.type === 'PDF' ? 'fa-file-pdf' : 'fa-file-excel'}"></i>
-                        </div>
-                        <div class="document-title">${doc.title}</div>
-                        <div class="document-info">${doc.description}</div>
-                        <div class="document-meta">
-                            <span class="document-type">${doc.type}</span> • 
-                            <span class="document-size">${doc.size}</span> • 
-                            <span class="document-date">${doc.date}</span>
-                        </div>
-                        <div class="document-actions">
-                            <button class="document-btn view" onclick="viewDocument('${doc.url}')">
-                                <i class="fas fa-eye"></i> Visualizar
-                            </button>
-                            <button class="document-btn download" onclick="downloadDocument('${doc.url}')">
-                                <i class="fas fa-download"></i> Download
-                            </button>
-                        </div>
-                    `;
-                    documentsList.appendChild(card);
-                });
-            }, 1500);
-        }
-
-        // Função para carregar usuários
-        function loadUsers() {
-            setTimeout(() => {
-                const users = [
-                    { usuario: 'gjunior', nome: 'Gelson Júnior', email: 'gjunior@vltcarioca.rj.gov.br', telefone: '(21) 98765-4321', tipo: 'Técnico', status: 'Ativo' },
-                    { usuario: 'dquintino', nome: 'Danilo Quintino', email: 'dquintino@vltcarioca.rj.gov.br', telefone: '(21) 97654-3210', tipo: 'Supervisor', status: 'Ativo' },
-                    { usuario: 'aluis', nome: 'André Luiz', email: 'aluis@vltcarioca.rj.gov.br', telefone: '(21) 96543-2109', tipo: 'Técnico', status: 'Ativo' },
-                    { usuario: 'rcamilo', nome: 'Rafael Camilo', email: 'rcamilo@vltcarioca.rj.gov.br', telefone: '(21) 95432-1098', tipo: 'Engenheiro', status: 'Ativo' },
-                    { usuario: 'darlan', nome: 'Darlan', email: 'darlan@vltcarioca.rj.gov.br', telefone: '(21) 94321-0987', tipo: 'Técnico', status: 'Em Férias' },
-                    { usuario: 'admin', nome: 'Administrador', email: 'admin@vltcarioca.rj.gov.br', telefone: '(21) 93210-9876', tipo: 'Administrador', status: 'Ativo' }
-                ];
-                const tableBody = document.getElementById('usuarios-table');
-                tableBody.innerHTML = '';
-                users.forEach(user => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${user.usuario}</td>
-                        <td>${user.nome}</td>
-                        <td>${user.email}</td>
-                        <td>${user.telefone}</td>
-                        <td>${user.tipo}</td>
-                        <td><span style="color: ${user.status === 'Ativo' ? 'green' : 'orange'}; font-weight: bold;">${user.status}</span></td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            }, 2000);
-        }
-
-        // Funções de captura de tela
-        function takeScreenshot() {
-            const element = document.querySelector('.content');
-            html2canvas(element).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save(`dashboard_${new Date().toISOString().split('T')[0]}.pdf`);
-                alert('Captura de tela realizada com sucesso!');
-            });
-        }
-
-        function takePageScreenshot(page) {
-            const element = document.getElementById(`page-${page}`);
-            html2canvas(element).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.download = `${page}_${new Date().toISOString().split('T')[0]}.png`;
-                link.href = imgData;
-                link.click();
-                alert(`Captura da página "${page}" realizada com sucesso!`);
-            });
-        }
-
-        function takePassagemScreenshot() {
-            const element = document.getElementById('page-passagem');
-            html2canvas(element).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.download = `passagem_${new Date().toISOString().split('T')[0]}.png`;
-                link.href = imgData;
-                link.click();
-                alert('Captura da passagem de serviço realizada com sucesso!');
-            });
-        }
-
-        // Funções do modal de passagem de serviço
-        function openPassagemFilterModal() {
-            document.getElementById('passagem-filters').style.display = 'flex';
-        }
-
-        function applyPassagemFilters() {
-            const data = document.getElementById('passagemData').value;
-            const grupo = document.getElementById('passagemGrupo').value;
-            const trem = document.getElementById('passagemTrem').value;
-            const sistema = document.getElementById('passagemSistema').value;
-            const tecnico = document.getElementById('passagemTecnico').value;
-            const status = document.getElementById('passagemStatus').value;
-            // Simula o carregamento dos dados filtrados
-            const tableBody = document.getElementById('passagem-table');
-            tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 40px;" class="loading">⏳ Carregando dados filtrados...</td></tr>`;
-            setTimeout(() => {
-                // Dados simulados para demonstração
-                const mockData = [
-                    { data: '24/11/2025 08:30', tecnico: 'Gelson Júnior', trem: '001', sistema: 'Tração', descricao: 'Manutenção preventiva realizada com sucesso', status: 'LIBERADO' },
-                    { data: '24/11/2025 10:15', tecnico: 'Danilo Quintino', trem: '002', sistema: 'Freio', descricao: 'Substituição de pastilhas de freio', status: 'MANUTENÇÃO' },
-                    { data: '24/11/2025 14:45', tecnico: 'André Luiz', trem: '003', sistema: 'Portas', descricao: 'Correção de sensor de porta', status: 'AGENDADO' },
-                    { data: '24/11/2025 16:20', tecnico: 'Rafael Camilo', trem: '004', sistema: 'Comunicação', descricao: 'Falha no sistema de comunicação', status: 'COLISÃO' }
-                ];
-                tableBody.innerHTML = '';
-                mockData.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.data}</td>
-                        <td>${item.tecnico}</td>
-                        <td>${item.trem}</td>
-                        <td>${item.sistema}</td>
-                        <td>${item.descricao}</td>
-                        <td><span style="color: ${getStatusColor(item.status)}; font-weight: bold;">${item.status}</span></td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            }, 1500);
-        }
-
-        function clearPassagemFilters() {
-            document.getElementById('passagemData').value = '';
-            document.getElementById('passagemGrupo').value = '';
-            document.getElementById('passagemTrem').value = '';
-            document.getElementById('passagemSistema').value = '';
-            document.getElementById('passagemTecnico').value = '';
-            document.getElementById('passagemStatus').value = '';
-            applyPassagemFilters();
-        }
-
-        function getStatusColor(status) {
-            const colors = {
-                'LIBERADO': 'green',
-                'MANUTENÇÃO': 'orange',
-                'AGENDADO': 'blue',
-                'COLISÃO': 'red',
-                'PREVENTIVA': 'purple'
-            };
-            return colors[status] || 'gray';
-        }
-
-        // Funções do modal de perfil
-        function editProfile() {
-            alert('Função de edição de perfil em desenvolvimento');
-        }
-
-        function changePassword() {
-            alert('Função de alteração de senha em desenvolvimento');
-        }
-
-        function logout() {
-            if (confirm('Deseja realmente sair do sistema?')) {
-                // Simula logout redirecionando para login
-                alert('Logout realizado com sucesso!');
-                closeProfileModal();
-            }
-        }
-
-        // Funções do modal de suporte
-        function openTicketForm() {
-            alert('Formulário de abertura de chamado em desenvolvimento');
-            closeSupportModal();
-        }
-
-        // Funções de documentação
-        function filterDocuments() {
-            const searchTerm = document.getElementById('searchDocumentacao').value.toLowerCase();
-            const cards = document.querySelectorAll('.document-card');
-            cards.forEach(card => {
-                const title = card.querySelector('.document-title').textContent.toLowerCase();
-                const description = card.querySelector('.document-info').textContent.toLowerCase();
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        function clearDocumentSearch() {
-            document.getElementById('searchDocumentacao').value = '';
-            document.querySelectorAll('.document-card').forEach(card => {
-                card.style.display = 'block';
-            });
-        }
-
-        function viewDocument(url) {
-            alert('Visualização do documento em desenvolvimento');
-        }
-
-        function downloadDocument(url) {
-            alert('Download do documento iniciado');
-        }
-
-        // Funções de manuseio de iframes
+        // Funções para iframes (formulários)
         function handleIframeLoad(loadingId) {
             document.getElementById(loadingId).classList.add('hidden');
         }
-
+        
         function handleIframeError(pageId, fallbackUrl) {
-            const loading = document.querySelector('.loading-overlay');
-            if (loading) {
-                loading.classList.add('hidden');
-            }
-            const container = document.getElementById(pageId);
-            if (container) {
-                container.innerHTML = `
-                    <div class="fallback-container">
-                        <div class="fallback-message">
-                            <p>O formulário não pôde ser carregado. Isso pode acontecer devido a restrições de segurança do navegador.</p>
-                            <p>Clique no botão abaixo para abrir o formulário em uma nova aba:</p>
-                        </div>
-                        <a href="${fallbackUrl}" target="_blank" class="fallback-btn">
-                            <i class="fas fa-external-link-alt"></i> Abrir Formulário
-                        </a>
-                    </div>
-                `;
-            }
+            console.error('Erro ao carregar iframe na página: ' + pageId);
+            alert('Erro ao carregar conteúdo. Tentando recarregar...');
+            // Aqui você poderia redirecionar para uma URL alternativa
         }
 
-        // Funções da aba Sobre o VLT
-        function searchStation() {
-            const searchTerm = document.getElementById('searchEstacao').value.toLowerCase();
-            const resultDiv = document.getElementById('estacao-result');
-            if (searchTerm.length < 2) {
-                resultDiv.innerHTML = '';
-                return;
-            }
-            // Dados simulados de estações
-            const stations = [
-                { name: 'Candelária', code: 'CAN', line: '1' },
-                { name: 'Sete de Setembro', code: 'SS', line: '1' },
-                { name: 'Carioca', code: 'CAR', line: '1' },
-                { name: 'Uruguai', code: 'URU', line: '1' },
-                { name: 'Santos Dumont', code: 'SD', line: '2' },
-                { name: 'Parada dos Museus', code: 'PMU', line: '2' },
-                { name: 'Cinelandia', code: 'CIN', line: '2' },
-                { name: 'Presidente Vargas', code: 'PV', line: '3' },
-                { name: 'Praça XV', code: 'PXV', line: '4' }
-            ];
-            const results = stations.filter(station => 
-                station.name.toLowerCase().includes(searchTerm) || 
-                station.code.toLowerCase().includes(searchTerm)
-            );
-            if (results.length > 0) {
-                let html = `<div class="estacoes-list">`;
-                results.forEach(station => {
-                    html += `
-                        <div class="estacao-item highlight">
-                            <strong>${station.name}</strong> (${station.code})
-                            <br>
-                            <small>Linha ${station.line}</small>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-                resultDiv.innerHTML = html;
-            } else {
-                resultDiv.innerHTML = '<p style="color: #666;">Nenhuma estação encontrada</p>';
-            }
+        // Função para capturar tela de uma página específica
+        function takePageScreenshot(pageName) {
+            alert('Capturando tela da página: ' + pageName);
         }
 
-        function showLineStations(lineNumber) {
-            const lines = {
-                1: ['Candelária', 'Sete de Setembro', 'Carioca', 'Uruguai'],
-                2: ['Santos Dumont', 'Parada dos Museus', 'Cinelandia'],
-                3: ['Carioca', 'Presidente Vargas'],
-                4: ['Praça XV', 'Parada dos Museus']
-            };
-            const stations = lines[lineNumber] || [];
-            const listDiv = document.getElementById('linhas-list');
-            if (stations.length > 0) {
-                let html = `<div style="margin-bottom: 10px;"><strong>Linha ${lineNumber}</strong></div>`;
-                html += `<div class="estacoes-list">`;
-                stations.forEach(station => {
-                    html += `<div class="estacao-item">${station}</div>`;
-                });
-                html += `</div>`;
-                listDiv.innerHTML = html;
-                listDiv.style.display = 'block';
-            } else {
-                listDiv.style.display = 'none';
-            }
-        }
-
-        // Fallback para caso os scripts externos falhem
+        // Inicialização quando a página carrega
         document.addEventListener('DOMContentLoaded', function() {
-            // Verifica se as bibliotecas necessárias estão carregadas
-            const requiredLibs = ['html2canvas', 'XLSX', 'jsPDF'];
+            // Carrega o perfil do usuário
+            loadUserProfile();
             
-            requiredLibs.forEach(lib => {
-                if (typeof window[lib] === 'undefined') {
-                    console.warn(`Biblioteca ${lib} não carregada. Funcionalidades relacionadas podem não funcionar.`);
+            // Fecha modais ao clicar fora deles
+            window.onclick = function(event) {
+                if (event.target.className === 'modal') {
+                    event.target.classList.remove('show');
                 }
+            };
+            
+            // Configurar data atual para o campo de data do plantão
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('plantao-date').value = today;
+        });
+
+        // Funções adicionais para o filtro de passagem de serviço
+        function openPassagemFilterModal() {
+            document.getElementById('passagem-filters').style.display = 'flex';
+        }
+        
+        function applyPassagemFilters() {
+            alert('Filtros aplicados! Em uma versão completa, aqui filtraríamos os dados.');
+        }
+        
+        function clearPassagemFilters() {
+            document.getElementById('passagem-filters').style.display = 'none';
+        }
+        
+        // Funções para a aba Plantão
+        function updatePlantaoInfo() {
+            const date = document.getElementById('plantao-date').value;
+            // Aqui iria a lógica para atualizar as informações do plantão com base na data
+            alert('Atualizando informações para: ' + date);
+        }
+        
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('plantao-date').value = today;
+            updatePlantaoInfo();
+        }
+        
+        function showTeamDetails(shiftType) {
+            alert('Mostrando detalhes da equipe do turno ' + (shiftType === 'diurno' ? 'diurno' : 'noturno'));
+        }
+        
+        function changeMonth(direction) {
+            // Lógica para mudar o mês no calendário
+            const currentTitle = document.getElementById('calendar-title').textContent;
+            alert('Mudando mês: ' + (direction > 0 ? 'próximo' : 'anterior') + ' - ' + currentTitle);
+        }
+        
+        // Funções para a aba Catálogo
+        function showCatalogoTab(tabName) {
+            document.querySelectorAll('.catalogo-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.catalogo-tab-content').forEach(content => {
+                content.classList.remove('active');
             });
             
-            // Cria versões fallback para funções críticas
-            if (typeof html2canvas === 'undefined') {
-                window.html2canvas = function() {
-                    console.error('html2canvas não disponível. Captura de tela desabilitada.');
-                    return Promise.reject(new Error('html2canvas não carregado'));
-                };
-            }
-            
-            if (typeof XLSX === 'undefined') {
-                window.XLSX = {
-                    utils: {
-                        json_to_sheet: function() { return {}; },
-                        aoa_to_sheet: function() { return {}; }
-                    },
-                    writeFile: function() { console.error('XLSX não disponível. Exportação desabilitada.'); }
-                };
-            }
-        });
+            document.querySelector(`.catalogo-tab[onclick="showCatalogoTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`catalogo-${tabName}`).classList.add('active');
+        }
+        
+        function exportCatalogoSistema() {
+            alert('Exportando dados do catálogo de sistema/equipamento');
+        }
+        
+        function exportCatalogoMaterial() {
+            alert('Exportando dados da base de cadastro');
+        }
+        
+        function previousMaterialPage() {
+            // Lógica para página anterior
+            alert('Página anterior');
+        }
+        
+        function nextMaterialPage() {
+            // Lógica para próxima página
+            alert('Próxima página');
+        }
+        
+        // Função para atualizar programação
+        function refreshProgramacao() {
+            alert('Atualizando programação semanal');
+        }
     </script>
 </body>
 </html>
