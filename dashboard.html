@@ -589,7 +589,7 @@
                             </button>
                         </div>
                         <div class="filter-container">
-                            <input type="date" id="plantaoData" class="filter-input" value="2025-11-25" onchange="updatePlantao()">
+                            <input type="date" id="plantaoData" class="filter-input" value="2025-11-24" onchange="updatePlantao()">
                             <button class="filter-btn" onclick="setTodayDate()">
                                 <i class="fas fa-calendar-day"></i> Hoje
                             </button>
@@ -597,8 +597,8 @@
                                 <i class="fas fa-arrow-right"></i> Amanhã
                             </button>
                             <div style="flex:1;"></div>
-                            <button class="filter-btn" onclick="toggleCalendarView()">
-                                <i class="fas fa-calendar-week"></i> <span id="calendarViewText">Calendário Mensal</span>
+                            <button class="filter-btn" onclick="toggleCalendarView()" style="background: var(--primary); color: white; border-color: var(--primary);">
+                                <i class="fas fa-calendar-week"></i> <span id="calendarViewText">Modo Simples</span>
                             </button>
                         </div>
                         <div class="operation-clock" style="margin-bottom: 30px;">
@@ -624,7 +624,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="calendar-container" style="display: none; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 8px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                        <div id="calendar-container" style="display: block; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 8px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                                 <button class="filter-btn" onclick="changeMonth(-1)"><i class="fas fa-arrow-left"></i> Mês Anterior</button>
                                 <h3 id="calendar-month-title" style="color: var(--dark); font-weight: 600; font-size: 20px;">Novembro 2025</h3>
@@ -2169,6 +2169,11 @@
                 handleIframeError(pageId, formUrl);
             });
         });
+        
+        // Inicializar calendário automaticamente para novembro/2025
+        if (document.getElementById('page-plantao')) {
+            setTimeout(initPlantaoSystem, 500);
+        }
     });
     console.log("🎯 JavaScript carregado com sucesso!");
 </script>
