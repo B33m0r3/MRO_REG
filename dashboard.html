@@ -484,6 +484,244 @@
         .fallback-btn i {
             font-size: 18px;
         }
+            /* Estilos para a aba Catálogo */
+        .catalogo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: calc(100% - 80px); /* Ajusta para o espaço do header */
+        }
+        .catalogo-column {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .column-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-container {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            gap: 10px;
+        }
+        .search-container input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .search-container button {
+            padding: 10px 15px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .search-container button:hover {
+            background: #e74c3c;
+        }
+        .tree-container, .materiais-grid {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        .tree-container {
+            font-size: 14px;
+        }
+        .materiais-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            align-content: start;
+        }
+        .material-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .material-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+        .material-card h4 {
+            margin: 0 0 10px 0;
+            color: var(--dark);
+            font-size: 16px;
+        }
+        .material-card p {
+            margin: 0;
+            color: #555;
+            font-size: 13px;
+        }
+        .material-card .material-id {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        /* Estilos da Árvore (reaproveitados e adaptados) */
+        .tree-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .tree-item:hover {
+            background-color: var(--light);
+        }
+        .tree-item.selected {
+            background-color: #fff3e0;
+            border-left: 3px solid var(--primary);
+        }
+        .tree-item .toggle-btn {
+            min-width: 20px;
+            height: 20px;
+            line-height: 18px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            background: #FF7C3C;
+            color: white;
+            font-size: 12px;
+        }
+        .tree-item .toggle-placeholder {
+            min-width: 20px;
+        }
+        .tree-item .view-btn {
+            padding: 2px 8px;
+            background-color: #004680;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .tree-item ul {
+            list-style-type: none;
+            padding-left: 25px;
+            margin: 0;
+            position: relative;
+        }
+        .tree-item ul:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 8px;
+            bottom: 0;
+            width: 1px;
+            background: #ccc;
+        }
+        .tree-item li {
+            margin: 5px 0;
+            position: relative;
+        }
+        .tree-item li:before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: -17px;
+            width: 17px;
+            height: 1px;
+            background: #ccc;
+        }
+        /* Estilos do Modal (reaproveitados) */
+        #itemDetailsModal .modal-content {
+             max-width: 900px;
+             width: 95%;
+             max-height: 90vh;
+        }
+        #itemDetailsModal .modal-body {
+             padding: 0;
+             max-height: calc(90vh - 70px);
+             overflow: hidden;
+        }
+        .modal-tabs {
+             display: flex;
+             background: var(--light);
+             border-bottom: 1px solid var(--border);
+        }
+        .modal-tab-btn {
+             flex: 1;
+             padding: 15px;
+             background: none;
+             border: none;
+             cursor: pointer;
+             font-size: 16px;
+             font-weight: 600;
+             color: var(--dark);
+             transition: all 0.3s;
+        }
+        .modal-tab-btn.active {
+             background: white;
+             color: var(--primary);
+             border-bottom: 3px solid var(--primary);
+        }
+        .modal-tab-content {
+             padding: 20px;
+             overflow-y: auto;
+             max-height: calc(90vh - 180px);
+             background: white;
+        }
+        .image-gallery {
+             display: flex;
+             gap: 15px;
+             flex-wrap: wrap;
+             justify-content: center;
+        }
+        .image-gallery img {
+             max-width: 100%;
+             max-height: 300px;
+             border-radius: 8px;
+             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+             object-fit: contain;
+        }
+        /* Loading Spinner */
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--primary);
+            font-size: 18px;
+        }
+        .loading-spinner i {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+        /* Destaque para busca */
+        .highlight {
+            background-color: #fff59d;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .catalogo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -538,6 +776,10 @@
                 <li class="nav-item" onclick="showPage('documentacao', event)">
                     <i class="fas fa-book"></i>
                     <span class="nav-label">Documentação</span>
+                </li>
+                <li class="nav-item" onclick="showPage('catalogo', event)">
+                    <i class="fas fa-book-open"></i>
+                    <span class="nav-label">Catálogo</span>
                 </li>
                 <li class="nav-item" onclick="showPage('sobre', event)">
                     <i class="fas fa-info-circle"></i>
@@ -996,6 +1238,68 @@
                             </div>
                         </div>
                     </div>
+                                        <!-- Catálogo -->
+                    <div class="page" id="page-catalogo">
+                        <div class="page-header">
+                            <h1>📚 Catálogo de Peças e Componentes</h1>
+                            <p>Navegue pela estrutura do VLT Citadis 402 e consulte a base de cadastro de materiais.</p>
+                        </div>
+
+                        <div class="catalogo-layout">
+                            <!-- Container da Árvore de Montagem -->
+                            <div class="catalogo-column" id="catalogo-tree-column">
+                                <div class="column-header">
+                                    <i class="fas fa-sitemap"></i> Estrutura do Sistema
+                                </div>
+                                <div class="search-container">
+                                    <input type="text" id="treeSearchInput" placeholder="Buscar na árvore..." onkeyup="searchTree()">
+                                    <button onclick="clearTreeSearch()"><i class="fas fa-times"></i></button>
+                                </div>
+                                <div class="tree-container" id="treeContent">
+                                    <div class="loading-spinner">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <span>Carregando estrutura...</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Container da Base de Cadastro -->
+                            <div class="catalogo-column" id="catalogo-materiais-column">
+                                <div class="column-header">
+                                    <i class="fas fa-database"></i> Base de Cadastro de Materiais
+                                </div>
+                                <div class="search-container">
+                                    <input type="text" id="materialSearchInput" placeholder="Buscar material (nome, código, descrição)..." onkeyup="searchMateriais()">
+                                    <button onclick="clearMaterialSearch()"><i class="fas fa-times"></i></button>
+                                </div>
+                                <div class="materiais-grid" id="materiaisGrid">
+                                     <div class="loading-spinner">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <span>Carregando materiais...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal para Detalhes do Item -->
+                        <div id="itemDetailsModal" class="modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 id="modalTitle">Detalhes do Item</h2>
+                                    <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-tabs">
+                                        <button class="modal-tab-btn active" onclick="switchModalTab('details')">Detalhes</button>
+                                        <button class="modal-tab-btn" onclick="switchModalTab('images')">Imagens</button>
+                                    </div>
+                                    <div id="modalTabContent" class="modal-tab-content">
+                                        <!-- O conteúdo será injetado aqui pelo JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="motivational-quote" id="motivational-quote">
                     💪 Excelência é a jornada, não o destino!
@@ -1201,6 +1505,7 @@
         } else {
             console.error("❌ Página não encontrada:", pageName);
         }
+        
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         if (event && event.currentTarget) {
             event.currentTarget.classList.add('active');
@@ -1222,7 +1527,7 @@
         document.getElementById('breadcrumb').textContent = titles[pageName] || pageName;
         updateMotivationalQuote();
         const screenshotBtn = document.getElementById('screenshotBtn');
-        if (['documentacao', 'sobre'].includes(pageName)) { 
+        if (['documentacao', 'sobre', 'catalogo'].includes(pageName)) { 
             screenshotBtn.style.display = 'inline-block'; 
         } else {
             screenshotBtn.style.display = 'none'; 
@@ -1238,6 +1543,8 @@
         if (pageName === 'relatorios') {
             document.getElementById('relatorio-table').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;">Clique em "Aplicar Filtros" para gerar o relatório</td></tr>';
         }
+
+        if (pageName === 'catalogo') showCatalogoPage();
     }
 
     // FUNÇÕES PARA PASSAGEM DE SERVIÇO (CORRIGIDAS E LIMPA)
@@ -1957,6 +2264,522 @@
     });
 
     console.log("🎯 JavaScript carregado com sucesso!");
+    // Variáveis globais para armazenar os dados carregados
+let projetoVLTData = null;
+let baseCadastroData = null;
+let currentSelectedItem = null;
+
+// Função para mostrar a aba do catálogo
+function showCatalogoPage() {
+    console.log("Carregando aba Catálogo...");
+    
+    // Verifica se os dados já foram carregados
+    if (!projetoVLTData || !baseCadastroData) {
+        // Mostra indicadores de carregamento
+        document.getElementById('treeContent').innerHTML = `
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Carregando estrutura do VLT...</span>
+            </div>
+        `;
+        
+        document.getElementById('materiaisGrid').innerHTML = `
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Carregando base de materiais...</span>
+            </div>
+        `;
+        
+        // Carrega os dados dos arquivos
+        Promise.all([
+            loadProjetoVLTData(),
+            loadBaseCadastroData()
+        ]).then(() => {
+            // Após carregar, renderiza a árvore e os materiais
+            renderTree();
+            renderMateriais();
+        }).catch(error => {
+            console.error("Erro ao carregar dados:", error);
+            document.getElementById('treeContent').innerHTML = `
+                <div class="loading-spinner">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Erro ao carregar dados: ${error.message}</span>
+                </div>
+            `;
+            document.getElementById('materiaisGrid').innerHTML = `
+                <div class="loading-spinner">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Erro ao carregar dados: ${error.message}</span>
+                </div>
+            `;
+        });
+    } else {
+        // Se os dados já foram carregados, apenas renderiza
+        renderTree();
+        renderMateriais();
+    }
+}
+
+// Função para carregar os dados do projeto VLT
+// Função para carregar os dados do projeto VLT (versão alternativa)
+// Função para carregar os dados do projeto VLT
+function loadProjetoVLTData() {
+    return new Promise((resolve, reject) => {
+        // URL do arquivo JSON no GitHub
+        const url = 'https://raw.githubusercontent.com/B33m0r3/MRO_REG/main/1MRO_FROTA.CITADIS402.json';
+        
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                return response.json(); // Usando .json() diretamente
+            })
+            .then(data => {
+                projetoVLTData = data;
+                console.log("Dados do projeto VLT carregados:", projetoVLTData);
+                resolve();
+            })
+            .catch(error => {
+                console.error("Erro ao carregar arquivo do projeto:", error);
+                reject(error);
+            });
+    });
+}
+
+// Função para carregar os dados da base de cadastro
+function loadBaseCadastroData() {
+    return new Promise((resolve, reject) => {
+        // URL do arquivo no GitHub - substitua USERNAME e REPO pelos seus dados
+        const url = 'https://raw.githubusercontent.com/B33m0r3/MRO_REG/main/VT_2025.07_BASECADASTRO.TXT';
+        
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(text => {
+                try {
+                    // Processa o texto para extrair o JSON
+                    // O formato do arquivo é {filename:[json_data]}
+                    const match = text.match(/\{[\s\S]*\}/);
+                    if (!match) {
+                        throw new Error("Formato de arquivo inválido");
+                    }
+                    
+                    // Remove o nome do arquivo e extrai apenas o JSON
+                    const jsonStr = text.replace(/^\{[^:]+:/, '{').replace(/\}$/, '}');
+                    baseCadastroData = JSON.parse(jsonStr);
+                    
+                    console.log("Dados da base de cadastro carregados:", baseCadastroData);
+                    resolve();
+                } catch (parseError) {
+                    console.error("Erro ao processar dados da base:", parseError);
+                    reject(new Error("Formato de dados da base inválido"));
+                }
+            })
+            .catch(error => {
+                console.error("Erro ao carregar arquivo da base:", error);
+                reject(error);
+            });
+    });
+}
+
+// Função para renderizar a árvore de componentes
+function renderTree() {
+    const treeContainer = document.getElementById('treeContent');
+    if (!treeContainer) return;
+    
+    treeContainer.innerHTML = ''; // Limpa o "Carregando..."
+    
+    if (!projetoVLTData || !projetoVLTData.children) {
+        treeContainer.innerHTML = '<p style="padding: 20px; color: var(--danger);">Erro: Dados do projeto não encontrados.</p>';
+        return;
+    }
+    
+    const treeElement = createTreeElement(projetoVLTData);
+    treeContainer.appendChild(treeElement);
+}
+
+// Função recursiva para criar os elementos da árvore
+function createTreeElement(node) {
+    const li = document.createElement('li');
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'tree-item';
+    itemDiv.onclick = () => selectTreeItem(itemDiv, node);
+
+    // Toggle para expandir/colapsar
+    if (node.children && node.children.length > 0) {
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'toggle-btn';
+        toggleBtn.textContent = '+';
+        toggleBtn.onclick = (e) => {
+            e.stopPropagation();
+            const childrenUl = li.querySelector('ul');
+            if (childrenUl) {
+                const isHidden = childrenUl.style.display === 'none';
+                childrenUl.style.display = isHidden ? 'block' : 'none';
+                toggleBtn.textContent = isHidden ? '-' : '+';
+            }
+        };
+        itemDiv.appendChild(toggleBtn);
+    } else {
+        const placeholder = document.createElement('span');
+        placeholder.className = 'toggle-placeholder';
+        itemDiv.appendChild(placeholder);
+    }
+
+    // Nome do item
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'item-originalname';
+    nameSpan.textContent = node.originalname || node.name;
+    itemDiv.appendChild(nameSpan);
+    
+    // Botão para visualizar detalhes
+    const viewBtn = document.createElement('button');
+    viewBtn.className = 'view-btn';
+    viewBtn.textContent = 'Ver';
+    viewBtn.onclick = (e) => {
+        e.stopPropagation();
+        showItemDetails(node);
+    };
+    itemDiv.appendChild(viewBtn);
+
+    li.appendChild(itemDiv);
+
+    // Adiciona filhos recursivamente
+    if (node.children && node.children.length > 0) {
+        const ul = document.createElement('ul');
+        ul.style.display = 'none'; // Começa colapsado
+        node.children.forEach(child => {
+            ul.appendChild(createTreeElement(child));
+        });
+        li.appendChild(ul);
+    }
+
+    return li;
+}
+
+// Função para renderizar a grade de materiais
+function renderMateriais() {
+    const gridContainer = document.getElementById('materiaisGrid');
+    if (!gridContainer) return;
+
+    gridContainer.innerHTML = ''; // Limpa o "Carregando..."
+
+    if (!baseCadastroData || baseCadastroData.length === 0) {
+        gridContainer.innerHTML = '<p style="padding: 20px; color: var(--danger);">Erro: Base de cadastro não encontrada.</p>';
+        return;
+    }
+
+    baseCadastroData.forEach(material => {
+        const card = document.createElement('div');
+        card.className = 'material-card';
+        card.onclick = () => showMaterialDetails(material);
+
+        const title = document.createElement('h4');
+        title.textContent = material["Texto breve de material"];
+
+        const id = document.createElement('p');
+        id.innerHTML = `<span class="material-id">Código:</span> ${material.Material}`;
+
+        const description = document.createElement('p');
+        description.textContent = material["Texto Longo"] ? material["Texto Longo"].substring(0, 100) + '...' : 'Sem descrição longa.';
+
+        card.appendChild(title);
+        card.appendChild(id);
+        card.appendChild(description);
+        gridContainer.appendChild(card);
+    });
+}
+
+// Função para selecionar um item na árvore
+function selectTreeItem(element, node) {
+    // Remove seleção anterior
+    document.querySelectorAll('.tree-item').forEach(item => item.classList.remove('selected'));
+    // Adiciona seleção ao item clicado
+    element.classList.add('selected');
+    currentSelectedItem = node;
+}
+
+// Função para mostrar detalhes do item (da árvore ou material)
+function showItemDetails(item) {
+    const modal = document.getElementById('itemDetailsModal');
+    const title = document.getElementById('modalTitle');
+    const content = document.getElementById('modalTabContent');
+
+    title.textContent = item.originalname || item["Texto breve de material"];
+
+    // Aba 'Detalhes'
+    const detailsHTML = `
+        <p><strong>Fabricante:</strong> ${item.fabricanteFornecedor || 'N/A'}</p>
+        <p><strong>Referência Comercial:</strong> ${item.referenciaComercial || 'N/A'}</p>
+        <p><strong>Código SAP:</strong> ${item.codigoSap || item.Material || 'N/A'}</p>
+        <p><strong>Quantidade:</strong> ${item.qtd || item["Utilização livre"] || 'N/A'}</p>
+        <p><strong>Descrição:</strong> ${item.description || item["Texto Longo"] || 'N/A'}</p>
+        <p><strong>Depósito:</strong> ${item.Depósito || 'N/A'}</p>
+        <p><strong>Centro:</strong> ${item.Centro || 'N/A'}</p>
+    `;
+    
+    // Aba 'Imagens'
+    const images = [item.imageUrl1, item.imageUrl2, item.imageUrl3, item["Image URL"]].filter(url => url);
+    const imagesHTML = `
+        <div class="image-gallery">
+            ${images.length > 0 ? images.map(url => `<img src="${url}" alt="Imagem do componente" onerror="this.src='https://picsum.photos/seed/error/300/200.jpg'">`).join('') : '<p>Nenhuma imagem disponível.</p>'}
+        </div>
+    `;
+
+    // Configura o conteúdo inicial para a aba de detalhes
+    content.innerHTML = detailsHTML;
+    modal.classList.add('show');
+
+    // Adiciona manipulador para as abas do modal
+    document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        btn.onclick = (e) => {
+            document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            if (e.target.textContent.includes('Detalhes')) {
+                content.innerHTML = detailsHTML;
+            } else if (e.target.textContent.includes('Imagens')) {
+                content.innerHTML = imagesHTML;
+            }
+        };
+    });
+}
+
+// Função para mostrar detalhes do material
+function showMaterialDetails(material) {
+    showItemDetails(material);
+}
+
+// Função para fechar o modal
+function closeModal() {
+    document.getElementById('itemDetailsModal').classList.remove('show');
+}
+
+// Funções de busca
+function searchTree() {
+    const input = document.getElementById('treeSearchInput');
+    const filter = input.value.toLowerCase();
+    const items = document.querySelectorAll('#treeContent .tree-item');
+
+    items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(filter)) {
+            item.style.display = 'flex';
+            // Expande os pais para tornar o item visível
+            let parent = item.closest('ul');
+            while(parent) {
+                parent.style.display = 'block';
+                parent = parent.parentElement.closest('ul');
+            }
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function searchMateriais() {
+    const input = document.getElementById('materialSearchInput');
+    const filter = input.value.toLowerCase();
+    const cards = document.querySelectorAll('.material-card');
+
+    cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(filter)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function clearTreeSearch() {
+    document.getElementById('treeSearchInput').value = '';
+    searchTree();
+}
+
+function clearMaterialSearch() {
+    document.getElementById('materialSearchInput').value = '';
+    searchMateriais();
+}
+
+// Adicione um evento para fechar o modal ao clicar fora dele
+window.onclick = function(event) {
+    const modal = document.getElementById('itemDetailsModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+/* ===================================================================
+   CÓDIGO CORRIGIDO PARA A ABA CATÁLOGO (VERSÃO FINAL)
+   =================================================================== */
+
+// URL CORRETA para o arquivo JSON bruto (raw) no GitHub
+const PROJECT_DATA_URL = 'https://raw.githubusercontent.com/B33m0r3/MRO_REG/main/1MRO_FROTA.CITADIS402.json';
+
+// Variável global para armazenar a estrutura da árvore já processada
+let projectTreeData = [];
+
+// Função principal que é chamada ao abrir a aba Catálogo
+function loadProjectTree() {
+    const treeContainer = document.querySelector('.tree-container');
+    if (!treeContainer) return;
+
+    // 1. Mostrar indicador de carregamento
+    treeContainer.innerHTML = `
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Carregando e processando estrutura do projeto...</p>
+        </div>
+    `;
+
+    // 2. Buscar os dados do arquivo JSON bruto
+    fetch(PROJECT_DATA_URL)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro HTTP! Status: ${response.status}. Verifique a URL do arquivo.`);
+            }
+            return response.json();
+        })
+        .then(flatData => {
+            // 3. Transformar a lista plana em uma estrutura de árvore
+            projectTreeData = buildTreeFromFlatData(flatData);
+            
+            // Limpa o indicador de carregamento
+            treeContainer.innerHTML = '';
+
+            if (projectTreeData.length > 0) {
+                // 4. Renderizar a árvore no primeiro nível
+                renderTreeLevel(projectTreeData, treeContainer);
+            } else {
+                treeContainer.innerHTML = '<p style="padding: 20px; color: #888;">Não foi possível construir a árvore a partir dos dados.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar ou processar os dados do projeto:', error);
+            treeContainer.innerHTML = `
+                <div class="fallback-container">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: var(--danger); margin-bottom: 15px;"></i>
+                    <p class="fallback-message"><strong>Erro: Dados do projeto não encontrados.</strong></p>
+                    <p class="fallback-message">Não foi possível carregar o arquivo da URL: <br><code>${PROJECT_DATA_URL}</code></p>
+                    <p style="font-size: 12px; color: #999; margin-top: 15px;">Detalhes do erro: ${error.message}</p>
+                </div>
+            `;
+        });
+}
+
+/**
+ * Transforma uma lista plana (do seu JSON) em uma estrutura de árvore hierárquica.
+ * @param {Array} flatData - O array de objetos vindo do JSON.
+ * @returns {Array} - A estrutura de árvore pronta para ser renderizada.
+ */
+function buildTreeFromFlatData(flatData) {
+    const tree = [];
+    const map = new Map();
+
+    // Primeira passagem: cria todos os nós e os coloca em um mapa para acesso rápido
+    flatData.forEach(item => {
+        // Nós são criados para cada nível que não é nulo
+        const levels = [
+            { name: item.NIVEL1, level: 1 },
+            { name: item.NIVEL2, level: 2 },
+            { name: item.NIVEL3, level: 3 },
+            { name: item.NIVEL4, level: 4 },
+            { name: item.NIVEL5, level: 5 },
+            { name: item.DESCRICAO, level: 6, id: item.CODIGO } // O último nível é a descrição com o código
+        ];
+
+        let currentPath = '';
+        levels.forEach(lvl => {
+            if (lvl.name) {
+                const id = currentPath + lvl.name;
+                if (!map.has(id)) {
+                    map.set(id, {
+                        id: id,
+                        name: lvl.name,
+                        children: [],
+                        isLeaf: lvl.level === 6 // Marca se é o nó final (folha)
+                    });
+                }
+                currentPath = id + ' > ';
+            }
+        });
+    });
+
+    // Segunda passagem: constrói a hierarquia ligando os pais aos filhos
+    map.forEach(node => {
+        // Encontra o pai removendo o último componente do ID
+        const parentId = node.id.substring(0, node.id.lastIndexOf(' > '));
+        if (parentId && map.has(parentId)) {
+            map.get(parentId).children.push(node);
+        } else if (!parentId) {
+            // Se não tem pai, é um nó raiz
+            tree.push(node);
+        }
+    });
+
+    return tree;
+}
+
+// Função para renderizar um nível da árvore (esta função continua a mesma)
+function renderTreeLevel(items, containerElement) {
+    const ul = document.createElement('ul');
+    items.forEach(item => {
+        const li = document.createElement('li');
+        li.dataset.id = item.id;
+
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('tree-item');
+
+        // Adiciona o botão de expandir/recolher se houver filhos
+        if (item.children && item.children.length > 0) {
+            const toggleBtn = document.createElement('span');
+            toggleBtn.classList.add('toggle-btn');
+            toggleBtn.textContent = '+';
+            toggleBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleNode(li, toggleBtn, item.children);
+            };
+            itemDiv.appendChild(toggleBtn);
+        } else {
+            const placeholder = document.createElement('span');
+            placeholder.classList.add('toggle-placeholder');
+            itemDiv.appendChild(placeholder);
+        }
+
+        // Adiciona o nome do item. Se for folha, adiciona um link para visualizar.
+        const itemName = document.createElement('span');
+        if(item.isLeaf) {
+            // Se for um item final (folha), podemos adicionar um link ou botão para ver detalhes
+            itemName.innerHTML = `<i class="fas fa-cog" style="color: var(--primary); margin-right: 8px;"></i>${item.name}`;
+        } else {
+            itemName.textContent = item.name;
+        }
+        itemDiv.appendChild(itemName);
+        
+        li.appendChild(itemDiv);
+        ul.appendChild(li);
+    });
+    containerElement.appendChild(ul);
+}
+
+// Função para expandir ou recolher um nó da árvore (continua a mesma)
+function toggleNode(liElement, buttonElement, childrenData) {
+    const childUl = liElement.querySelector(':scope > ul');
+
+    if (childUl) {
+        liElement.removeChild(childUl);
+        buttonElement.textContent = '+';
+    } else {
+        const newUl = document.createElement('ul');
+        renderTreeLevel(childrenData, newUl);
+        liElement.appendChild(newUl);
+        buttonElement.textContent = '-';
+    }
+}
 </script>
 </body>
 </html>
