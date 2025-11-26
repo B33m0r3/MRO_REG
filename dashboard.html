@@ -778,6 +778,11 @@
                     <i class="fas fa-book-open"></i>
                     <span class="nav-label">Catálogo</span>
                 </li>
+                <!-- Cole este item dentro da <ul class="nav-menu"> -->
+<li class="nav-item" onclick="showPage('programacao', event)">
+    <i class="fas fa-calendar-alt"></i>
+    <span class="nav-label">Programação</span>
+</li>
                 <li class="nav-item" onclick="showPage('sobre', event)">
                     <i class="fas fa-info-circle"></i>
                     <span class="nav-label">Sobre o VLT</span>
@@ -1280,6 +1285,35 @@
                             </div>
                         </div>
                     </div>
+                
+                <!-- Cole esta página inteira dentro da <div class="pages-wrapper"> -->
+<!-- Programação -->
+<div class="page" id="page-programacao">
+    <div class="page-header">
+        <h1>📅 Programação</h1>
+        <p>Visualização da programação de atividades</p>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pub?gid=1888450540&single=true&output=csv" target="_blank" class="btn-primary">
+            <i class="fas fa-table"></i> Acessar Planilha
+        </a>
+        <button class="btn-primary" onclick="takePageScreenshot('programacao')" style="margin-left: 10px;">
+            <i class="fas fa-camera"></i> Capturar Tela
+        </button>
+    </div>
+    <div class="table-container" style="min-height: 650px;">
+        <div class="loading-overlay" id="loading-programacao">
+            <div class="spinner"></div>
+        </div>
+        <iframe 
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pubhtml?gid=1888450540&single=true" 
+            frameborder="0" 
+            style="border: 0; width: 100%; height: 650px;" 
+            onload="document.getElementById('loading-programacao').classList.add('hidden')"
+            allowfullscreen
+        ></iframe>
+    </div>
+</div>
                 </div>
                 <div class="motivational-quote" id="motivational-quote">
                     💪 Excelência é a jornada, não o destino!
