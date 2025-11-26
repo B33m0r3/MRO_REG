@@ -486,10 +486,10 @@
         }
             /* Estilos para a aba Catálogo */
         .catalogo-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            height: calc(100% - 80px); /* Ajusta para o espaço do header */
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    height: calc(100% - 80px); /* Ajusta para o espaço do header */
         }
         .catalogo-column {
             background: rgba(255, 255, 255, 0.95);
@@ -1246,40 +1246,23 @@
                         </div>
 
                         <div class="catalogo-layout">
-                            <!-- Container da Árvore de Montagem -->
-                            <div class="catalogo-column" id="catalogo-tree-column">
-                                <div class="column-header">
-                                    <i class="fas fa-sitemap"></i> Estrutura do Sistema
-                                </div>
-                                <div class="search-container">
-                                    <input type="text" id="treeSearchInput" placeholder="Buscar na árvore..." onkeyup="searchTree()">
-                                    <button onclick="clearTreeSearch()"><i class="fas fa-times"></i></button>
-                                </div>
-                                <div class="tree-container" id="treeContent">
-                                    <div class="loading-spinner">
-                                        <i class="fas fa-spinner fa-spin"></i>
-                                        <span>Carregando estrutura...</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Container da Base de Cadastro -->
-                            <div class="catalogo-column" id="catalogo-materiais-column">
-                                <div class="column-header">
-                                    <i class="fas fa-database"></i> Base de Cadastro de Materiais
-                                </div>
-                                <div class="search-container">
-                                    <input type="text" id="materialSearchInput" placeholder="Buscar material (nome, código, descrição)..." onkeyup="searchMateriais()">
-                                    <button onclick="clearMaterialSearch()"><i class="fas fa-times"></i></button>
-                                </div>
-                                <div class="materiais-grid" id="materiaisGrid">
-                                     <div class="loading-spinner">
-                                        <i class="fas fa-spinner fa-spin"></i>
-                                        <span>Carregando materiais...</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Container da Base de Cadastro -->
+    <div class="catalogo-column" id="catalogo-materiais-column">
+        <div class="column-header">
+            <i class="fas fa-database"></i> Base de Cadastro de Materiais
+        </div>
+        <div class="search-container">
+            <input type="text" id="materialSearchInput" placeholder="Buscar material (nome, código, descrição)..." onkeyup="searchMateriais()">
+            <button onclick="clearMaterialSearch()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="materiais-grid" id="materiaisGrid">
+             <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Carregando materiais...</span>
+            </div>
+        </div>
+    </div>
+</div>
 
                         <!-- Modal para Detalhes do Item -->
                         <div id="itemDetailsModal" class="modal">
@@ -1528,7 +1511,6 @@
         updateMotivationalQuote();
         const screenshotBtn = document.getElementById('screenshotBtn');
         if (['documentacao', 'sobre', 'catalogo'].includes(pageName)) { 
-            screenshotBtn.style.display = 'inline-block'; 
         } else {
             screenshotBtn.style.display = 'none'; 
         }
@@ -2274,15 +2256,8 @@ function showCatalogoPage() {
     console.log("Carregando aba Catálogo...");
     
     // Verifica se os dados já foram carregados
-    if (!projetoVLTData || !baseCadastroData) {
-        // Mostra indicadores de carregamento
-        document.getElementById('treeContent').innerHTML = `
-            <div class="loading-spinner">
-                <i class="fas fa-spinner fa-spin"></i>
-                <span>Carregando estrutura do VLT...</span>
-            </div>
-        `;
-        
+    if (!baseCadastroData) {
+        // Mostra indicador de carregamento
         document.getElementById('materiaisGrid').innerHTML = `
             <div class="loading-spinner">
                 <i class="fas fa-spinner fa-spin"></i>
@@ -2290,22 +2265,12 @@ function showCatalogoPage() {
             </div>
         `;
         
-        // Carrega os dados dos arquivos
-        Promise.all([
-            loadProjetoVLTData(),
-            loadBaseCadastroData()
-        ]).then(() => {
-            // Após carregar, renderiza a árvore e os materiais
-            renderTree();
+        // Carrega apenas os dados da base de cadastro
+        loadBaseCadastroData().then(() => {
+            // Após carregar, renderiza os materiais
             renderMateriais();
         }).catch(error => {
             console.error("Erro ao carregar dados:", error);
-            document.getElementById('treeContent').innerHTML = `
-                <div class="loading-spinner">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>Erro ao carregar dados: ${error.message}</span>
-                </div>
-            `;
             document.getElementById('materiaisGrid').innerHTML = `
                 <div class="loading-spinner">
                     <i class="fas fa-exclamation-triangle"></i>
@@ -2315,7 +2280,6 @@ function showCatalogoPage() {
         });
     } else {
         // Se os dados já foram carregados, apenas renderiza
-        renderTree();
         renderMateriais();
     }
 }
@@ -2323,29 +2287,7 @@ function showCatalogoPage() {
 // Função para carregar os dados do projeto VLT
 // Função para carregar os dados do projeto VLT (versão alternativa)
 // Função para carregar os dados do projeto VLT
-function loadProjetoVLTData() {
-    return new Promise((resolve, reject) => {
-        // URL do arquivo JSON no GitHub
-        const url = 'https://raw.githubusercontent.com/B33m0r3/MRO_REG/main/1MRO_FROTA.CITADIS402.json';
-        
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP: ${response.status}`);
-                }
-                return response.json(); // Usando .json() diretamente
-            })
-            .then(data => {
-                projetoVLTData = data;
-                console.log("Dados do projeto VLT carregados:", projetoVLTData);
-                resolve();
-            })
-            .catch(error => {
-                console.error("Erro ao carregar arquivo do projeto:", error);
-                reject(error);
-            });
-    });
-}
+
 
 // Função para carregar os dados da base de cadastro
 function loadBaseCadastroData() {
@@ -2387,21 +2329,6 @@ function loadBaseCadastroData() {
     });
 }
 
-// Função para renderizar a árvore de componentes
-function renderTree() {
-    const treeContainer = document.getElementById('treeContent');
-    if (!treeContainer) return;
-    
-    treeContainer.innerHTML = ''; // Limpa o "Carregando..."
-    
-    if (!projetoVLTData || !projetoVLTData.children) {
-        treeContainer.innerHTML = '<p style="padding: 20px; color: var(--danger);">Erro: Dados do projeto não encontrados.</p>';
-        return;
-    }
-    
-    const treeElement = createTreeElement(projetoVLTData);
-    treeContainer.appendChild(treeElement);
-}
 
 // Função recursiva para criar os elementos da árvore
 function createTreeElement(node) {
@@ -2560,26 +2487,7 @@ function closeModal() {
 }
 
 // Funções de busca
-function searchTree() {
-    const input = document.getElementById('treeSearchInput');
-    const filter = input.value.toLowerCase();
-    const items = document.querySelectorAll('#treeContent .tree-item');
 
-    items.forEach(item => {
-        const text = item.textContent.toLowerCase();
-        if (text.includes(filter)) {
-            item.style.display = 'flex';
-            // Expande os pais para tornar o item visível
-            let parent = item.closest('ul');
-            while(parent) {
-                parent.style.display = 'block';
-                parent = parent.parentElement.closest('ul');
-            }
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
 
 function searchMateriais() {
     const input = document.getElementById('materialSearchInput');
@@ -2596,10 +2504,6 @@ function searchMateriais() {
     });
 }
 
-function clearTreeSearch() {
-    document.getElementById('treeSearchInput').value = '';
-    searchTree();
-}
 
 function clearMaterialSearch() {
     document.getElementById('materialSearchInput').value = '';
@@ -2780,6 +2684,8 @@ function toggleNode(liElement, buttonElement, childrenData) {
         buttonElement.textContent = '-';
     }
 }
+
+
 </script>
 </body>
 </html>
