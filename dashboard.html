@@ -1435,11 +1435,12 @@ function checkAuth() {
 
     // FUNÇÃO PARA CARREGAR PERFIL DO USUÁRIO (mantida)
     // FUNÇÃO PARA CARREGAR PERFIL DO USUÁRIO (VERSÃO CORRIGIDA)
+// FUNÇÃO PARA CARREGAR PERFIL DO USUÁRIO (VERSÃO FINAL E CORRIGIDA)
 function loadUserProfile(usuario) {
-    // A variável 'usuario' agora vem diretamente do checkAuth() e contém o usuário logado.
+    // A variável 'usuario' vem do checkAuth() e contém o usuário logado.
     console.log("Tentando carregar perfil para o usuário:", usuario);
 
-    // URL da planilha de usuários
+    // URL da planilha de usuários (certifique-se de que esta é a URL de "Publicar na web")
     const USUARIOS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pub?gid=1605075317&single=true&output=csv';
 
     // Atualiza o nome de usuário e tipo na barra superior imediatamente
@@ -1450,7 +1451,7 @@ function loadUserProfile(usuario) {
 
     // Busca os dados detalhados na planilha
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); // Aumentei o timeout para 8s
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // Timeout de 8 segundos
 
     fetch(USUARIOS_CSV, { signal: controller.signal })
         .then(r => {
@@ -1460,22 +1461,31 @@ function loadUserProfile(usuario) {
         .then(csv => {
             clearTimeout(timeoutId);
             const rows = parseCSV(csv);
-            // Procura pelo usuário na coluna 'Usuario' ou 'usuario' da planilha
-            const userRow = rows.find(r => r.Usuario === usuario || r.usuario === usuario);
+            // Procura pelo usuário na coluna 'Usuário' da planilha
+            const userRow = rows.find(r => r.Usuário === usuario || r.Usuario === usuario);
             
             if (userRow) {
                 console.log("Dados do usuário encontrados na planilha:", userRow);
-                const telefone = userRow.Telefone ? userRow.Telefone.replace(/\D/g, '') : '';
-                const whatsappLink = telefone ? `<a href="https://wa.me/55${telefone}" target="_blank" class="modal-link"><i class="fab fa-whatsapp"></i> Clique para conversar</a>` : 'Não informado';
+                
+                // Extrai os dados da planilha usando os nomes de coluna corretos
+                const nomeCompleto = userRow.Nome_Completo || '-';
+                const email = userRow.Email || '-';
+                const telefone = userRow.Telefone || '';
+                const endereco = userRow.Endereco || '-';
+                const matricula = userRow.Matrícula || '-';
+                const tipo = userRow.Tipo || currentUser.tipo || '-';
+
+                // Cria o link do WhatsApp se o telefone existir
+                const whatsappLink = telefone ? `<a href="https://wa.me/55${telefone.replace(/\D/g, '')}" target="_blank" class="modal-link"><i class="fab fa-whatsapp"></i> Clique para conversar</a>` : 'Não informado';
                 
                 // Preenche o modal "Meu Perfil" com os dados da planilha
-                document.getElementById('perfil-nome').textContent = userRow.Nome_Completo || userRow['Nome Completo'] || '-';
-                document.getElementById('perfil-usuario').textContent = userRow.Usuario || userRow.usuario || '-';
-                document.getElementById('perfil-email').textContent = userRow.Email || '-';
+                document.getElementById('perfil-nome').textContent = nomeCompleto;
+                document.getElementById('perfil-usuario').textContent = usuario;
+                document.getElementById('perfil-email').textContent = email;
                 document.getElementById('perfil-telefone').innerHTML = whatsappLink;
-                document.getElementById('perfil-endereco').textContent = userRow.Endereco || '-';
-                document.getElementById('perfil-matricula').textContent = userRow.Matrícula || userRow['Matrícula'] || '-';
-                document.getElementById('perfil-tipo').textContent = userRow.Tipo || currentUser.tipo || '-';
+                document.getElementById('perfil-endereco').textContent = endereco;
+                document.getElementById('perfil-matricula').textContent = matricula;
+                document.getElementById('perfil-tipo').textContent = tipo;
             } else {
                 console.warn("Usuário não encontrado na planilha. Usando dados do login.");
                 // Se não encontrar na planilha, usa os dados do login e preenche o resto com '-'
