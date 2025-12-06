@@ -935,6 +935,8 @@
                                 <option value="GRUPO C">GRUPO C</option>
                                 <option value="GRUPO D">GRUPO D</option>
                             </select>
+                            <input type="date" id="passagemDataInicio" class="filter-input" placeholder="Data Início">
+                            <input type="date" id="passagemDataFim" class="filter-input" placeholder="Data Fim">
                             <input type="text" id="passagemTrem" class="filter-input" placeholder="Número do Trem">
                             <input type="text" id="passagemSistema" class="filter-input" placeholder="Sistema">
                             <input type="text" id="passagemTecnico" class="filter-input" placeholder="Técnico">
@@ -1729,83 +1731,124 @@ function loadUserProfile(usuario) {
 
     // Função para processar os filtros e atualizar a tabela
     function processPassagemFilters() {
-        const dataSelecionada = document.getElementById('passagemData').value;
-        const grupo = document.getElementById('passagemGrupo').value;
-        const trem = document.getElementById('passagemTrem').value.toLowerCase();
-        const sistema = document.getElementById('passagemSistema').value.toLowerCase();
-        const tecnico = document.getElementById('passagemTecnico').value.toLowerCase();
-        const status = document.getElementById('passagemStatus').value;
+  // Obter os valores dos novos filtros de data
+  const dataInicio = document.getElementById('passagemDataInicio').value;
+  const dataFim = document.getElementById('passagemDataFim').value;
 
-        // Filtra os registros
-        filteredPassagemData = allRegistros.filter(r => {
-            try {
-                const dataRegistro = r['Carimbo de data/hora'] || '';
-                // Filtrar por data (se fornecida)
-                if (dataSelecionada) {
-                    const partsFiltro = dataSelecionada.split('-');
-                    const dataFiltroFormatada = `${partsFiltro[2]}/${partsFiltro[1]}/${partsFiltro[0]}`;
-                    const dataRegistroFormatada = dataRegistro.split(' ')[0];
-                    if (dataRegistroFormatada !== dataFiltroFormatada) {
-                        return false;
-                    }
-                }
-                // Filtrar por grupo
-                if (grupo && r['GRUPO'] !== grupo) return false;
-                // Filtrar por trem
-                if (trem && !r['NÚMERO DO TREM'].toLowerCase().includes(trem)) return false;
-                // Filtrar por sistema
-                if (sistema && !r['SISTEMAS'].toLowerCase().includes(sistema)) return false;
-                // Filtrar por técnico
-                if (tecnico && !r['NOME E SOBRENOME'].toLowerCase().includes(tecnico)) return false;
-                // Filtrar por status
-                if (status) { 
-                    const statusRegistro = (r['STATUS ATUAL DO TREM'] || '').toUpperCase();
-                    if (!statusRegistro.includes(status.toUpperCase())) return false; 
-                }
-                return true;
-            } catch (e) { 
-                console.log('❌ Erro no filtro:', e, r); 
-                return false; 
-            }
-        });
+  // Obter os outros filtros
+  const grupo = document.getElementById('passagemGrupo').value;
+  const trem = document.getElementById('passagemTrem').value.toLowerCase();
+  const sistema = document.getElementById('passagemSistema').value.toLowerCase();
+  const tecnico = document.getElementById('passagemTecnico').value.toLowerCase();
+  const status = document.getElementById('passagemStatus').value;
 
-        // Renderiza a tabela com os resultados filtrados
-        renderPassagemTable();
+  // Filtra os registros
+  filteredPassagemData = allRegistros.filter(r => {
+    try {
+      // Extrai a data/hora do registro (primeiro campo)
+      let dataRegistroBruta = r['Carimbo de data/hora'] || '';
+
+      // --- Manipulação da Data ---
+      // Assumindo o formato DD/MM/YYYY HH:MM:SS ou DD/MM/YYYY
+      // Extraindo apenas a parte da data (DD/MM/YYYY)
+      let dataParte = dataRegistroBruta.split(' ')[0]; // Pega "DD/MM/YYYY"
+      if (!dataParte) {
+          // Se não houver data válida, não inclui no filtro
+          return false;
+      }
+
+      // Converte DD/MM/YYYY para YYYY-MM-DD para comparação
+      let partes = dataParte.split('/');
+      if (partes.length !== 3) {
+          // Formato de data inesperado, ignora
+          return false;
+      }
+      let dataRegistroISO = `${partes[2]}-${partes[1]}-${partes[0]}`; // YYYY-MM-DD
+
+      // --- Aplica os filtros de data ---
+      // Caso 1: Filtro de "Data Início" e "Data Fim" (intervalo)
+      if (dataInicio && dataFim) {
+          if (dataRegistroISO < dataInicio || dataRegistroISO > dataFim) {
+              return false;
+          }
+      }
+      // Caso 2: Filtro apenas de "Data Início" (depois da data X)
+      else if (dataInicio && !dataFim) {
+          if (dataRegistroISO < dataInicio) {
+              return false;
+          }
+      }
+      // Caso 3: Filtro apenas de "Data Fim" (antes da data Y)
+      else if (!dataInicio && dataFim) {
+          if (dataRegistroISO > dataFim) {
+              return false;
+          }
+      }
+      // (Caso 4: Nenhum filtro de data definido - ignora a verificação de data)
+
+      // --- Aplica os outros filtros ---
+      if (grupo && r['GRUPO'] !== grupo) return false;
+      if (trem && !r['NÚMERO DO TREM'].toLowerCase().includes(trem)) return false;
+      if (sistema && !r['SISTEMAS'].toLowerCase().includes(sistema)) return false;
+      if (tecnico && !r['NOME E SOBRENOME'].toLowerCase().includes(tecnico)) return false;
+      if (status) {
+          const statusRegistro = (r['STATUS ATUAL DO TREM'] || '').toUpperCase();
+          if (!statusRegistro.includes(status.toUpperCase())) return false;
+      }
+
+      return true;
+    } catch (e) {
+      console.log('❌ Erro no filtro de data ou outro:', e, r);
+      return false;
     }
+  });
+
+  // Renderiza a tabela com os resultados filtrados
+  renderPassagemTable();
+}
 
     // Função para renderizar a tabela
     function renderPassagemTable() {
-        const table = document.getElementById('passagem-table');
-        if (filteredPassagemData.length === 0) {
-            table.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Nenhum registro encontrado para os filtros aplicados.</td></tr>';
-        } else {
-            table.innerHTML = filteredPassagemData.map(r => {
-                const data = r['Carimbo de data/hora'] || '';
-                const nome = r['NOME E SOBRENOME'] || '';
-                const trem = r['NÚMERO DO TREM'] || '';
-                const sistema = r['SISTEMAS'] || '';
-                const descricao = r['DESCRIÇÃO DETALHADA'] || '';
-                const status = r['STATUS ATUAL DO TREM'] || 'NÃO INFORMADO';
-                return `
-                    <tr>
-                        <td>${data}</td>
-                        <td>${nome}</td>
-                        <td>${trem}</td>
-                        <td>${sistema}</td>
-                        <td>${descricao}</td>
-                        <td>${status}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-    }
+  const table = document.getElementById('passagem-table');
+  if (filteredPassagemData.length === 0) {
+    table.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Nenhum registro encontrado para os filtros aplicados.</td></tr>';
+  } else {
+    table.innerHTML = filteredPassagemData.map(r => {
+      const data = r['Carimbo de data/hora'] || '';
+      const nome = r['NOME E SOBRENOME'] || '';
+      const trem = r['NÚMERO DO TREM'] || '';
+      const sistema = r['SISTEMAS'] || '';
+      const descricao = r['DESCRIÇÃO DETALHADA'] || '';
+      // --- Solução para o problema do STATUS ---
+      let status = r['STATUS ATUAL DO TREM'];
+      // Garante que status seja uma string e remove espaços extras
+      status = (typeof status === 'string' || typeof status === 'number') ? String(status).trim() : '';
+      // Define "NÃO INFORMADO" apenas se a string resultante for vazia
+      if (status === '') {
+          status = 'NÃO INFORMADO';
+      }
+      // -------------------------------------------
+      return `<tr>
+                <td>${data}</td>
+                <td>${nome}</td>
+                <td>${trem}</td>
+                <td>${sistema}</td>
+                <td>${descricao}</td>
+                <td>${status}</td>
+              </tr>`;
+    }).join('');
+  }
+}
 
     // Função para limpar os filtros
     function clearPassagemFilters() {
-        ['passagemData', 'passagemGrupo', 'passagemTrem', 'passagemSistema', 'passagemTecnico', 'passagemStatus'].forEach(id => document.getElementById(id).value = '');
-        filteredPassagemData = [];
-        document.getElementById('passagem-table').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Clique em "Aplicar Filtros" para gerar os dados</td></tr>';
-    }
+  // Inclui os novos IDs de data
+  ['passagemDataInicio', 'passagemDataFim', 'passagemGrupo', 'passagemTrem', 'passagemSistema', 'passagemTecnico', 'passagemStatus'].forEach(id =>
+    document.getElementById(id).value = ''
+  );
+  filteredPassagemData = [];
+  document.getElementById('passagem-table').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Clique em "Aplicar Filtros" para gerar os dados</td></tr>';
+}
 
     // Função para carregar os dados da planilha (chamada quando a página é aberta)
     function loadPassagemData() { 
