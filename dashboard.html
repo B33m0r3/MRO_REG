@@ -2470,20 +2470,40 @@ function updateOperationClock() {
             atualizarCalendarioPlantao();
         }
     }
-    document.addEventListener('DOMContentLoaded', function() {
-        const navItemPlantao = document.querySelector('.nav-item[onclick*="plantao"]');
-        if (navItemPlantao) {
-            navItemPlantao.addEventListener('click', function() {
-                setTimeout(() => {
-                    atualizarCalendarioPlantao();
-                    console.log("📅 Calendário do Plantão atualizado!");
-                }, 100);
-            });
+    // BLOCO DE INICIALIZAÇÃO DA PÁGINA (CORRIGIDO E COMPLETO)
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 Inicializando Dashboard VLT Carioca...");
+
+    // 1. Verifica a autenticação do usuário
+    currentUser = checkAuth();
+    if (currentUser) {
+        console.log("✅ Usuário autenticado:", currentUser.usuario);
+        const usuario = currentUser.usuario;
+        document.getElementById('userName').textContent = usuario;
+        document.getElementById('userRole').textContent = currentUser.tipo;
+        const initials = usuario.split('.').map(n => n[0].toUpperCase()).join('');
+        document.getElementById('userInitials').textContent = initials;
+        if (currentUser.tipo !== 'ADMIN') {
+            document.getElementById('usuarios-menu').style.display = 'none';
         }
-        if (document.getElementById('page-plantao').classList.contains('active')) {
-            atualizarCalendarioPlantao();
-        }
-    });
+        loadUserProfile(usuario);
+    }
+
+    // 2. INICIA O CRONÔMETRO DE OPERAÇÃO
+    updateOperationClock(); // Chama a função uma vez para não começar do zero
+    setInterval(updateOperationClock, 1000); // Repete a função a cada segundo
+
+    // 3. Inicia as outras funcionalidades
+    updateMotivationalQuote();
+    setInterval(updateMotivationalQuote, 30000);
+
+    // 4. Inicia o calendário do plantão se a página já estiver ativa
+    if (document.getElementById('page-plantao').classList.contains('active')) {
+        atualizarCalendarioPlantao();
+    }
+
+    console.log("✅ Dashboard inicializado com sucesso!");
+});
 
     console.log("🎯 JavaScript carregado com sucesso!");
     // Variáveis globais para armazenar os dados carregados
