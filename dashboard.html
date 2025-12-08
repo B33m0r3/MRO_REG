@@ -2034,7 +2034,8 @@ function parseDateFromCSV(dateStr) {
         document.getElementById('motivational-quote').textContent = quote;
     }
     function updateOperationClock() {
-        const startDate = new Date('2016-06-06T00:00:00');
+        // Data e hora de início da operação comercial: 05/06/2016 às 12:00
+const startDate = new Date('2016-06-05T12:00:00');
         const now = new Date();
         const diff = now - startDate;
         const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
@@ -2329,6 +2330,7 @@ function parseDateFromCSV(dateStr) {
     const documentosPDF = [
         { nome: "ECOPACK FALHAS", descricao: "LISTA DE FALHAS DO ECOPACK", arquivo: "PDF/1525MI falhas.pdf", tamanho: "2.4 MB", categoria: "MANUTENÇÃO" },
         { nome: "Lista IOS", descricao: "LISTA COM IOS E FALHAS", arquivo: "PDF/Lista IOS.pdf", tamanho: "2.1 MB", categoria: "MANUTENÇÃO" },
+        { nome: "Lista IOS", descricao: "ESQUEMÁTICO GERAL", arquivo: "PDF/ESQUEMÁTICO%20GERAL.pdf", tamanho: "2.1 MB", categoria: "MANUTENÇÃO" },
     ];
 
     // URLs DOS DADOS (mantida)
