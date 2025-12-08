@@ -2033,24 +2033,29 @@ function parseDateFromCSV(dateStr) {
         const quote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
         document.getElementById('motivational-quote').textContent = quote;
     }
-    function updateOperationClock() {
-        // Data e hora de início da operação comercial: 05/06/2016 às 12:00
-const startDate = new Date('2016-06-05T12:00:00');
-        const now = new Date();
-        const diff = now - startDate;
-        const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
-        const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
-        const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        document.getElementById('op-years').textContent = years;
-        document.getElementById('op-months').textContent = months;
-        document.getElementById('op-days').textContent = days;
-        document.getElementById('op-hours').textContent = hours;
-        document.getElementById('op-minutes').textContent = minutes;
-        document.getElementById('op-seconds').textContent = seconds;
-    }
+    // FUNÇÃO QUE ATUALIZA O CRONÔMETRO DE OPERAÇÃO
+function updateOperationClock() {
+    // DATA E HORA EXATAS DO INÍCIO DA OPERAÇÃO COMERCIAL: 05/06/2016 às 12:00
+    const startDate = new Date('2016-06-05T12:00:00');
+    const now = new Date();
+    const diff = now - startDate;
+
+    // Calcula cada unidade de tempo
+    const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+    const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
+    const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    // Atualiza os elementos na tela com os valores calculados
+    document.getElementById('op-years').textContent = years;
+    document.getElementById('op-months').textContent = months;
+    document.getElementById('op-days').textContent = days;
+    document.getElementById('op-hours').textContent = hours;
+    document.getElementById('op-minutes').textContent = minutes;
+    document.getElementById('op-seconds').textContent = seconds;
+}
     function searchStation() {
         const searchTerm = document.getElementById('searchEstacao').value.toLowerCase();
         const resultDiv = document.getElementById('estacao-result');
