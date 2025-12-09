@@ -1932,56 +1932,74 @@ function parseDateFromCSV(dateStr) {
 }
 
 // FUNÇÃO PRINCIPAL PARA FAZER O PARSING DO CSV (VERSÃO CORRIGIDA)
-function parseCSV(csvText) {
-    const lines = csvText.split('\n');
-    if (lines.length === 0) return [];
+// INÍCIO DA NOVA FUNÇÃO parseCSV (VERSÃO DEFINITIVA)
 
-    const headers = parseCSVLine(lines[0]);
+function parseCSV(csvText) {
     const rows = [];
     let currentRow = [];
+    let currentField = "";
     let inQuotes = false;
 
-    // Loop por todas as linhas do texto CSV
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
-        // Processa cada caractere da linha
-        for (let j = 0; j < line.length; j++) {
-            const char = line[j];
-            const nextChar = line[j + 1];
+    for (let i = 0; i < csvText.length; i++) {
+        const char = csvText[i];
+        const nextChar = csvText[i + 1];
 
-            // Lida com aspas duplas dentro de um campo
-            if (char === '"' && nextChar === '"' && inQuotes) {
-                currentRow.push('"');
-                j++; // Pula a próxima aspa
-                continue;
-            }
-
-            if (char === '"') {
-                inQuotes = !inQuotes; // Inverte o estado de estar dentro de aspas
-            } else if (char === ',' && !inQuotes) {
-                // Se for uma vírgula fora de aspas, termina o campo atual
-                currentRow.push('');
-            } else {
-                // Adiciona o caractere ao último campo
-                if (currentRow.length === 0) {
-                    currentRow.push('');
-                }
-                currentRow[currentRow.length - 1] += char;
-            }
+        // Handle escaped quotes (two double quotes inside a quoted field)
+        if (char === '"' && nextChar === '"' && inQuotes) {
+            currentField += '"';
+            i++; // Skip the next quote
+            continue;
         }
 
-        // Se a linha terminou e não estamos mais dentro de aspas, a linha está completa
-        if (!inQuotes) {
-            if (currentRow.length > 0 && currentRow.some(cell => cell.trim() !== '')) {
-                const obj = {};
-                headers.forEach((header, idx) => {
-                    const cleanHeader = header.trim().replace(/"/g, '');
-                    // Limpa o valor, removendo aspas e espaços extras
-                    const value = (currentRow[idx] || '').trim().replace(/^"|"$/g, '');
-                    obj[cleanHeader] = value;
-                });
-                rows.push(obj);
+        if (char === '"') {
+            inQuotes = !inQuotes; // Toggle quote state
+        } else if (char === ',' && !inQuotes) {
+            // End of field, add it to the current row
+            currentRow.push(currentField.trim());
+            currentField = ""; // Reset for the next field
+        } else if ((char === '\n' || char === '\r') && !inQuotes) {
+            // End of row, add the last field and the row itself
+            currentRow.push(currentField.trim());
+            if (currentRow.length > 1) { // Avoid adding empty rows from trailing newlines
+                rows.push(currentRow);
             }
+            currentRow = []; // Reset for the next row
+            currentField = ""; // Reset for the next field
+            // Handle potential \r\n sequences
+            if (char === '\r' && nextChar === '\n') {
+                i++; // Skip the \n part of \r\n
+            }
+        } else {
+            // Regular character, add to the current field
+            currentField += char;
+        }
+    }
+
+    // Add the very last field and row if the file doesn't end with a newline
+    if (currentField || currentRow.length > 0) {
+        currentRow.push(currentField.trim());
+        rows.push(currentRow);
+    }
+
+    // Now, convert the array of arrays into an array of objects
+    if (rows.length === 0) return [];
+    const headers = rows[0];
+    const data = [];
+    for (let i = 1; i < rows.length; i++) {
+        const values = rows[i];
+        if (values.length === 0 || values.every(val => val === "")) continue; // Skip empty rows
+        const obj = {};
+        for (let j = 0; j < headers.length; j++) {
+            const header = headers[j] ? headers[j].trim().replace(/"/g, '') : `Coluna_${j+1}`;
+            obj[header] = values[j] ? values[j].trim().replace(/^"|"$/g, '') : '';
+        }
+        data.push(obj);
+    }
+
+    return data;
+}
+
+// FIM DA NOVA FUNÇÃO parseCSV
             currentRow = []; // Reseta para a próxima linha
         } else {
             // Se ainda estamos dentro de aspas, a linha continua na próxima
