@@ -1005,6 +1005,7 @@
                                         <th>Técnico</th>
                                         <th>Trem</th>
                                         <th>Sistema</th>
+                                        <th>Título da Falha</th>
                                         <th>Descrição</th>
                                         <th>Status</th>
                                     </tr>
@@ -1853,29 +1854,32 @@ function processPassagemFilters() {
 
     // Função para renderizar a tabela
     function renderPassagemTable() {
-        const table = document.getElementById('passagem-table');
-        if (filteredPassagemData.length === 0) {
-            table.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">Nenhum registro encontrado para os filtros aplicados.</td></tr>';
-        } else {
-            table.innerHTML = filteredPassagemData.map(r => {
-                const data = r['Carimbo de data/hora'] || '';
-                const nome = r['NOME E SOBRENOME'] || '';
-                const trem = r['NÚMERO DO TREM'] || '';
-                const sistema = r['SISTEMAS'] || '';
-                const descricao = r['DESCRIÇÃO DETALHADA'] || '';
-                const status = r['STATUS ATUAL DO TREM'] || 'NÃO INFORMADO';
-                return `
-                    <tr>
-                        <td>${data}</td>
-                        <td>${nome}</td>
-                        <td>${trem}</td>
-                        <td>${sistema}</td>
-                        <td>${descricao}</td>
-                        <td>${status}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
+    const table = document.getElementById('passagem-table');
+    if (filteredPassagemData.length === 0) {
+        table.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;">Nenhum registro encontrado para os filtros aplicados.</td></tr>';
+    } else {
+        table.innerHTML = filteredPassagemData.map(r => {
+            const data = r['Carimbo de data/hora'] || '';
+            const nome = r['NOME E SOBRENOME'] || '';
+            const trem = r['NÚMERO DO TREM'] || '';
+            const sistema = r['SISTEMAS'] || '';
+            const tituloFalha = r['TITULO DA FALHA'] || ''; // << NOVA VARIÁVEL
+            const descricao = r['DESCRIÇÃO DETALHADA'] || '';
+            const status = r['STATUS ATUAL DO TREM'] || 'NÃO INFORMADO';
+            return `
+                <tr>
+                    <td>${data}</td>
+                    <td>${nome}</td>
+                    <td>${trem}</td>
+                    <td>${sistema}</td>
+                    <td>${tituloFalha}</td> // << NOVA CÉLULA
+                    <td>${descricao}</td>
+                    <td>${status}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+}
     }
 
 // FUNÇÃO PARA LIMPAR OS FILTROS (ATUALIZADA)
