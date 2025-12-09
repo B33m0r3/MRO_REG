@@ -1932,84 +1932,89 @@ function parseDateFromCSV(dateStr) {
 }
 
 // FUNÇÃO PRINCIPAL PARA FAZER O PARSING DO CSV (VERSÃO CORRIGIDA)
-// INÍCIO DA NOVA FUNÇÃO parseCSV (VERSÃO DEFINITIVA)
 
-function parseCSV(csvText) {
-    const rows = [];
-    let currentRow = [];
-    let currentField = "";
-    let inQuotes = false;
+// INÍCIO DO BLOCO DE FUNÇÕES DE LEITURA (VERSÃO ESTÁVEL E RÁPIDA)
 
-    for (let i = 0; i < csvText.length; i++) {
-        const char = csvText[i];
-        const nextChar = csvText[i + 1];
+// Função auxiliar para juntar linhas quebradas em campos com aspas
+function preProcessCSVLines(csvText) {
+    const rawLines = csvText.split('\n');
+    const processedLines = [];
+    let currentLine = '';
 
-        // Handle escaped quotes (two double quotes inside a quoted field)
-        if (char === '"' && nextChar === '"' && inQuotes) {
-            currentField += '"';
-            i++; // Skip the next quote
-            continue;
-        }
+    for (let i = 0; i < rawLines.length; i++) {
+        const line = rawLines[i];
+        currentLine += line;
 
-        if (char === '"') {
-            inQuotes = !inQuotes; // Toggle quote state
-        } else if (char === ',' && !inQuotes) {
-            // End of field, add it to the current row
-            currentRow.push(currentField.trim());
-            currentField = ""; // Reset for the next field
-        } else if ((char === '\n' || char === '\r') && !inQuotes) {
-            // End of row, add the last field and the row itself
-            currentRow.push(currentField.trim());
-            if (currentRow.length > 1) { // Avoid adding empty rows from trailing newlines
-                rows.push(currentRow);
-            }
-            currentRow = []; // Reset for the next row
-            currentField = ""; // Reset for the next field
-            // Handle potential \r\n sequences
-            if (char === '\r' && nextChar === '\n') {
-                i++; // Skip the \n part of \r\n
-            }
+        // Conta as aspas. Se for um número ímpar, estamos no meio de um campo.
+        const quoteCount = (currentLine.match(/"/g) || []).length;
+        if (quoteCount % 2 === 0) {
+            // Aspas estão balanceadas, esta linha está completa.
+            processedLines.push(currentLine);
+            currentLine = ''; // Reseta para a próxima linha
         } else {
-            // Regular character, add to the current field
-            currentField += char;
+            // Aspas não estão balanceadas, a linha continua. Adiciona uma quebra de linha.
+            currentLine += '\n';
         }
     }
-
-    // Add the very last field and row if the file doesn't end with a newline
-    if (currentField || currentRow.length > 0) {
-        currentRow.push(currentField.trim());
-        rows.push(currentRow);
-    }
-
-    // Now, convert the array of arrays into an array of objects
-    if (rows.length === 0) return [];
-    const headers = rows[0];
-    const data = [];
-    for (let i = 1; i < rows.length; i++) {
-        const values = rows[i];
-        if (values.length === 0 || values.every(val => val === "")) continue; // Skip empty rows
-        const obj = {};
-        for (let j = 0; j < headers.length; j++) {
-            const header = headers[j] ? headers[j].trim().replace(/"/g, '') : `Coluna_${j+1}`;
-            obj[header] = values[j] ? values[j].trim().replace(/^"|"$/g, '') : '';
-        }
-        data.push(obj);
-    }
-
-    return data;
+    return processedLines;
 }
 
-// FIM DA NOVA FUNÇÃO parseCSV
-            currentRow = []; // Reseta para a próxima linha
+// Função auxiliar para dividir uma linha já corrigida em colunas
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const nextChar = line[i + 1];
+
+        // Lida com aspas duplas dentro de um campo (ex: "texto com ""aspas"" aqui")
+        if (char === '"' && nextChar === '"' && inQuotes) {
+            current += '"';
+            i++; // Pula a próxima aspa
+        } else if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
         } else {
-            // Se ainda estamos dentro de aspas, a linha continua na próxima
-            if (currentRow.length > 0) {
-                currentRow[currentRow.length - 1] += '\n'; // Adiciona a quebra de linha ao campo atual
-            }
+            current += char;
         }
+    }
+    result.push(current.trim());
+    return result;
+}
+
+// FUNÇÃO PRINCIPAL - Agora mais simples e rápida
+function parseCSV(csvText) {
+    // Etapa 1: Pré-processa o texto para corrigir as quebras de linha
+    const processedLines = preProcessCSVLines(csvText);
+
+    if (processedLines.length === 0) return [];
+
+    // Etapa 2: Lê os cabeçalhos da primeira linha
+    const headers = parseCSVLine(processedLines[0]);
+
+    // Etapa 3: Lê as linhas de dados
+    const rows = [];
+    for (let i = 1; i < processedLines.length; i++) {
+        const line = processedLines[i];
+        if (line.trim() === '') continue; // Pula linhas vazias
+
+        const values = parseCSVLine(line);
+        const obj = {};
+        headers.forEach((header, idx) => {
+            const cleanHeader = header.trim().replace(/"/g, '');
+            // Limpa o valor: remove aspas das extremidades e espaços
+            const value = values[idx] ? values[idx].trim().replace(/^"|"$/g, '') : '';
+            obj[cleanHeader] = value;
+        });
+        rows.push(obj);
     }
     return rows;
 }
+
+// FIM DO BLOCO DE FUNÇÕES DE LEITURA
 
 // FUNÇÃO AUXILIAR PARA DIVIDIR UMA LINHA SIMPLES (não será mais usada pela parseCSV principal, mas mantida por segurança)
 function parseCSVLine(line) {
