@@ -3081,7 +3081,84 @@ function toggleNode(liElement, buttonElement, childrenData) {
         buttonElement.textContent = '-';
     }
 }
+// Função para alternar entre abas do modal de detalhes
+function switchModalTab(tabName) {
+    document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    const item = currentSelectedItem;
+    const content = document.getElementById('modalTabContent');
+    
+    if (tabName === 'details' && item) {
+        // Conteúdo da aba de detalhes
+        const detailsHTML = `
+            <p><strong>Fabricante:</strong> ${item.fabricanteFornecedor || 'N/A'}</p>
+            <p><strong>Referência Comercial:</strong> ${item.referenciaComercial || 'N/A'}</p>
+            <p><strong>Código SAP:</strong> ${item.codigoSap || item.Material || 'N/A'}</p>
+            <p><strong>Quantidade:</strong> ${item.qtd || item["Utilização livre"] || 'N/A'}</p>
+            <p><strong>Descrição:</strong> ${item.description || item["Texto Longo"] || 'N/A'}</p>
+            <p><strong>Depósito:</strong> ${item.Depósito || 'N/A'}</p>
+            <p><strong>Centro:</strong> ${item.Centro || 'N/A'}</p>
+        `;
+        content.innerHTML = detailsHTML;
+    } else if (tabName === 'images' && item) {
+        // Conteúdo da aba de imagens
+        const images = [item.imageUrl1, item.imageUrl2, item.imageUrl3, item["Image URL"]].filter(url => url);
+        const imagesHTML = `
+            <div class="image-gallery">
+                ${images.length > 0 ? images.map(url => `<img src="${url}" alt="Imagem do componente" onerror="this.src='https://picsum.photos/seed/error/300/200.jpg'">`).join('') : '<p>Nenhuma imagem disponível.</p>'}
+            </div>
+        `;
+        content.innerHTML = imagesHTML;
+    }
+}
 
+// Função para fechar o modal de detalhes
+function closeModal() {
+    document.getElementById('itemDetailsModal').classList.remove('show');
+}
+
+// Fecha o modal quando clicar fora dele
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('itemDetailsModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
+// Atualiza a variável para armazenar o item selecionado
+let currentSelectedItem = null;
+
+// Função para mostrar detalhes do material
+function showMaterialDetails(material) {
+    currentSelectedItem = material;
+    const modal = document.getElementById('itemDetailsModal');
+    const title = document.getElementById('modalTitle');
+    title.textContent = material["Texto breve de material"];
+    
+    // Define o conteúdo inicial (aba de detalhes)
+    const content = document.getElementById('modalTabContent');
+    const detailsHTML = `
+        <p><strong>Fabricante:</strong> ${material.fabricanteFornecedor || 'N/A'}</p>
+        <p><strong>Referência Comercial:</strong> ${material.referenciaComercial || 'N/A'}</p>
+        <p><strong>Código SAP:</strong> ${material.Material || 'N/A'}</p>
+        <p><strong>Quantidade:</strong> ${material["Utilização livre"] || 'N/A'}</p>
+        <p><strong>Descrição:</strong> ${material["Texto Longo"] || 'N/A'}</p>
+        <p><strong>Depósito:</strong> ${material.Depósito || 'N/A'}</p>
+        <p><strong>Centro:</strong> ${material.Centro || 'N/A'}</p>
+    `;
+    content.innerHTML = detailsHTML;
+    
+    // Garante que a aba de detalhes esteja ativa
+    document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector('.modal-tab-btn:first-child').classList.add('active');
+    
+    modal.classList.add('show');
+}
 
 </script>
 </body>
