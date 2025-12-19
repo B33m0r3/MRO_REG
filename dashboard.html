@@ -1420,8 +1420,8 @@
             </div>
             <div class="modal-body">
                 <div class="modal-tabs">
-                    <button class="modal-tab-btn active" onclick="switchModalTab('details')">Detalhes</button>
-                    <button class="modal-tab-btn" onclick="switchModalTab('images')">Imagens</button>
+                    <button class="modal-tab-btn active" onclick="switchModalTab('details' event)">Detalhes</button>
+                    <button class="modal-tab-btn" onclick="switchModalTab('images' event)">Imagens</button>
                 </div>
                 <div id="modalTabContent" class="modal-tab-content">
                     <!-- O conteúdo será injetado aqui pelo JavaScript -->
@@ -2875,13 +2875,41 @@ function showItemDetails(item) {
 
 // Função para mostrar detalhes do material
 function showMaterialDetails(material) {
-    showItemDetails(material);
+    currentSelectedItem = material;
+    const modal = document.getElementById('itemDetailsModal');
+    const title = document.getElementById('modalTitle');
+    title.textContent = material["Texto breve de material"];
+    
+    // Define o conteúdo inicial (aba de detalhes)
+    const content = document.getElementById('modalTabContent');
+    const detailsHTML = `
+        <p><strong>Fabricante:</strong> ${material.fabricanteFornecedor || 'N/A'}</p>
+        <p><strong>Referência Comercial:</strong> ${material.referenciaComercial || 'N/A'}</p>
+        <p><strong>Código SAP:</strong> ${material.Material || 'N/A'}</p>
+        <p><strong>Quantidade:</strong> ${material["Utilização livre"] || 'N/A'}</p>
+        <p><strong>Descrição:</strong> ${material["Texto Longo"] || 'N/A'}</p>
+        <p><strong>Depósito:</strong> ${material.Depósito || 'N/A'}</p>
+        <p><strong>Centro:</strong> ${material.Centro || 'N/A'}</p>
+    `;
+    content.innerHTML = detailsHTML;
+    
+    // Garante que a aba de detalhes esteja ativa
+    document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector('.modal-tab-btn:first-child').classList.add('active');
+    
+    modal.classList.add('show');
 }
 
 // Função para fechar o modal
-function closeModal() {
-    document.getElementById('itemDetailsModal').classList.remove('show');
-}
+// Fecha o modal quando clicar fora dele
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('itemDetailsModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+});
 
 // Funções de busca
 
@@ -3082,7 +3110,7 @@ function toggleNode(liElement, buttonElement, childrenData) {
     }
 }
 // Função para alternar entre abas do modal de detalhes
-function switchModalTab(tabName) {
+function switchModalTab(tabName, event) {
     document.querySelectorAll('.modal-tab-btn').forEach(btn => {
         btn.classList.remove('active');
     });
@@ -3127,9 +3155,6 @@ window.addEventListener('click', function(event) {
         closeModal();
     }
 });
-
-// Atualiza a variável para armazenar o item selecionado
-let currentSelectedItem = null;
 
 // Função para mostrar detalhes do material
 function showMaterialDetails(material) {
