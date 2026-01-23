@@ -764,7 +764,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container aba-conteudo" id="aba-dashboard">
         <aside class="sidebar">
             <button class="toggle-sidebar" onclick="toggleSidebar()">◀</button>
             <div class="logo">
@@ -776,10 +776,10 @@
                     <i class="fas fa-chart-line"></i>
                     <span class="nav-label">Dashboard</span>
                 </li>
-                <li onclick="mostrarAba('sigma-help')" style="cursor: pointer;">
-    <a href="javascript:void(0)">
-        <i class="fas fa-video"></i>
-        <span class="nav-item" style="margin-left: 10px;">SIGMA-HELP</span>
+                <li onclick="mostrarAba('sigma-help')" style="list-style: none; cursor: pointer; display: flex; align-items: center; padding: 10px 0;">
+    <a href="javascript:void(0)" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
+        <i class="fas fa-video" style="font-size: 20px; margin-right: 15px; width: 25px; text-align: center;"></i>
+        <span style="font-size: 16px; font-weight: 500;">SIGMA-HELP</span>
     </a>
 </li>
                 <li class="nav-item" onclick="showPage('plantao', event)">
@@ -1527,6 +1527,38 @@
                     💪 Excelência é a jornada, não o destino!
                 </div>
             </div>
+            <section id="sigma-help" class="aba-conteudo" style="display: none; padding: 20px;">
+    <div style="border-bottom: 1px solid #333; margin-bottom: 20px; padding-bottom: 10px;">
+        <h2 style="color: #00d4ff;">SIGMA-HELP</h2>
+        <p style="color: #ccc; font-size: 14px;">Capacitação técnica e procedimentos operacionais em vídeo.</p>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <input type="text" id="inputBusca" onkeyup="filtrarVideos()" placeholder="Pesquisar procedimento..." style="width:100%; padding:10px; border-radius:5px; border:1px solid #444; background:#1a1a1a; color:white;">
+    </div>
+
+    <div class="video-grid" id="videoGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+        
+        <div class="video-card" data-titulo="Vídeo de Teste" style="background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; border: 1px solid #333;">
+            <div style="height: 160px; background: #000; display: flex; align-items: center; justify-content: center; cursor: pointer;" 
+                 onclick="abrirModal('https://drive.google.com/file/d/1TWvVi_AZaPpZ-zkNwA5XWoJkYLLNoCK4/preview')">
+                <i class="fas fa-play-circle" style="font-size: 50px; color: #00d4ff;"></i>
+            </div>
+            <div style="padding: 15px;">
+                <h4 style="color: white; margin: 0;">Procedimento de Teste</h4>
+                <p style="color: #888; font-size: 12px; margin-top: 5px;">Tutorial prático de manutenção.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center;">
+    <div style="width:90%; max-width:800px; position:relative;">
+        <span onclick="fecharModal()" style="position:absolute; top:-40px; right:0; color:white; font-size:30px; cursor:pointer;">&times; fechar</span>
+        <iframe id="videoPlayer" src="" style="width:100%; height:450px; border:2px solid #00d4ff; border-radius:10px;" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>
         </main>
     </div>
     <!-- Modal Perfil -->
@@ -3224,6 +3256,35 @@ function showMaterialDetails(material) {
     document.querySelector('.modal-tab-btn:first-child').classList.add('active');
 
     modal.classList.add('show');
+}
+// Função para trocar de aba (funcional)
+function mostrarAba(idAba) {
+    // Esconde tudo (seu dashboard original deve ter a classe 'aba-conteudo')
+    document.querySelectorAll('.aba-conteudo').forEach(aba => {
+        aba.style.display = 'none';
+    });
+    // Mostra a aba clicada
+    document.getElementById(idAba).style.display = 'block';
+}
+
+// Filtro de busca
+function filtrarVideos() {
+    let input = document.getElementById('inputBusca').value.toLowerCase();
+    let cards = document.querySelectorAll('.video-card');
+    cards.forEach(card => {
+        let titulo = card.getAttribute('data-titulo').toLowerCase();
+        card.style.display = titulo.includes(input) ? "block" : "none";
+    });
+}
+
+// Funções do Modal de Vídeo
+function abrirModal(link) {
+    document.getElementById('videoPlayer').src = link;
+    document.getElementById('videoModal').style.display = 'flex';
+}
+function fecharModal() {
+    document.getElementById('videoModal').style.display = 'none';
+    document.getElementById('videoPlayer').src = "";
 }
 
 </script>
