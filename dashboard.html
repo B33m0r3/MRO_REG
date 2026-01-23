@@ -762,6 +762,200 @@
     }
 }
     </style>
+    <!-- ========================= INÍCIO DO CSS DA ABA SIGMA-HELP ========================= -->
+<style>
+    /* Estilos específicos da aba SIGMA-HELP, usando suas cores já existentes */
+    #page-sigma-help {
+        padding: 20px;
+    }
+
+    #page-sigma-help .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    #page-sigma-help .search-bar {
+        position: relative;
+        flex-grow: 1;
+        max-width: 400px;
+    }
+
+    #page-sigma-help .search-bar i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c8d;
+    }
+
+    #page-sigma-help .search-bar input {
+        width: 100%;
+        padding: 12px 20px 12px 45px;
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+        background: white;
+    }
+
+    #page-sigma-help .search-bar input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    #page-sigma-help .filter-tags {
+        display: flex;
+        gap: 10px;
+    }
+
+    #page-sigma-help .tag-btn {
+        padding: 10px 20px;
+        background: white;
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        color: var(--dark);
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    #page-sigma-help .tag-btn:hover, #page-sigma-help .tag-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    /* Grade de Vídeos */
+    #page-sigma-help .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    #page-sigma-help .video-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    #page-sigma-help .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    #page-sigma-help .video-card .thumbnail {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+    }
+
+    #page-sigma-help .video-card .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #page-sigma-help .video-card .play-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 60px;
+        color: rgba(255, 255, 255, 0.8);
+        transition: color 0.3s;
+    }
+
+    #page-sigma-help .video-card:hover .play-icon {
+        color: var(--primary);
+    }
+
+    #page-sigma-help .video-info {
+        padding: 15px;
+    }
+
+    #page-sigma-help .video-info h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: var(--dark);
+    }
+
+    #page-sigma-help .video-info .badge {
+        background-color: var(--primary);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    /* Modal do Vídeo */
+    .video-modal {
+        display: none; /* Escondido por padrão */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .video-modal-content {
+        position: relative;
+        width: 80%;
+        max-width: 900px;
+    }
+
+    .video-modal-close {
+        position: absolute;
+        top: -40px;
+        right: 0;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .video-modal-close:hover {
+        color: var(--primary);
+    }
+
+    .video-modal iframe {
+        width: 100%;
+        height: 500px;
+        border: 2px solid var(--primary);
+        border-radius: 10px;
+    }
+
+    /* Responsividade para Celular */
+    @media (max-width: 768px) {
+        #page-sigma-help .controls {
+            flex-direction: column;
+        }
+        #page-sigma-help .search-bar {
+            max-width: 100%;
+        }
+        #page-sigma-help .video-grid {
+            grid-template-columns: 1fr;
+        }
+        .video-modal iframe {
+            height: 300px;
+        }
+    }
+</style>
+<!-- ========================= FIM DO CSS DA ABA SIGMA-HELP ========================= -->
 </head>
 <body>
     <div class="container aba-conteudo" id="aba-dashboard">
@@ -823,6 +1017,10 @@
                     <i class="fas fa-book-open"></i>
                     <span class="nav-label">Catálogo</span>
                 </li>
+<li class="nav-item" onclick="showPage('sigma-help', event)">
+    <i class="fas fa-question-circle"></i>
+    <span class="nav-label">SIGMA-HELP</span>
+</li>
                 <!-- Cole este item dentro da <ul class="nav-menu"> -->
 <li class="nav-item" onclick="showPage('programacao', event)">
     <i class="fas fa-calendar-alt"></i>
@@ -1428,6 +1626,87 @@
                             </div>
                         </div>
                     </div>
+
+<!-- ========================= INÍCIO DA ABA SIGMA-HELP ========================= -->
+<div class="page" id="page-sigma-help">
+    <div class="page-header">
+        <h1>SIGMA-HELP</h1>
+        <p>O intuito desta aba é auxiliar e capacitar nossos colaboradores através de guias visuais, garantindo a execução correta e segura dos procedimentos técnicos.</p>
+    </div>
+
+    <section class="controls">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" class="search-input" placeholder="Buscar por um procedimento...">
+        </div>
+        <div class="filter-tags">
+            <button class="tag-btn active" data-category="todos">Todos</button>
+            <button class="tag-btn" data-category="eletrica">Elétrica</button>
+            <button class="tag-btn" data-category="mecanica">Mecânica</button>
+            <button class="tag-btn" data-category="eletronica">Eletrônica</button>
+            <button class="tag-btn" data-category="seguranca">Segurança</button>
+        </div>
+    </section>
+
+    <main class="video-grid">
+        <!-- VÍDEO DE TESTE (seu vídeo) -->
+        <article class="video-card" data-category="eletrica" data-video-id="1TWvVi_AZaPpZ-zkNwA5XWoJkYLLNoCK4">
+            <div class="thumbnail">
+                <img src="https://via.placeholder.com/320x180/1a1a1a/00d4ff?text=VÍDEO+DE+TESTE" alt="Thumbnail do Vídeo">
+                <i class="fas fa-play-circle play-icon"></i>
+            </div>
+            <div class="video-info">
+                <h3>TESTE</h3>
+                <span class="badge">Elétrica</span>
+            </div>
+        </article>
+
+        <!-- EXEMPLOS DE OUTROS VÍDEOS -->
+        <article class="video-card" data-category="mecanica" data-video-id="ID_DO_VIDEO_2">
+            <div class="thumbnail">
+                <img src="https://via.placeholder.com/320x180/1a1a1a/ff6b6b?text=Troca+de+Pneu" alt="Thumbnail do Vídeo">
+                <i class="fas fa-play-circle play-icon"></i>
+            </div>
+            <div class="video-info">
+                <h3>Troca de Pneu Dianteiro</h3>
+                <span class="badge">Mecânica</span>
+            </div>
+        </article>
+
+        <article class="video-card" data-category="eletronica" data-video-id="ID_DO_VIDEO_3">
+            <div class="thumbnail">
+                <img src="https://via.placeholder.com/320x180/1a1a1a/4ecdc4?text=Teste+de+PCI" alt="Thumbnail do Vídeo">
+                <i class="fas fa-play-circle play-icon"></i>
+            </div>
+            <div class="video-info">
+                <h3>Teste de PCI do Sistema de Ar</h3>
+                <span class="badge">Eletrônica</span>
+            </div>
+        </article>
+
+        <article class="video-card" data-category="seguranca" data-video-id="ID_DO_VIDEO_4">
+            <div class="thumbnail">
+                <img src="https://via.placeholder.com/320x180/1a1a1a/f7b731?text=Uso+do+Extintor" alt="Thumbnail do Vídeo">
+                <i class="fas fa-play-circle play-icon"></i>
+            </div>
+            <div class="video-info">
+                <h3>Uso Correto do Extintor de Incêndio</h3>
+                <span class="badge">Segurança</span>
+            </div>
+        </article>
+
+    </main>
+</div>
+<!-- ========================= FIM DA ABA SIGMA-HELP ========================= -->
+
+<!-- ========================= MODAL DO VÍDEO (JANELA FLUTUANTE) ========================= -->
+<!-- Cole este modal antes da tag </body> final -->
+<div id="videoModal" class="video-modal">
+    <div class="video-modal-content">
+        <span class="video-modal-close">&times;</span>
+        <iframe id="modalVideoFrame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>
 <!-- Catálogo -->
 <div class="page" id="page-catalogo">
     <div class="page-header">
@@ -3276,16 +3555,96 @@ function filtrarVideos() {
         card.style.display = titulo.includes(input) ? "block" : "none";
     });
 }
+<!-- ========================= MODAL DO VÍDEO (JANELA FLUTUANTE) ========================= -->
+<!-- ESTE BLOCO É HTML E FICA FORA DA TAG <script> -->
+<div id="videoModal" class="video-modal">
+    <div class="video-modal-content">
+        <span class="video-modal-close">&times;</span>
+        <iframe id="modalVideoFrame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>
 
-// Funções do Modal de Vídeo
-function abrirModal(link) {
-    document.getElementById('videoPlayer').src = link;
-    document.getElementById('videoModal').style.display = 'flex';
+<script>
+    // ... (todo o seu código JavaScript antigo fica aqui) ...
+    // ... (as últimas linhas do seu código antigo são) ...
+    modal.classList.add('show');
 }
-function fecharModal() {
-    document.getElementById('videoModal').style.display = 'none';
-    document.getElementById('videoPlayer').src = "";
-}
+
+// ========================= INÍCIO DO JAVASCRIPT DA ABA SIGMA-HELP =========================
+// ESTE BLOCO É JAVASCRIPT E FICA DENTRO DA TAG <script>, NO FINAL DE TUDO
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- LÓGICA DA ABA SIGMA-HELP (BUSCA, FILTROS E MODAL) ---
+    const searchInput = document.querySelector('#page-sigma-help .search-input');
+    const filterButtons = document.querySelectorAll('#page-sigma-help .tag-btn');
+    const videoCards = document.querySelectorAll('#page-sigma-help .video-card');
+    const modal = document.getElementById('videoModal');
+    const modalVideoFrame = document.getElementById('modalVideoFrame');
+    const closeModalBtn = document.querySelector('.video-modal-close');
+
+    // Função para filtrar vídeos
+    const filterVideos = () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const activeCategory = document.querySelector('#page-sigma-help .tag-btn.active').getAttribute('data-category');
+
+        videoCards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const category = card.getAttribute('data-category');
+
+            const matchesSearch = title.includes(searchTerm);
+            const matchesCategory = activeCategory === 'todos' || category === activeCategory;
+
+            if (matchesSearch && matchesCategory) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    };
+
+    // Evento de busca
+    if(searchInput) {
+        searchInput.addEventListener('input', filterVideos);
+    }
+
+    // Evento de filtros
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            filterVideos(); // Re-aplica o filtro
+        });
+    });
+
+    // Lógica do Modal
+    videoCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const videoId = card.getAttribute('data-video-id');
+            const videoUrl = `https://drive.google.com/file/d/${videoId}/preview`;
+            modalVideoFrame.src = videoUrl;
+            modal.style.display = 'flex';
+        });
+    });
+
+    const closeModal = () => {
+        modal.style.display = 'none';
+        modalVideoFrame.src = ''; // Para o vídeo ao fechar
+    };
+
+    if(closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeModal);
+    }
+
+    if(modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
+});
+
+// ========================= FIM DO JAVASCRIPT DA ABA SIGMA-HELP =========================
 
 </script>
 </body>
