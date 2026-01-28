@@ -931,44 +931,7 @@
     </div>
 </div>
 
-<!-- INÍCIO PÁGINA SIGMA-HELP -->
-<div class="page" id="page-sigma_help" style="display: none;">
-    <div class="page-header">
-        <h2><i class="fas fa-graduation-cap"></i> SIGMA-HELP</h2>
-        <p>Central de capacitação visual. Acesse os guias técnicos para garantir a execução segura.</p>
-    </div>
 
-    <div class="sigma-bg-effect"></div> <!-- Efeito de fundo abstrato -->
-
-    <!-- Busca e Tags -->
-    <div class="sigma-search-container">
-        <input type="text" id="sigmaSearch" class="sigma-input" placeholder="Pesquisar procedimento (ex: Troca de Relé)...">
-        <i class="fas fa-search sigma-icon-search"></i>
-    </div>
-
-    <div class="sigma-tags" id="sigmaTags">
-        <button class="sigma-tag active" onclick="filterSigma('all')">Todos</button>
-        <button class="sigma-tag" onclick="filterSigma('Elétrica')">Elétrica</button>
-        <button class="sigma-tag" onclick="filterSigma('Mecânica')">Mecânica</button>
-        <button class="sigma-tag" onclick="filterSigma('Sistemas')">Sistemas</button>
-        <button class="sigma-tag" onclick="filterSigma('Segurança')">Segurança</button>
-    </div>
-
-    <!-- Grid de Vídeos -->
-    <div class="sigma-grid" id="sigmaGrid">
-        <!-- Os vídeos serão carregados pelo Javascript abaixo -->
-    </div>
-</div>
-<!-- MODAL DE VÍDEO (Código Faltante) -->
-<div class="sigma-modal" id="sigmaModal">
-    <div class="sigma-video-box">
-        <span class="sigma-close" onclick="closeSigmaModal()">&times;</span>
-        <div class="sigma-video-wrapper">
-            <iframe id="sigmaFrame" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-</div>
-<!-- FIM PÁGINA SIGMA-HELP -->
                     <!-- Dashboard -->
                     <div class="page active" id="page-dashboard">
                         <div class="cards-container" id="dashboard-cards"></div>
@@ -1503,7 +1466,7 @@
             </div>
             <div class="modal-body">
                 <div class="modal-tabs">
-                    <button class="modal-tab-btn active" onclick="switchModalTab('details' event)">Detalhes</button>
+                    <button class="modal-tab-btn active" onclick="switchModalTab('details', event)">Detalhes</button>
                     <button class="modal-tab-btn" onclick="switchModalTab('images' event)">Imagens</button>
                 </div>
                 <div id="modalTabContent" class="modal-tab-content">
@@ -3267,71 +3230,6 @@ function showMaterialDetails(material) {
 
     modal.classList.add('show');
 }
-
-// --- LÓGICA DO SIGMA-HELP ---
-const sigmaVideos = [
-    { id: 1, title: "Troca de Relé de Porta", cat: "Elétrica", img: "https://picsum.photos/seed/ele1/400/250", url: "https://drive.google.com/file/d/ID_VIDEO_1/preview" },
-    { id: 2, title: "Lubrificação de Truques", cat: "Mecânica", img: "https://picsum.photos/seed/mec1/400/250", url: "https://drive.google.com/file/d/ID_VIDEO_2/preview" },
-    { id: 3, title: "Diagnóstico de Sinalização", cat: "Sistemas", img: "https://picsum.photos/seed/sis1/400/250", url: "https://drive.google.com/file/d/ID_VIDEO_3/preview" },
-    { id: 4, title: "Uso de EPIs", cat: "Segurança", img: "https://picsum.photos/seed/seg1/400/250", url: "https://drive.google.com/file/d/ID_VIDEO_4/preview" }
-];
-
-const sigmaGrid = document.getElementById('sigmaGrid');
-const sigmaSearch = document.getElementById('sigmaSearch');
-const sigmaModal = document.querySelector('.sigma-modal');
-const sigmaFrame = document.querySelector('.sigma-video-wrapper iframe');
-
-function renderSigma(filterText = '', category = 'all') {
-    sigmaGrid.innerHTML = '';
-    const filtered = sigmaVideos.filter(v => {
-        return v.title.toLowerCase().includes(filterText.toLowerCase()) && 
-               (category === 'all' || v.cat === category);
-    });
-
-    filtered.forEach(v => {
-        const card = document.createElement('div');
-        card.className = 'sigma-card';
-        card.innerHTML = `
-            <div class="sigma-thumb"><img src="${v.img}" alt="Miniatura"></div>
-            <div class="sigma-content">
-                <span class="sigma-cat">${v.cat}</span>
-                <div class="sigma-title">${v.title}</div>
-                <button class="sigma-btn" onclick="openSigmaModal('${v.url}')"><i class="fas fa-play"></i> Assistir</button>
-            </div>
-        `;
-        sigmaGrid.appendChild(card);
-    });
-}
-
-function filterSigma(cat) {
-    document.querySelectorAll('.sigma-tag').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-    renderSigma(sigmaSearch.value, cat);
-}
-
-function openSigmaModal(url) {
-    sigmaFrame.src = url;
-    sigmaModal.classList.add('active');
-}
-
-function closeSigmaModal() {
-    sigmaFrame.src = '';
-    sigmaModal.classList.remove('active');
-}
-
-// Eventos
-sigmaSearch.addEventListener('keyup', (e) => {
-    const activeCat = document.querySelector('.sigma-tag.active').innerText;
-    renderSigma(e.target.value, activeCat === 'Todos' ? 'all' : activeCat);
-});
-
-// Fechar modal ao clicar fora
-sigmaModal.addEventListener('click', (e) => {
-    if(e.target === sigmaModal) closeSigmaModal();
-});
-
-// Inicializar Sigma Help ao carregar
-document.addEventListener('DOMContentLoaded', renderSigma);
 
 </script>
 </body>
