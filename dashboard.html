@@ -761,126 +761,7 @@
         flex-direction: column; /* Empilha as colunas verticalmente */
     }
 }
-/* =========================================
-   ESTILO DO SIGMA-HELP (Glassmorphism)
-   ========================================= */
 
-/* Container da página Sigma-Help */
-#page-sigma_help {
-    background: transparent; /* Fundo transparente para ver o tema escuro */
-    padding: 20px;
-    animation: fadeIn 0.5s ease;
-}
-
-/* Gradiente de fundo sutil */
-.sigma-bg-effect {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -1;
-    background: radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.05), transparent 40%);
-    pointer-events: none;
-}
-
-/* Header da Ajuda */
-.sigma-header h2 {
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
-}
-.sigma-header p {
-    color: #ccc;
-    max-width: 700px;
-}
-
-/* Barra de Busca */
-.sigma-search-container {
-    position: relative;
-    max-width: 500px;
-    margin: 20px 0;
-}
-.sigma-input {
-    width: 100%;
-    padding: 12px 45px 12px 20px;
-    border-radius: 50px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(15, 23, 42, 0.6);
-    color: #fff;
-    outline: none;
-    backdrop-filter: blur(5px);
-}
-.sigma-input:focus { border-color: #06b6d4; box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
-.sigma-icon-search {
-    position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-    color: #06b6d4;
-}
-
-/* Tags */
-.sigma-tags {
-    display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap;
-}
-.sigma-tag {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    color: #aaa; padding: 5px 15px; border-radius: 20px; cursor: pointer; transition: 0.3s;
-    font-size: 0.85rem;
-}
-.sigma-tag:hover, .sigma-tag.active {
-    background: #06b6d4; color: #0f172a; font-weight: bold;
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
-}
-
-/* Grid de Vídeos (Cards Glass) */
-.sigma-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding-bottom: 50px;
-}
-.sigma-card {
-    background: rgba(30, 41, 59, 0.4); /* Vidro Escuro */
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-.sigma-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(6, 182, 212, 0.5);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 15px rgba(6, 182, 212, 0.1);
-}
-.sigma-thumb {
-    height: 160px; background: #000; position: relative; overflow: hidden;
-}
-.sigma-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-.sigma-card:hover .sigma-thumb img { opacity: 1; transform: scale(1.05); transition: 0.5s; }
-.sigma-content { padding: 15px; }
-.sigma-cat { color: #06b6d4; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; display: block; }
-.sigma-title { color: #fff; font-size: 1rem; margin-bottom: 15px; line-height: 1.4; }
-.sigma-btn {
-    width: 100%; padding: 10px; background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(6, 182, 212, 0.3); color: #fff; border-radius: 8px;
-    cursor: pointer; transition: 0.3s; display: flex; justify-content: center; gap: 8px;
-}
-.sigma-btn:hover { background: #06b6d4; color: #000; }
-
-/* Modal de Vídeo */
-.sigma-modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9); z-index: 2000;
-    display: none; justify-content: center; align-items: center;
-}
-.sigma-modal.active { display: flex; animation: fadeIn 0.3s; }
-.sigma-video-box {
-    width: 90%; max-width: 900px; background: #000; border: 1px solid #06b6d4;
-    border-radius: 10px; position: relative; overflow: hidden;
-}
-.sigma-close {
-    position: absolute; top: -40px; right: 0; color: #fff; font-size: 30px; cursor: pointer;
-}
-.sigma-video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
-.sigma-video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -938,9 +819,13 @@
                     <span class="nav-label">Catálogo</span>
                 </li>
                 <!-- Item de Menu SIGMA-HELP -->
-<li class="nav-item" onclick="showPage('sigma_help', event)">
-    <i class="fas fa-graduation-cap"></i> <!-- Ícone de Capacitação -->
-    <span class="nav-label">SIGMA-HELP</span>
+<!-- SIGMA-HELP (Link Direto) -->
+<li class="nav-item">
+    <!-- O href abre o arquivo que está na sua pasta -->
+    <a href="sigma-help.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%; height: 100%;">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="nav-label">SIGMA-HELP</span>
+    </a>
 </li>
                 <!-- Cole este item dentro da <ul class="nav-menu"> -->
 <li class="nav-item" onclick="showPage('programacao', event)">
