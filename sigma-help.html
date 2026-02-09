@@ -3,311 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGMA - Capacitação</title>
-    <!-- Ícones FontAwesome -->
+    <title>SIGMA-HELP | Capacitação</title>
+    <!-- Ícones e Fontes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Fonte (Roboto ou Inter, similar ao dashboard) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         /* =========================================
-           VARIÁVEIS DE COR (PADRÃO DASHBOARD)
+           VARIÁVEIS (Tema Igual ao Dashboard Principal)
            ========================================= */
         :root {
-            --bg-body: #0f172a;        /* Azul Profundo */
-            --bg-sidebar: #1e293b;     /* Cinza Grafite */
-            --text-main: #f8fafc;      /* Branco Gelo */
-            --text-muted: #94a3b8;     /* Cinza Claro */
-            --accent: #06b6d4;         /* Ciano/Turquesa (Highlight) */
-            --accent-hover: #0891b2;
-            
-            --sidebar-width: 260px;
-            --sidebar-width-collapsed: 70px;
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --light: #f5f7fa;
+            --dark: #2c3e50;
+            --border: #e0e6ed;
+            --sidebar-width: 280px;
+            --sidebar-width-collapsed: 80px;
+            --gradient-main: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-body);
-            background-image: 
-                linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)),
-                url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDIiLz4KPC9zdmc+'); /* Textura sutil */
-            color: var(--text-main);
-            height: 100vh;
-            display: flex; /* O segredo para o layout fluído */
-            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--gradient-main); /* Fundo gradiente igual ao dashboard */
+            position: relative;
+            overflow: hidden; /* Evita rolagem dupla */
+        }
+        
+        /* Padrão de fundo sutil */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.1;
+            z-index: -1;
         }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-body); }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        .container { display: flex; height: 100vh; }
 
         /* =========================================
-           SIDEBAR (Menu Lateral) - CLONE DASHBOARD
+           SIDEBAR (Menu Lateral - Clonado do Dashboard)
            ========================================= */
         .sidebar {
             width: var(--sidebar-width);
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid rgba(255,255,255,0.05);
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            color: white;
             display: flex; flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
             transition: width 0.3s ease;
+            position: relative;
             z-index: 100;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.2);
+            overflow-y: auto;
         }
 
         /* Estado Recolhido */
-        .sidebar.collapsed { width: var(--sidebar-width-collapsed); }
-        
-        .sidebar-header {
-            height: 70px; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
-            overflow: hidden; white-space: nowrap;
+        .sidebar.collapsed {
+            width: var(--sidebar-width-collapsed);
+            align-items: center;
         }
-        
-        .logo-area { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.2rem; }
-        .logo-area i { color: var(--accent); font-size: 1.4rem; }
-        .logo-text { transition: opacity 0.2s; }
-        .sidebar.collapsed .logo-text { opacity: 0; pointer-events: none; }
 
-        /* Botão de Recolher */
-        .toggle-sidebar {
-            background: none; border: none; color: var(--text-muted);
-            font-size: 1rem; cursor: pointer; transition: transform 0.3s;
+        /* LOGO */
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: all 0.3s;
         }
-        .sidebar.collapsed .toggle-sidebar { transform: rotate(180deg); }
+        .logo i { font-size: 28px; color: var(--primary); }
+        .sidebar.collapsed .logo { padding: 30px 0; justify-content: center; }
+        .sidebar.collapsed .logo span { display: none; }
 
-        /* Itens do Menu */
-        .nav-menu { list-style: none; padding: 20px 10px; overflow-y: auto; flex: 1; }
+        /* MENU ITENS */
+        .nav-menu { list-style: none; flex: 1; padding: 0 10px; }
         .nav-item { margin-bottom: 5px; }
-
+        
+        /* Link Wrapper */
         .nav-link {
-            display: flex; align-items: center; gap: 15px;
-            padding: 12px 15px; border-radius: 8px;
-            text-decoration: none; color: var(--text-muted);
-            transition: all 0.2s; white-space: nowrap; overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
-        .nav-link:hover {
-            background: rgba(255,255,255,0.05); color: #fff;
+        .nav-link:hover, .nav-link.active {
+            background: rgba(102,126,234,0.2);
+            color: white;
+            border-left-color: var(--primary);
         }
 
-        .nav-link.active {
-            background: rgba(6, 182, 212, 0.15);
-            color: var(--accent);
-            border-left: 3px solid var(--accent);
-        }
+        .nav-link i { width: 20px; text-align: center; font-size: 1.1rem; }
+        .sidebar.collapsed .nav-link { justify-content: center; padding: 12px 0; }
+        .sidebar.collapsed .nav-link span { display: none; }
+        
+        .nav-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 15px 0; }
 
-        .nav-link i { min-width: 24px; text-align: center; font-size: 1.1rem; }
-        .nav-label { transition: opacity 0.2s; }
-        .sidebar.collapsed .nav-label { opacity: 0; display: none; }
+        /* BOTÃO TOGGLE (Expandir/Recolher) */
+        .toggle-sidebar {
+            position: absolute;
+            top: 30px;
+            right: 15px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+            z-index: 101; /* Garante que fique por cima */
+        }
+        .toggle-sidebar:hover { background: var(--primary); }
+
+        /* Quando recolhido, move o botão para o centro (opcional) ou apenas gira a seta */
+        .sidebar.collapsed .toggle-sidebar { 
+            transform: rotate(180deg); /* Gira a seta para a direita (>) */
+            right: 25px; /* Ajuste fino para centralizar quando colapso */
+        }
 
         /* =========================================
-           CONTEÚDO PRINCIPAL
+           CONTEÚDO PRINCIPAL (Sigma Help)
            ========================================= */
         .main-content {
             flex: 1;
-            padding: 30px 40px;
-            overflow-y: auto;
+            display: flex; flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
             position: relative;
         }
 
-        /* HEADER */
-        .sigma-header { margin-bottom: 30px; animation: slideDown 0.5s ease; }
-        .sigma-header h1 { font-size: 2rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
-        .sigma-header p { color: var(--text-muted); max-width: 700px; line-height: 1.5; }
-
-        /* BARRA DE PESQUISA (Glass) */
-        .search-wrapper { position: relative; max-width: 500px; margin-bottom: 30px; }
-        .search-input {
-            width: 100%; padding: 14px 50px 14px 20px;
-            border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(30, 41, 59, 0.5); color: #fff; outline: none;
-            backdrop-filter: blur(10px); transition: 0.3s;
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(6,182,212,0.2); background: rgba(30, 41, 59, 0.8); }
-        .search-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--accent); }
+        .breadcrumb { color: var(--dark); font-weight: 600; font-size: 18px; }
 
-        /* FILTROS */
-        .tags-filter { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-        .filter-btn {
-            padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
-            background: transparent; color: var(--text-muted); cursor: pointer;
-            font-size: 0.85rem; transition: 0.3s;
-        }
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--accent); color: #0f172a; font-weight: 600;
-            border-color: var(--accent); box-shadow: 0 0 10px rgba(6,182,212,0.3);
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            background: rgba(255,255,255,0.6); /* Fundo levemente transparente */
+            backdrop-filter: blur(10px);
         }
 
-        /* GRID DE CARDS */
+        /* Cards de Vídeo */
         .video-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;
             padding-bottom: 50px;
         }
         .card {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px; overflow: hidden; transition: all 0.3s;
-            display: flex; flex-direction: column;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border-left: 5px solid var(--secondary);
         }
-        .card:hover {
-            transform: translateY(-5px); border-color: var(--accent);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        .card:hover { transform: translateY(-5px); }
+        
+        .card-img { height: 180px; background: #000; position: relative; }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        
+        .card-body { padding: 20px; }
+        .card-tag { 
+            color: var(--primary); font-size: 11px; font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; display: block;
         }
-        .card-img {
-            height: 160px; background: #000; position: relative;
-        }
-        .card-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.3s; }
-        .card:hover .card-img img { opacity: 1; transform: scale(1.05); }
-        .card-body { padding: 15px; flex: 1; display: flex; flex-direction: column; }
-        .card-tag { color: var(--accent); font-size: 0.7rem; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
-        .card-title { color: #fff; font-size: 1rem; margin-bottom: 15px; font-weight: 500; line-height: 1.4; }
+        .card-title { color: var(--dark); font-size: 16px; margin-bottom: 15px; font-weight: 600; }
+        
         .btn-play {
-            margin-top: auto; width: 100%; padding: 10px; border: 1px solid var(--accent);
-            background: rgba(6, 182, 212, 0.1); color: var(--accent);
-            border-radius: 8px; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 10px;
+            background: var(--gradient-main); color: white; border: none;
+            border-radius: 6px; cursor: pointer; font-weight: 600;
             display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.3s;
         }
-        .btn-play:hover { background: var(--accent); color: #000; }
+        .btn-play:hover { opacity: 0.9; }
 
-        /* MODAL DE VÍDEO */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 23, 0.95); z-index: 2000;
-            display: none; justify-content: center; align-items: center;
-            backdrop-filter: blur(5px);
+        /* Busca e Filtros */
+        .filter-container { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .search-input {
+            padding: 10px 15px; border: 1px solid var(--border);
+            border-radius: 6px; width: 300px; outline: none;
         }
-        .modal.active { display: flex; animation: fadeIn 0.3s; }
+        .search-input:focus { border-color: var(--primary); }
+
+        .filter-btn {
+            padding: 8px 16px; border: 1px solid var(--border);
+            border-radius: 20px; background: white; cursor: pointer;
+            font-size: 14px; transition: 0.2s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary); color: white; border-color: var(--primary);
+        }
+
+        /* Modal Vídeo */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+        .modal.active { display: flex; }
         .modal-content {
-            width: 90%; max-width: 900px; background: #000;
-            border: 1px solid var(--accent); border-radius: 10px; position: relative;
-            box-shadow: 0 0 40px rgba(6, 182, 212, 0.2);
+            background: black; width: 90%; max-width: 900px;
+            border-radius: 10px; overflow: hidden; position: relative;
+            aspect-ratio: 16/9;
         }
         .close-modal {
-            position: absolute; top: -40px; right: 0; color: #fff; font-size: 2rem; cursor: pointer;
+            position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer;
         }
-        .aspect-ratio { position: relative; padding-bottom: 56.25%; height: 0; }
-        .aspect-ratio iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        iframe { width: 100%; height: 100%; border: none; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Responsivo */
-        @media(max-width: 768px) {
-            .sidebar { position: fixed; height: 100%; width: 0; border: none; }
-            .sidebar.active-mobile { width: 260px; }
-            .main-content { margin-left: 0; padding: 20px; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR (Menu Lateral) -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo-area">
-                <i class="fas fa-train-subway"></i>
-                <span class="logo-text">SIGMA-MRO</span>
-            </div>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Botão de Expandir/Recolher (Fixado para sempre aparecer) -->
             <button class="toggle-sidebar" onclick="toggleSidebar()">
                 <i class="fas fa-chevron-left"></i>
             </button>
-        </div>
 
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="dashboard.html" class="nav-link">
-                    <i class="fas fa-chart-line"></i>
-                    <span class="nav-label">Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="sigma-help.html" class="nav-link active">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span class="nav-label">SIGMA-HELP</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-wrench"></i>
-                    <span class="nav-label">Manutenção</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    <span class="nav-label">Equipe</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+            <div class="logo">
+                <i class="fas fa-train"></i>
+                <span>SIGMA-MRO</span>
+            </div>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="main-content">
-        <header class="sigma-header">
-            <h1><i class="fas fa-book-reader" style="color: var(--accent);"></i> SIGMA-HELP</h1>
-            <p>Centro de capacitação técnica. Guias visuais para garantir a segurança e eficiência na manutenção ferroviária.</p>
-        </header>
+            <ul class="nav-menu">
+                <!-- Links apontando para o index.html (Arquivo Principal) -->
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-clock"></i>
+                        <span>Plantão</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Passagem de Serviço</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Novo Registro</span>
+                    </a>
+                </li>
 
-        <!-- BUSCA E FILTROS -->
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" class="search-input" placeholder="Buscar procedimento (ex: Troca de Relé)...">
-            <i class="fas fa-search search-icon"></i>
-        </div>
+                <li class="nav-divider"></li>
 
-        <div class="tags-filter" id="tagsContainer">
-            <button class="filter-btn active" onclick="filterVideos('all')">Todos</button>
-            <button class="filter-btn" onclick="filterVideos('Elétrica')">Elétrica</button>
-            <button class="filter-btn" onclick="filterVideos('Mecânica')">Mecânica</button>
-            <button class="filter-btn" onclick="filterVideos('Sistemas')">Sistemas</button>
-            <button class="filter-btn" onclick="filterVideos('Segurança')">Segurança</button>
-        </div>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Usuários</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-flask"></i>
+                        <span>Laboratório</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-robot"></i>
+                        <span>EVA</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-snowflake"></i>
+                        <span>Refrigeração</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-route"></i>
+                        <span>Rastreabilidade</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Documentação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-book-open"></i>
+                        <span>Catálogo</span>
+                    </a>
+                </li>
 
-        <!-- GRID -->
-        <div class="video-grid" id="gridContainer">
-            <!-- Preenchido via JS -->
-        </div>
-    </main>
+                <!-- Aba Atual (Sigma Help) -->
+                <li class="nav-item">
+                    <a href="sigma-help.html" class="nav-link active">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>SIGMA-HELP</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Programação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-train"></i>
+                        <span>Plano de Frota</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Avisos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Sobre o VLT</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-headset"></i>
+                        <span>Suporte</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="breadcrumb">SIGMA-HELP / Centro de Capacitação</div>
+                <div style="font-weight: 600; color: var(--secondary);">
+                    <i class="fas fa-user-circle"></i> Usuário Logado
+                </div>
+            </header>
+
+            <div class="content-area">
+                <h2 style="margin-bottom: 20px; color: var(--dark);">Guia de Procedimentos</h2>
+                
+                <div class="filter-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar vídeo (ex: Relé, Porta)...">
+                    <button class="filter-btn active" onclick="filterVideos('all')">Todos</button>
+                    <button class="filter-btn" onclick="filterVideos('Elétrica')">Elétrica</button>
+                    <button class="filter-btn" onclick="filterVideos('Mecânica')">Mecânica</button>
+                    <button class="filter-btn" onclick="filterVideos('Sistemas')">Sistemas</button>
+                </div>
+
+                <div class="video-grid" id="gridContainer">
+                    <!-- Vídeos via JS -->
+                </div>
+            </div>
+        </main>
+    </div>
 
     <!-- MODAL -->
     <div class="modal" id="videoModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <div class="aspect-ratio">
-                <iframe id="iframeVideo" src="" frameborder="0" allowfullscreen></iframe>
-            </div>
+            <iframe id="iframeVideo" src="" allowfullscreen></iframe>
         </div>
     </div>
 
     <script>
-        // DADOS
+        // Lógica do Toggle Menu
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Dados dos Vídeos
         const videos = [
-            { id: 1, title: "Troca de Relé de Porta", cat: "Elétrica", img: "https://picsum.photos/seed/r1/400/250", url: "https://drive.google.com/file/d/ID_1/preview" },
-            { id: 2, title: "Lubrificação de Truques", cat: "Mecânica", img: "https://picsum.photos/seed/r2/400/250", url: "https://drive.google.com/file/d/ID_2/preview" },
-            { id: 3, title: "Sistema de Sinalização ATC", cat: "Sistemas", img: "https://picsum.photos/seed/r3/400/250", url: "https://drive.google.com/file/d/ID_3/preview" },
-            { id: 4, title: "Uso Correto de EPIs", cat: "Segurança", img: "https://picsum.photos/seed/r4/400/250", url: "https://drive.google.com/file/d/ID_4/preview" },
-            { id: 5, title: "Painel de Alta Tensão", cat: "Elétrica", img: "https://picsum.photos/seed/r5/400/250", url: "https://drive.google.com/file/d/ID_5/preview" }
+            { id: 1, title: "Troca de Relé de Porta", cat: "Elétrica", img: "https://picsum.photos/seed/ele1/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+            { id: 2, title: "Lubrificação de Truques", cat: "Mecânica", img: "https://picsum.photos/seed/mec1/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+            { id: 3, title: "Sinalização ATC", cat: "Sistemas", img: "https://picsum.photos/seed/sis1/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+            { id: 4, title: "Inspeção de EPIs", cat: "Segurança", img: "https://picsum.photos/seed/seg1/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+            { id: 5, title: "Painel de Alta Tensão", cat: "Elétrica", img: "https://picsum.photos/seed/ele2/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
         ];
 
-        // ELEMENTOS
         const grid = document.getElementById('gridContainer');
         const search = document.getElementById('searchInput');
         const modal = document.getElementById('videoModal');
         const iframe = document.getElementById('iframeVideo');
-        const sidebar = document.getElementById('sidebar');
 
-        // FUNÇÃO RENDER
         function render(data) {
             grid.innerHTML = '';
-            if(data.length === 0) { grid.innerHTML = '<p style="color:var(--text-muted); grid-column:1/-1;">Nenhum vídeo encontrado.</p>'; return; }
-            
+            if(data.length === 0) { grid.innerHTML = '<p>Nenhum vídeo encontrado.</p>'; return; }
             data.forEach(v => {
                 const el = document.createElement('div');
                 el.className = 'card';
                 el.innerHTML = `
-                    <div class="card-img"><img src="${v.img}" loading="lazy"></div>
+                    <div class="card-img"><img src="${v.img}"></div>
                     <div class="card-body">
                         <span class="card-tag">${v.cat}</span>
                         <div class="card-title">${v.title}</div>
@@ -319,7 +439,6 @@
             });
         }
 
-        // FILTROS
         function filterVideos(cat) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
@@ -332,7 +451,6 @@
             render(filtered);
         }
 
-        // MODAL
         function openVideo(url) {
             iframe.src = url;
             modal.classList.add('active');
@@ -342,12 +460,6 @@
             modal.classList.remove('active');
         }
 
-        // TOGGLE SIDEBAR (Lógica igual ao Dashboard)
-        function toggleSidebar() {
-            sidebar.classList.toggle('collapsed');
-        }
-
-        // EVENTOS
         search.addEventListener('keyup', () => {
             const activeBtn = document.querySelector('.filter-btn.active');
             const currentCat = activeBtn.innerText === 'Todos' ? 'all' : activeBtn.innerText;
@@ -356,7 +468,7 @@
 
         modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 
-        // INIT
+        // Init
         render(videos);
     </script>
 </body>
