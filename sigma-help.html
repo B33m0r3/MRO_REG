@@ -414,38 +414,79 @@
         </div>
     </div>
 
-    <script>
-        // Lógica do Toggle Menu
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('collapsed');
-        }
+        <script>
+        // ==========================================
+        // CONFIGURAÇÃO
+        // Cole aqui o link que você copiou do Google Sheets
+        // DICA: No final do link do Google Sheets, mude o parametro para "&output=csv"
+        // Exemplo: https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?output=csv
+        // ==========================================
+        const GOOGLE_SHEETS_URL = "COLE_SEU_LINK_DO_GOOGLE_SHEETS_AQUI";
 
-        // Dados dos Vídeos
-        const videos = [
-            { id: 1, title: "Troca de Relé de Porta", cat: "Elétrica", img: "https://picsum.photos/seed/ele1/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-            { id: 2, title: "Lubrificação de Truques", cat: "Mecânica", img: "https://picsum.photos/seed/mec1/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-            { id: 3, title: "Sinalização ATC", cat: "Sistemas", img: "https://picsum.photos/seed/sis1/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-            { id: 4, title: "Inspeção de EPIs", cat: "Segurança", img: "https://picsum.photos/seed/seg1/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-            { id: 5, title: "Painel de Alta Tensão", cat: "Elétrica", img: "https://picsum.photos/seed/ele2/400/250", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
-        ];
-
+        // Elementos do DOM
         const grid = document.getElementById('gridContainer');
         const search = document.getElementById('searchInput');
         const modal = document.getElementById('videoModal');
         const iframe = document.getElementById('iframeVideo');
+        let videoData = []; // Armazena os vídeos carregados
 
+        // 1. Carregar Dados do Google Sheets
+        async function loadVideos() {
+            try {
+                // Busca o arquivo CSV
+                const response = await fetch(GOOGLE_SHEETS_URL);
+                const data = await response.text();
+                
+                // Converte CSV para Array de Objetos
+                videoData = parseCSV(data);
+                
+                // Renderiza na tela
+                render(videoData);
+            } catch (error) {
+                console.error("Erro ao carregar vídeos:", error);
+                grid.innerHTML = '<p style="color:red; text-align:center;">Erro ao carregar vídeos. Verifique o link do Google Sheets.</p>';
+            }
+        }
+
+        // 2. Função simples para ler o CSV (Funciona como um "Conversor")
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n').filter(line => line.trim() !== '');
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase()); // pega titulo, categoria...
+            
+            const result = [];
+            
+            // Começa do 1 para pular o cabeçalho
+            for(let i = 1; i < lines.length; i++) {
+                const currentline = lines[i].split(',');
+                
+                // Cria o objeto com base na ordem das colunas
+                if(currentline.length >= 3) { // Verifica se tem dados suficientes
+                    let obj = {};
+                    // Mapeia as colunas pelo cabeçalho
+                    headers.forEach((header, index) => {
+                        // Remove aspas extras se existirem
+                        let val = currentline[index] ? currentline[index].replace(/^"|"$/g, '').trim() : '';
+                        obj[header] = val;
+                    });
+                    result.push(obj);
+                }
+            }
+            return result;
+        }
+
+        // 3. Renderizar os Cards
         function render(data) {
             grid.innerHTML = '';
             if(data.length === 0) { grid.innerHTML = '<p>Nenhum vídeo encontrado.</p>'; return; }
+            
             data.forEach(v => {
                 const el = document.createElement('div');
                 el.className = 'card';
                 el.innerHTML = `
-                    <div class="card-img"><img src="${v.img}"></div>
+                    <div class="card-img"><img src="${v.imagem || 'https://picsum.photos/400/250'}"></div>
                     <div class="card-body">
-                        <span class="card-tag">${v.cat}</span>
-                        <div class="card-title">${v.title}</div>
+                        <span class="card-tag">${v.categoria || 'Geral'}</span>
+                        <div class="card-title">${v.titulo}</div>
                         <button class="btn-play" onclick="openVideo('${v.url}')">
                             <i class="fas fa-play"></i> Assistir
                         </button>
@@ -454,22 +495,33 @@
             });
         }
 
+        // 4. Filtros (Mesma lógica de antes, mas usando a variável global videoData)
         function filterVideos(cat) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
             
             const term = search.value.toLowerCase();
-            const filtered = videos.filter(v => 
-                (cat === 'all' || v.cat === cat) && 
-                v.title.toLowerCase().includes(term)
-            );
+            const filtered = videoData.filter(v => {
+                const matchCat = cat === 'all' || (v.categoria && v.categoria.toLowerCase() === cat.toLowerCase());
+                const matchTitle = v.titulo && v.titulo.toLowerCase().includes(term);
+                return matchCat && matchTitle;
+            });
             render(filtered);
         }
 
+        // 5. Modal
         function openVideo(url) {
-            iframe.src = url;
+            // Verifica se é link do youtube curto e converte para embed se necessário
+            let embedUrl = url;
+            if(url.includes('youtube.com/watch?v=')) {
+                const videoId = url.split('v=')[1].split('&')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            }
+            
+            iframe.src = embedUrl;
             modal.classList.add('active');
         }
+
         function closeModal() {
             iframe.src = '';
             modal.classList.remove('active');
@@ -483,8 +535,14 @@
 
         modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 
-        // Init
-        render(videos);
+        // Inicializa
+        loadVideos();
+
+        // Toggle Sidebar (Mantido do original)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
     </script>
 </body>
 </html>
