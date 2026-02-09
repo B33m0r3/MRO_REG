@@ -1660,6 +1660,52 @@ function checkAuth() {
     document.addEventListener('DOMContentLoaded', function() {
         console.log("🚀 Inicializando Dashboard SIGMA-MRO...");
         currentUser = checkAuth();
+                // ==========================================
+        // CORREÇÃO DE NAVEGAÇÃO (SIGMA HELP)
+        // ==========================================
+        
+        function checkUrlHash() {
+            // Lê o que está depois do # na URL (ex: #laboratorio)
+            const hash = window.location.hash; 
+            
+            if (hash) {
+                const pageId = hash.replace('#', '');
+                
+                // Verifica se a página existe antes de tentar abrir
+                const targetPage = document.getElementById('page-' + pageId);
+                
+                if (targetPage) {
+                    // Abre a aba chamando a função que já existe no sistema
+                    showPage(pageId, null);
+                    
+                    // Atualiza o título superior para não parecer que recarregou tudo
+                    const breadcrumb = document.getElementById('breadcrumb');
+                    if(breadcrumb) {
+                        const titulos = {
+                            'dashboard': '📊 Dashboard',
+                            'plantao': '🕒 Plantão',
+                            'passagem': '📋 Passagem de Serviço',
+                            'novo_registro': '➕ Novo Registro',
+                            'usuarios': '👥 Usuários',
+                            'laboratorio': '🔬 Laboratório',
+                            'eva': '🤖 EVA',
+                            'refrigeracao': '❄️ Refrigeração',
+                            'rastreabilidade': '🚩 Rastreabilidade',
+                            'documentacao': '📒 Documentação',
+                            'catalogo': '📚 Catálogo',
+                            'programacao': '📅 Programação',
+                            'plano_frota': '🚆 Plano de Frota',
+                            'avisos': '📢 Avisos',
+                            'sobre': 'ℹ️ Sobre o VLT'
+                        };
+                        breadcrumb.innerHTML = titulos[pageId] || '📊 Dashboard';
+                    }
+                }
+            }
+        }
+
+        // Executa a verificação assim que a página termina de carregar
+        checkUrlHash();
         if (currentUser) {
             console.log("✅ Usuário autenticado:", currentUser.usuario);
             const usuario = currentUser.usuario;
