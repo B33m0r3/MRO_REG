@@ -414,57 +414,39 @@
         </div>
     </div>
 
-        <script>
-        // ==========================================
+            <script>
         // CONFIGURAÇÃO
-        // Cole aqui o link que você copiou do Google Sheets
-        // DICA: No final do link do Google Sheets, mude o parametro para "&output=csv"
-        // Exemplo: https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?output=csv
-        // ==========================================
         const GOOGLE_SHEETS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTI602SZCvv3Vljbau78ZXFxNxUVQATWF1aefTd0rxh6zXpmhV9nDjmpimnDO5vkHLKpWZl82Kw4Gu2/pub?gid=210452734&single=true&output=csv";
 
-        // Elementos do DOM
         const grid = document.getElementById('gridContainer');
         const search = document.getElementById('searchInput');
         const modal = document.getElementById('videoModal');
-        const iframe = document.getElementById('iframeVideo');
-        let videoData = []; // Armazena os vídeos carregados
+        const modalContent = document.querySelector('.modal-content');
+        let videoData = [];
 
         // 1. Carregar Dados do Google Sheets
         async function loadVideos() {
             try {
-                // Busca o arquivo CSV
                 const response = await fetch(GOOGLE_SHEETS_URL);
                 const data = await response.text();
-                
-                // Converte CSV para Array de Objetos
                 videoData = parseCSV(data);
-                
-                // Renderiza na tela
                 render(videoData);
             } catch (error) {
-                console.error("Erro ao carregar vídeos:", error);
-                grid.innerHTML = '<p style="color:red; text-align:center;">Erro ao carregar vídeos. Verifique o link do Google Sheets.</p>';
+                console.error("Erro:", error);
+                grid.innerHTML = '<p style="color:red; text-align:center;">Erro ao carregar a planilha.</p>';
             }
         }
 
-        // 2. Função simples para ler o CSV (Funciona como um "Conversor")
+        // 2. Ler CSV
         function parseCSV(csvText) {
             const lines = csvText.split('\n').filter(line => line.trim() !== '');
-            const headers = lines[0].split(',').map(h => h.trim().toLowerCase()); // pega titulo, categoria...
-            
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
             const result = [];
-            
-            // Começa do 1 para pular o cabeçalho
             for(let i = 1; i < lines.length; i++) {
                 const currentline = lines[i].split(',');
-                
-                // Cria o objeto com base na ordem das colunas
-                if(currentline.length >= 3) { // Verifica se tem dados suficientes
+                if(currentline.length >= 2) { 
                     let obj = {};
-                    // Mapeia as colunas pelo cabeçalho
                     headers.forEach((header, index) => {
-                        // Remove aspas extras se existirem
                         let val = currentline[index] ? currentline[index].replace(/^"|"$/g, '').trim() : '';
                         obj[header] = val;
                     });
@@ -474,7 +456,7 @@
             return result;
         }
 
-        // 3. Renderizar os Cards
+        // 3. Renderizar Cards
         function render(data) {
             grid.innerHTML = '';
             if(data.length === 0) { grid.innerHTML = '<p>Nenhum vídeo encontrado.</p>'; return; }
@@ -482,8 +464,24 @@
             data.forEach(v => {
                 const el = document.createElement('div');
                 el.className = 'card';
+                
+                // Lógica para pegar a imagem correta
+                let thumb = v.imagem;
+                if (!thumb) {
+                    // Se for YouTube, pega o thumbnail automaticamente
+                    if (v.url.includes('youtube.com') || v.url.includes('youtu.be')) {
+                        let videoId = '';
+                        if(v.url.includes('embed/')) videoId = v.url.split('embed/')[1];
+                        else if(v.url.includes('watch?v=')) videoId = v.url.split('v=')[1].split('&')[0];
+                        else if(v.url.includes('youtu.be/')) videoId = v.url.split('youtu.be/')[1];
+                        if(videoId) thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                    } 
+                    // Se for Drive, usa imagem genérica (o Drive não deixa pegar thumbnail fácil via link)
+                    else thumb = `https://picsum.photos/seed/${v.titulo.replace(/\s/g,'')}/400/250`;
+                }
+
                 el.innerHTML = `
-                    <div class="card-img"><img src="${v.imagem || 'https://picsum.photos/400/250'}"></div>
+                    <div class="card-img"><img src="${thumb}" alt="Capa"></div>
                     <div class="card-body">
                         <span class="card-tag">${v.categoria || 'Geral'}</span>
                         <div class="card-title">${v.titulo}</div>
@@ -495,11 +493,65 @@
             });
         }
 
-        // 4. Filtros (Mesma lógica de antes, mas usando a variável global videoData)
+        // 4. Abrir Vídeo (Unificado com IFRAME - Mais estável)
+        function openVideo(url) {
+            modal.classList.add('active');
+            
+            // Limpa modal anterior
+            modalContent.innerHTML = '<span class="close-modal" onclick="closeModal()">&times;</span>';
+
+            let iframe = document.createElement('iframe');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.setAttribute('allowfullscreen', 'true');
+
+            // CASO A: YouTube
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                let embedUrl = url;
+                if(url.includes('youtu.be/')) {
+                    const videoId = url.split('youtu.be/')[1];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                }
+                else if(url.includes('watch?v=')) {
+                    const videoId = url.split('v=')[1].split('&')[0];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                }
+                iframe.src = embedUrl;
+                modalContent.appendChild(iframe);
+            } 
+            
+            // CASO B: Google Drive (Usa o modo Preview)
+            else if (url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/d/')[1].split('/')[0];
+                // O modo /preview é o mais robusto para exibir vídeos do Drive
+                iframe.src = `https://drive.google.com/file/d/${id}/preview`;
+                modalContent.appendChild(iframe);
+            }
+
+            // CASO C: Link direto (MP4) - Fallback
+            else {
+                const video = document.createElement('video');
+                video.src = url;
+                video.controls = true;
+                video.autoplay = true;
+                video.style.width = '100%';
+                video.style.height = '100%';
+                video.style.backgroundColor = 'black';
+                modalContent.appendChild(video);
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            // Limpa o iframe para parar o som
+            setTimeout(() => { modalContent.innerHTML = ''; }, 300);
+        }
+
+        // Filtros
         function filterVideos(cat) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
-            
             const term = search.value.toLowerCase();
             const filtered = videoData.filter(v => {
                 const matchCat = cat === 'all' || (v.categoria && v.categoria.toLowerCase() === cat.toLowerCase());
@@ -509,24 +561,6 @@
             render(filtered);
         }
 
-        // 5. Modal
-        function openVideo(url) {
-            // Verifica se é link do youtube curto e converte para embed se necessário
-            let embedUrl = url;
-            if(url.includes('youtube.com/watch?v=')) {
-                const videoId = url.split('v=')[1].split('&')[0];
-                embedUrl = `https://www.youtube.com/embed/${videoId}`;
-            }
-            
-            iframe.src = embedUrl;
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            iframe.src = '';
-            modal.classList.remove('active');
-        }
-
         search.addEventListener('keyup', () => {
             const activeBtn = document.querySelector('.filter-btn.active');
             const currentCat = activeBtn.innerText === 'Todos' ? 'all' : activeBtn.innerText;
@@ -534,15 +568,12 @@
         });
 
         modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
-
-        // Inicializa
+        
+        // Inicia
         loadVideos();
-
-        // Toggle Sidebar (Mantido do original)
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('collapsed');
-        }
+        
+        // Toggle
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
     </script>
 </body>
 </html>
