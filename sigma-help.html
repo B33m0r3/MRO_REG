@@ -457,6 +457,7 @@
         }
 
         // 3. Renderizar Cards
+        // 3. Renderizar Cards (VERSÃO ATUALIZADA PARA IMAGENS DO DRIVE)
         function render(data) {
             grid.innerHTML = '';
             if(data.length === 0) { grid.innerHTML = '<p>Nenhum vídeo encontrado.</p>'; return; }
@@ -465,10 +466,20 @@
                 const el = document.createElement('div');
                 el.className = 'card';
                 
-                // Lógica para pegar a imagem correta
-                let thumb = v.imagem;
-                if (!thumb) {
-                    // Se for YouTube, pega o thumbnail automaticamente
+                let thumb = v.imagem; // Pega o que está na planilha
+
+                // === LÓGICA INTELIGENTE DE IMAGEM ===
+                
+                // 1. Se o usuário colocou um link do Google Drive na planilha
+                if (thumb && thumb.includes('drive.google.com/file/d/')) {
+                    // Extrai o ID do arquivo do link
+                    const id = thumb.split('/d/')[1].split('/')[0];
+                    // Transforma em um link direto de imagem
+                    thumb = `https://drive.google.com/uc?export=view&id=${id}`;
+                }
+                
+                // 2. Se NÃO colocou imagem na planilha, tenta achar do YouTube
+                else if (!thumb) {
                     if (v.url.includes('youtube.com') || v.url.includes('youtu.be')) {
                         let videoId = '';
                         if(v.url.includes('embed/')) videoId = v.url.split('embed/')[1];
@@ -476,12 +487,20 @@
                         else if(v.url.includes('youtu.be/')) videoId = v.url.split('youtu.be/')[1];
                         if(videoId) thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
                     } 
-                    // Se for Drive, usa imagem genérica (o Drive não deixa pegar thumbnail fácil via link)
-                    else thumb = `https://picsum.photos/seed/${v.titulo.replace(/\s/g,'')}/400/250`;
                 }
 
+                // 3. Se ainda não temos imagem (é vídeo do drive e não tem capa personalizada)
+                // Gera uma imagem aleatória bonita baseada no título
+                if (!thumb) {
+                    thumb = `https://picsum.photos/seed/${v.titulo.replace(/\s/g,'')}/400/250`;
+                }
+                
+                // ====================================
+
                 el.innerHTML = `
-                    <div class="card-img"><img src="${thumb}" alt="Capa"></div>
+                    <div class="card-img">
+                        <img src="${thumb}" alt="Capa" onerror="this.src='https://via.placeholder.com/400x250?text=Sem+Imagem'">
+                    </div>
                     <div class="card-body">
                         <span class="card-tag">${v.categoria || 'Geral'}</span>
                         <div class="card-title">${v.titulo}</div>
